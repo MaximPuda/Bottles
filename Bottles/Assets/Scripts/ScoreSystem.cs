@@ -10,6 +10,7 @@ public class ScoreSystem : MonoBehaviour
     public int Points { get; private set; }
 
     public event UnityAction<int> OnPonintsChanged;
+    
 
     private void OnEnable()
     {
@@ -34,7 +35,7 @@ public class ScoreSystem : MonoBehaviour
                 break;
 
             default:
-                ApllyPenalty(_penalty);
+                GlobalEvents.SendOnWrongCombination();
                 break;
         }   
 
