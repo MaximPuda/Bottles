@@ -13,4 +13,10 @@ public class Transporter : MonoBehaviour
         if (_enabled)
             collision.rigidbody.velocity = _direction * _speed;
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (_enabled)
+            collision.rigidbody.velocity = Vector2.zero;
+    }
 }

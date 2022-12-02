@@ -41,6 +41,7 @@ public class Box : MonoBehaviour, ICollectable
             {
                 //_animator.SetTrigger("Add");
                 _cells[i].Addbottle(bottle);
+                bottle.IsCollected = true;
                 return true;
             }
         }
@@ -58,6 +59,7 @@ public class Box : MonoBehaviour, ICollectable
             if (combo > 0)
             {
                 _animator.SetTrigger("Close");
+                HideBottles();
                 OnBoxClose?.Invoke();
             }    
             else
@@ -70,7 +72,7 @@ public class Box : MonoBehaviour, ICollectable
         int count = 0;
         foreach (var cell in _cells)
         {
-            if (!cell.IsEmpty)
+            if(!cell.IsEmpty)
                 count++;
         }
 
@@ -79,17 +81,43 @@ public class Box : MonoBehaviour, ICollectable
 
     private int GetCombo()
     {
+        int shapeMatch = 1;
+        int colorMatch = 1;
         int combo = 0;
 
-        if (_cells[0].CurrentBottle.Shape == _cells[1].CurrentBottle.Shape &&
-            _cells[1].CurrentBottle.Shape == _cells[2].CurrentBottle.Shape)
+        Shapes currentShape = _cells[0].CurrentBottle.Shape;
+        Colors currentColor = _cells[0].CurrentBottle.Color;
+
+        for (int i = 1; i < _cells.Length; i++)
+        {
+            if(currentShape == Shapes.None)
+                currentShape = _cells[i].CurrentBottle.Shape;
+
+            if(currentColor == Colors.None)
+                currentColor = _cells[i].CurrentBottle.Color;
+
+            if(_cells[i].CurrentBottle.Shape == currentShape || _cells[i].CurrentBottle.Shape == Shapes.None)
+                shapeMatch++;
+
+            if(_cells[i].CurrentBottle.Color == currentColor || _cells[i].CurrentBottle.Color == Colors.None)
+                colorMatch++;
+        }
+
+        if(shapeMatch == _cells.Length)
             combo++;
 
-        if (_cells[0].CurrentBottle.Color == _cells[1].CurrentBottle.Color &&
-            _cells[1].CurrentBottle.Color == _cells[2].CurrentBottle.Color)
+        if(colorMatch == _cells.Length)
             combo++;
 
         return combo;
+    }
+
+    private void HideBottles()
+    {
+        foreach (var cell in _cells)
+        {
+            cell.HideBottle();
+        }
     }
 
     private void Clear()

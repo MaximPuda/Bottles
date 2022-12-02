@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private const float DOUBLE_TAP_TIME = 0.2f;
+    
     private Camera _cam;
-    private Bottle _target;
+    private Bottle _activeBottle;
+    private Bottle _lastBottle;
     private PlayerData _data;
-    public int Health => _data.Health;
+
     public PlayerController Instance { get; private set; }
+
+    private float _lastTapTime = 0;
 
     private void Awake()
     {
@@ -17,75 +22,110 @@ public class PlayerController : MonoBehaviour
         InitializePlayer();
     }
 
-    private void OnDestroy()
-    {
-        //GlobalEvents.OnWrongCombination -= DecreaseOneHP;
-        //GlobalEvents.OnBottleCrash -= DecreaseOneHP;
-    }
-
     private void Update()
     {
-        if(Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if(touch.phase == TouchPhase.Began)
+            if (touch.phase == TouchPhase.Began)
             {
-                Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
-                RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
-                if (hit.collider != null)
-                    if (hit.collider.TryGetComponent<Bottle>(out _target))
-                        _target.ActivePhysic(false);
+                float timeSinceLatTap = Time.time - _lastTapTime;
+
+                if (timeSinceLatTap <= DOUBLE_TAP_TIME)
+                    DoubleTap(touch);
+                else Tap(touch);
+                
+                _lastTapTime = Time.time; 
             }
 
-            if(touch.phase == TouchPhase.Moved)
+            if (touch.phase == TouchPhase.Moved)
             {
-                if(_target != null)
-                {
-                    if (_target.transform.parent == null)
-                    {
-                        _target.SetVelocity(Vector3.zero);
-                        Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
-                        _target.transform.position = touchWorldPos;
-                        _target.transform.rotation = Quaternion.identity;
-                    }
-                    else _target = null;
-                }
+                Drag(touch);
             }
 
-            if(touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
+            if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
             {
-                if (_target != null)
-                {
-                    Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
-                    RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
-                    if (hit.collider != null)
-                    {
-                        if (hit.collider.TryGetComponent<ICollectable>(out ICollectable Collectable))
-                            Collectable.TryAddBottle(_target);
-                        else _target.ActivePhysic(true);
-                    }
-                    else _target.ActivePhysic(true);
-
-                    _target = null;
-                }
-
+                Drop(touch);
             }
         }
     }
 
     private void InitializePlayer()
-    {  
+    {
         _cam = Camera.main;
         _data = new PlayerData(3);
-
-       // GlobalEvents.OnWrongCombination += DecreaseOneHP;
-        //GlobalEvents.OnBottleCrash += DecreaseOneHP;
     }
 
-    private void DecreaseOneHP()
+    private void Tap(Touch touch)
     {
-        _data.Health--;
-        if (_data.Health <= 0)
-            GlobalEvents.SendOnPlayerDie();
+        _lastBottle = _activeBottle;
+
+        Bottle selected = SelectBootle(touch);
+        if (selected != null)
+        {
+            _activeBottle = selected;
+            _activeBottle.Active(true);
+        }
+
+        if (_lastBottle != null && _lastBottle != _activeBottle)
+            _lastBottle.Active(false);
+    }
+
+    private void DoubleTap(Touch touch)
+    {
+        Bottle selected = SelectBootle(touch);
+        if(_activeBottle = selected)
+            _activeBottle.Crash();
+    }
+
+    private Bottle SelectBootle(Touch touch)
+    {
+        Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
+        RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
+        Bottle selectedBottle;
+        if (hit.collider != null)
+        {
+            hit.collider.TryGetComponent<Bottle>(out selectedBottle);
+            return selectedBottle;
+        }
+        else return null;
+    }
+
+    private void Drag(Touch touch)
+    {
+        if (_activeBottle != null)
+        {
+            if (!_activeBottle.IsCollected)
+            {
+                Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
+                _activeBottle.Dragable.parent = null;
+                _activeBottle.Dragable.position = touchWorldPos;
+                _activeBottle.Dragable.rotation = Quaternion.identity;
+            }
+        }
+    }
+
+    private void Drop(Touch touch)
+    {
+        if (_activeBottle != null)
+        {
+            _activeBottle.Dragable.parent = _activeBottle.transform;
+            _activeBottle.Dragable.localPosition = Vector3.zero;
+            Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
+            RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
+            if (hit.collider != null)
+            {
+                if (hit.collider.TryGetComponent<ICollectable>(out ICollectable Collectable))
+                    Collectable.TryAddBottle(_activeBottle);
+            }
+
+            if (_activeBottle.IsCollected)
+            {
+                _activeBottle.Active(false);
+                _activeBottle.ActivePhysic(false);
+                _lastBottle = _activeBottle;
+                _activeBottle = null;
+            }    
+        }
     }
 }

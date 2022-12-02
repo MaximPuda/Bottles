@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   _bottlesAmount: 30
+  _targets:
+  - _color: 2
+    _shape: 2
+    _amount: 5

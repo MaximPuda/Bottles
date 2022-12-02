@@ -14,7 +14,6 @@ public class Cell : MonoBehaviour
     public void Addbottle(Bottle bottle)
     {
         CurrentBottle = bottle;
-        CurrentBottle.ActivePhysic(false);
         CurrentBottle.transform.parent = transform;
         CurrentBottle.transform.localPosition = Vector3.zero;
         CurrentBottle.transform.localScale = Vector3.one * _scaleFactor;
@@ -22,6 +21,11 @@ public class Cell : MonoBehaviour
         
         IsEmpty = false;
         OnBottleAdd?.Invoke();
+    }
+
+    public void HideBottle()
+    {
+        CurrentBottle.Hide();
     }
 
     public void RemoveBottle()

@@ -5,40 +5,34 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Bottle[] _bottles;
-    [SerializeField] private Color[] _colors;
-    [SerializeField] private bool _fxEnable;
-    [SerializeField] private ParticleSystem _stopFXL;
-    [SerializeField] private ParticleSystem _stopFXR;
+    [SerializeField] private ColorPalette[] _palettes;
     [SerializeField] private float _minDistanceBetweenBottles = 0.5f;
-    [SerializeField] private float _timeToStop = 2;
 
     public int BottlesAmount { get; private set; }
 
     private Transform _prevBottle;
-    private float _waitTime = 0;
+    private bool _isStop;
+
+    private void OnEnable()
+    {
+        GlobalEvents.OnLevelCompleted += Stop;
+    }
+
+    private void OnDisable()
+    {
+        GlobalEvents.OnLevelCompleted -= Stop;
+    }
 
     private void Update()
     {
-        if (_prevBottle == null || Vector3.Magnitude(transform.position - _prevBottle.position) >= _minDistanceBetweenBottles)
+        if(!_isStop)
         {
-            SpawnRandom();
-            _waitTime = 0;
-        }
-        else _waitTime += Time.deltaTime;
-
-        if (_fxEnable && _waitTime >= _timeToStop)
-        {
-            GlobalEvents.SendOnCantSpawn();
-
-            TryPlayStopFX(true);
-        }
-        else
-        {
-            TryPlayStopFX(false);
+            if (BottlesAmount > 0 && (_prevBottle == null || Vector3.Magnitude(transform.position - _prevBottle.position) >= _minDistanceBetweenBottles))
+                SpawnRandom();
         }
     }
 
-    public void Initialize(int bottlesAmount, float minDistance = 0.6f)
+    public void Initialize(int bottlesAmount, float minDistance = 0.9f)
     {
         BottlesAmount = bottlesAmount;
         _minDistanceBetweenBottles = minDistance;
@@ -46,23 +40,18 @@ public class Spawner : MonoBehaviour
 
     private void SpawnRandom()
     {
-        int colorIndex = Random.Range(0, _colors.Length);
+        int colorIndex = Random.Range(0, _palettes.Length);
         int bottlesIndex = Random.Range(0, _bottles.Length);
         Vector3 newPos = transform.position;
         GameObject newBottle = Instantiate(_bottles[bottlesIndex].gameObject, newPos, Quaternion.identity);
         _prevBottle = newBottle.transform;
 
         Bottle bottle = newBottle.GetComponent<Bottle>();
-        bottle.SetColor(_colors[colorIndex]);
+        bottle.SetColor(_palettes[colorIndex]);
 
         BottlesAmount--;
+        GlobalEvents.SendOnBottleSpawn(BottlesAmount);
     }
 
-    private void TryPlayStopFX(bool play)
-    {
-        if (_stopFXL != null)
-            _stopFXL.enableEmission = play;
-        if (_stopFXR != null)
-            _stopFXR.enableEmission = play;
-    }
+    private void Stop() => _isStop = true;
 }

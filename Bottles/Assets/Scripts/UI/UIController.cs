@@ -9,17 +9,17 @@ public class UIController : MonoBehaviour
 
     private void OnEnable()
     {
-        _scoreSystem.OnPonintsChanged += UpdateHUD;
-        GlobalEvents.OnWrongCombination += WrongCombination;
-        GlobalEvents.OnCantSpawn += StopSpawnHandle;
+        _scoreSystem.OnPonintsChanged += UpdatePoints;
+
+        GlobalEvents.OnBottleSpawn += UpdateBottlesAmount;
         GlobalEvents.OnGameOver += GameOver;
     }
 
     private void OnDisable()
     {
-        _scoreSystem.OnPonintsChanged -= UpdateHUD;
-        GlobalEvents.OnWrongCombination -= WrongCombination;
-        GlobalEvents.OnCantSpawn -= StopSpawnHandle;
+        _scoreSystem.OnPonintsChanged -= UpdatePoints;
+
+        GlobalEvents.OnBottleSpawn -= UpdateBottlesAmount;
         GlobalEvents.OnGameOver -= GameOver;
     }
 
@@ -28,19 +28,14 @@ public class UIController : MonoBehaviour
         _view.IntitializeHUD();
     }
 
-    private void UpdateHUD(int points)
+    private void UpdatePoints(int points)
     {
         _view.UpdatePoints(points);
     }
 
-    private void WrongCombination()
+    private void UpdateBottlesAmount(int amount)
     {
-        _view.DesableOneHP();
-    }
-
-    private void StopSpawnHandle()
-    {
-        _view.Alarm(true);
+        _view.UpdateBottlesAmount(amount);
     }
 
     private void GameOver()

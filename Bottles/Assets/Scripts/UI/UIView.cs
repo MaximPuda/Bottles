@@ -5,8 +5,8 @@ using TMPro;
 public class UIView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _pointsLabel;
-    [SerializeField] private Animation _alarmAnimation;
-    [SerializeField] private Image[] _hearts;
+    [SerializeField] private TextMeshProUGUI _bottlesAmount;
+
     [SerializeField] private Animator _animator;
 
     public void IntitializeHUD()
@@ -19,23 +19,9 @@ public class UIView : MonoBehaviour
         _pointsLabel.text = points.ToString();
     }
 
-    public void DesableOneHP()
+    public void UpdateBottlesAmount(int amount)
     {
-        foreach (var heart in _hearts)
-        {
-            if (heart.enabled)
-            {
-                heart.enabled = false;
-                return;
-            }
-        }
-    }
-
-    public void Alarm(bool active)
-    {
-        if (active)
-            _alarmAnimation.Play();
-        else _alarmAnimation.Stop();
+        _bottlesAmount.text = amount.ToString();
     }
 
     public void ShowGameOverScreen(bool show)

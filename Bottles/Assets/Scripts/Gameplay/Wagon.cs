@@ -7,6 +7,12 @@ public class Wagon : MonoBehaviour
     [SerializeField] private Box[] _boxes;
 
     private int _closedCount;
+    private Animator _animator;
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();    
+    }
 
     private void OnEnable()
     {
@@ -26,9 +32,16 @@ public class Wagon : MonoBehaviour
     {
         _closedCount++;
 
+
         if(_closedCount == _boxes.Length)
         {
-            Debug.Log("You win!");
+            _animator.SetTrigger("Completed");
+            GlobalEvents.SendOnLevelCompleted();
         }
+    }
+
+    public void WagonDone()
+    {
+        GlobalEvents.SendOnGameOver();
     }
 }

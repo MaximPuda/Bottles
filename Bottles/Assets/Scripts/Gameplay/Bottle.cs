@@ -6,46 +6,45 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
 public class Bottle : MonoBehaviour
 {
+    [SerializeField] private Transform _dragable;
     [SerializeField] private SpriteRenderer _bottle;
     [SerializeField] private SpriteRenderer _fill;
+    [SerializeField] private SpriteRenderer _multicolor;
+    [SerializeField] private SpriteRenderer _outline;
     [SerializeField] private ParticleSystem _crashFX;
     [SerializeField] private float _destroyDelay = 1f;
-    [SerializeField] private Shape _shape;
-    public Shape Shape => _shape;
-    public Color Color { get; private set; }
+    [SerializeField] private Shapes _shape;
+    [SerializeField] private Colors _color;
 
-    private float _speed = 2;
+    public Transform Dragable => _dragable;
+    public Shapes Shape => _shape;
+    public Colors Color { get; private set; }
+    public bool IsCollected { get; set; }
+
     private Rigidbody2D _rb;
+    private Collider2D _collider;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _collider = GetComponent<Collider2D>();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void SetColor(ColorPalette palette)
     {
-        if(collision.relativeVelocity.magnitude > 3f)
+        Color = palette.ColorName;
+
+        if (Color == Colors.None)
         {
-            GlobalEvents.SendOnWrongCombination();
-            Crash();
-        }
-    }
+            _multicolor.enabled = true;
+            _fill.enabled = false;
+        }    
+        else
+            _fill.color = palette.Color;
 
-    public void SetColor(Color color)
-    {
-        Color = color;
-        _fill.color = Color;
-
-        var fxColor = Color;
+        var fxColor = palette.Color;
         fxColor.a = 0.7f;
         _crashFX.startColor = fxColor;
-    }
-
-    public void SetSpeed(float speed) => _speed = speed;
-
-    public void SetVelocity(Vector2 direction)
-    {
-        _rb.velocity = direction * _speed;
     }
 
     public void ActivePhysic(bool active)
@@ -53,12 +52,26 @@ public class Bottle : MonoBehaviour
         _rb.simulated = active;
     }
 
+    public void Active(bool active)
+    {
+        _outline.enabled = active;
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+   
     public void Crash()
     {
         _bottle.enabled = false;
         _fill.enabled = false;
+        _multicolor.enabled = false;
+        _outline.enabled = false;
+        _collider.enabled = false;
         enabled = false;
         ActivePhysic(false);
+
         _crashFX.Play();
         StartCoroutine(DestroyWithDelay(_destroyDelay));
     }
