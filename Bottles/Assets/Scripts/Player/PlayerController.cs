@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     private void DoubleTap(Touch touch)
     {
         Bottle selected = SelectBootle(touch);
-        if(_activeBottle = selected)
+        if(_activeBottle == selected)
             _activeBottle.Crash();
     }
 

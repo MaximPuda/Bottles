@@ -39,7 +39,6 @@ public class Box : MonoBehaviour, ICollectable
         {
             if(_cells[i].IsEmpty)
             {
-                //_animator.SetTrigger("Add");
                 _cells[i].Addbottle(bottle);
                 bottle.IsCollected = true;
                 return true;
