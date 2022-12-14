@@ -1,4 +1,4 @@
 public enum Shapes
 {
-   None, Spehrical, Triangle, Squere, RevTriangle, FatTube, DoubleSpherical 
+   None, All, Spehrical, Squere, Triangle, RevTriangle, Penta, SphericTriangle
 }
