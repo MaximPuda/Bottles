@@ -4,7 +4,11 @@ using UnityEngine;
 
 public abstract class Controller : MonoBehaviour
 {
-    public abstract void Initialize();
+    protected Service CurrentService;
+    public virtual void Initialize(Service service)
+    {
+        CurrentService = service;
+    }
 
     public virtual void OnStart() { }
 }

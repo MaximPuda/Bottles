@@ -6,31 +6,29 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D), typeof(Animator))]
 public class Box : MonoBehaviour, ICollectable
 {
-    [SerializeField] private Cell[] _cells;
-
-    public event UnityAction OnBoxClose;
+    private Cell[] _cells;
 
     private Collider2D _collider;
     private Animator _animator;
 
-    private void Awake()
+    public event UnityAction<int> BoxCloseEvent;
+
+    public void Initialize()
     {
         _collider = GetComponent<Collider2D>();
         _collider.isTrigger = true;
 
         _animator = GetComponent<Animator>();
-    }
 
-    private void OnEnable()
-    {
+        _cells = GetComponentsInChildren<Cell>();
         foreach (var cell in _cells)
-            cell.OnBottleAdd += TryCombo;
+            cell.BottleAddEvent += TryCombo;
     }
 
     private void OnDisable()
     {
         foreach (var cell in _cells)
-            cell.OnBottleAdd -= TryCombo;
+            cell.BottleAddEvent -= TryCombo;
     }
 
     public bool TryAddBottle(Bottle bottle)
@@ -53,13 +51,12 @@ public class Box : MonoBehaviour, ICollectable
         if (CheckIsFull())
         {
             int combo = GetCombo();
-            EventBus.SendOnBottleCombo(combo);
 
             if (combo > 0)
             {
                 _animator.SetTrigger("Close");
                 HideBottles();
-                OnBoxClose?.Invoke();
+                BoxCloseEvent?.Invoke(combo);
             }    
             else
                 Clear();
@@ -85,20 +82,20 @@ public class Box : MonoBehaviour, ICollectable
         int combo = 0;
 
         Shapes currentShape = _cells[0].CurrentBottle.CurrentShape;
-        Colors currentColor = _cells[0].CurrentBottle.CurrentColor;
+        ColorsName currentColor = _cells[0].CurrentBottle.CurrentColor;
 
         for (int i = 1; i < _cells.Length; i++)
         {
             if (currentShape == Shapes.All)
                 currentShape = _cells[i].CurrentBottle.CurrentShape;
 
-            if(currentColor == Colors.All)
+            if(currentColor == ColorsName.All)
                 currentColor = _cells[i].CurrentBottle.CurrentColor;
 
             if(_cells[i].CurrentBottle.CurrentShape == currentShape || _cells[i].CurrentBottle.CurrentShape == Shapes.All)
                 shapeMatch++;
 
-            if(_cells[i].CurrentBottle.CurrentColor == currentColor || _cells[i].CurrentBottle.CurrentColor == Colors.All)
+            if(_cells[i].CurrentBottle.CurrentColor == currentColor || _cells[i].CurrentBottle.CurrentColor == ColorsName.All)
                 colorMatch++;
         }
 

@@ -6,10 +6,11 @@ using UnityEngine.Events;
 public class Cell : MonoBehaviour
 {
     [SerializeField] private float _scaleFactor = 0.6f;
+
     public bool IsEmpty { get; private set; } = true;
     public Bottle CurrentBottle { get; private set; }
 
-    public event UnityAction OnBottleAdd;
+    public event UnityAction BottleAddEvent;
 
     public void Addbottle(Bottle bottle)
     {
@@ -20,7 +21,7 @@ public class Cell : MonoBehaviour
         CurrentBottle.transform.localRotation = Quaternion.identity;
         
         IsEmpty = false;
-        OnBottleAdd?.Invoke();
+        BottleAddEvent?.Invoke();
     }
 
     public void HideBottle()

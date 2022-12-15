@@ -113,9 +113,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2533971862511213409}
-  - {fileID: 2533971862839051891}
-  - {fileID: 2533971862771524427}
   - {fileID: 2533971863166055115}
+  - {fileID: 2533971862771524427}
+  - {fileID: 2533971862839051891}
   m_Father: {fileID: 2533971862869364041}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 2533971862839051891}
   - component: {fileID: 2533971862839051884}
   m_Layer: 0
-  m_Name: Cell 1
+  m_Name: Cell 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,7 +278,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2533971861601140643}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2533971862839051884
 MonoBehaviour:
@@ -387,10 +387,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9870312a4dfbb94b9028b3df44b579f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cells:
-  - {fileID: 2533971863166055108}
-  - {fileID: 2533971862771524420}
-  - {fileID: 2533971862839051884}
 --- !u!1 &2533971863166055109
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,7 +398,7 @@ GameObject:
   - component: {fileID: 2533971863166055115}
   - component: {fileID: 2533971863166055108}
   m_Layer: 0
-  m_Name: Cell 3
+  m_Name: Cell 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -421,7 +417,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2533971861601140643}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2533971863166055108
 MonoBehaviour:

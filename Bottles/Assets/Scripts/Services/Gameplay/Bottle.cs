@@ -15,12 +15,12 @@ public class Bottle : MonoBehaviour
     [SerializeField] private ParticleSystem _crashFX;
     [SerializeField] private float _destroyDelay = 1f;
     [SerializeField] private Shapes _shape;
-    [SerializeField] private Colors _color;
+    [SerializeField] private ColorsName _color;
     [SerializeField] private Gradient _uniColor;
 
     public Transform Dragable => _dragable;
     public Shapes CurrentShape => _shape;
-    public Colors CurrentColor => _color;
+    public ColorsName CurrentColor => _color;
     public bool IsCollected { get; set; }
 
     private Rigidbody2D _rb;
@@ -39,7 +39,7 @@ public class Bottle : MonoBehaviour
 
     private void Update()
     {
-        if (CurrentColor == Colors.All)
+        if (CurrentColor == ColorsName.All)
         {
             _tempColor = Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
             _uniColorIndexLerp = Mathf.Lerp(_uniColorIndexLerp, 1, _uniColorLerp * Time.deltaTime);
@@ -60,12 +60,12 @@ public class Bottle : MonoBehaviour
     {
         _color = palette.ColorName;
 
-        if (CurrentColor == Colors.None)
+        if (CurrentColor == ColorsName.None)
         {
             _fill.enabled = true;
             _fill.enabled = false;
         }    
-        else if (CurrentColor == Colors.All)
+        else if (CurrentColor == ColorsName.All)
         {
             _uniFx.enableEmission = true;
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable] public class Target
 {
-    public Colors Color;
+    public ColorsName Color;
     public Shapes Shape;
     public int Amount;
 }

@@ -2,23 +2,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class Service : MonoBehaviour
 {
-    [SerializeField] private List<Controller> _controllers;
+    [SerializeField] protected List<Controller> Controllers;
 
     public bool isReady { get; private set; }
+
+    public event UnityAction InitFinishedEvent;
 
     public virtual void Initialize()
     {
         InitAllControllers();
+        
         GameManager.Instance.MenuEnterEvent += OnMenuEnter;
         GameManager.Instance.PlayEnterEvent += OnPlayEnter;
         GameManager.Instance.PauseEnterEvent += OnPauseEnter;
         GameManager.Instance.WinEnterEvent += OnWinEnter;
         GameManager.Instance.LoseEnterEvent += OnLoseEnter;
+        
         isReady = true;
+        InitFinishedEvent?.Invoke();
         Debug.Log(this.ToString() + " is intiialized!");
+    }
+
+    protected virtual void InitAllControllers()
+    {
+        foreach (var controller in Controllers)
+            controller.Initialize(this);
+
+        foreach (var controller in Controllers)
+            controller.OnStart();
     }
 
     private void OnDestroy()
@@ -33,7 +48,7 @@ public abstract class Service : MonoBehaviour
 
     public bool TryGetController<T>(out T controller) where T :  Controller
     {
-        foreach (var cont in _controllers)
+        foreach (var cont in Controllers)
         {
             if (cont.GetType() == typeof(T))
             {
@@ -44,15 +59,6 @@ public abstract class Service : MonoBehaviour
 
         controller = null;
         return false;
-    }
-
-    protected virtual void InitAllControllers()
-    {
-        foreach (var controller in _controllers)
-            controller.Initialize();
-
-        foreach (var controller in _controllers)
-            controller.OnStart();
     }
 
     protected virtual void OnMenuEnter() { }

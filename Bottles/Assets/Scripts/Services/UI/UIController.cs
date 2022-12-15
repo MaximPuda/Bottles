@@ -2,25 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIController : MonoBehaviour
+public class UIController : Controller
 {
     [SerializeField] private UIView _view;
-    [SerializeField] private ScoreSystem _scoreSystem;
+    [SerializeField] private ScoreController _scoreSystem;
 
-    private void OnEnable()
+    private ScoreController _score; 
+    public override void Initialize(Service service)
     {
-        _scoreSystem.OnPonintsChanged += UpdatePoints;
+        base.Initialize(service);
 
-        EventBus.OnBottleSpawn += UpdateBottlesAmount;
-        EventBus.OnGameOver += ShowGameOverScreen;
+        if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
+            if (gamePlay.TryGetController<ScoreController>(out _score))
+                _score.PonintsChangedEvent += UpdatePoints;
+
     }
 
     private void OnDisable()
     {
-        _scoreSystem.OnPonintsChanged -= UpdatePoints;
+        _score.PonintsChangedEvent += UpdatePoints;
 
-        EventBus.OnBottleSpawn -= UpdateBottlesAmount;
-        EventBus.OnGameOver -= ShowGameOverScreen;
+        //EventBus.OnBottleSpawn -= UpdateBottlesAmount;
+        //EventBus.OnGameOver -= ShowGameOverScreen;
     }
 
     private void Start()

@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable] public class ColorPalette
+[CreateAssetMenu(fileName = "Color", menuName = "Add new color", order = 2)]
+public class ColorPalette: ScriptableObject
 {
-    public Colors ColorName;
+    public ColorsName ColorName;
     public Color Color;
     public float Weight;
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ScoreSystem : MonoBehaviour
+public class ScoreController : Controller
 {
     [SerializeField] private int _oneComboPoints;
     [SerializeField] private int _doubleComboPoints;
@@ -9,16 +9,21 @@ public class ScoreSystem : MonoBehaviour
 
     public int Points { get; private set; }
 
-    public event UnityAction<int> OnPonintsChanged;
+    public event UnityAction<int> PonintsChangedEvent;
 
-    private void OnEnable()
+    private WagonController _currentWagon;
+
+    public override void Initialize(Service service)
     {
-        EventBus.OnBottleCombo += CheckCombo;
+        base.Initialize(service);
+
+        CurrentService.TryGetController<WagonController>(out _currentWagon);
+        _currentWagon.BoxCloseEvent += CheckCombo;
     }
 
     private void OnDisable()
     {
-        EventBus.OnBottleCombo -= CheckCombo;
+        _currentWagon.BoxCloseEvent -= CheckCombo;
     }
 
     private void CheckCombo(int combo)
@@ -34,11 +39,10 @@ public class ScoreSystem : MonoBehaviour
                 break;
 
             default:
-                EventBus.SendOnWrongCombination();
                 break;
         }   
 
-        OnPonintsChanged?.Invoke(Points);
+        PonintsChangedEvent?.Invoke(Points);
     }
 
     private void AddPoints(int points) => Points += points;

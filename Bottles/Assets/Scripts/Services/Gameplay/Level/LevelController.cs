@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class LevelController : Controller
 {
-    [SerializeField] private Level _level;
-    [SerializeField] private Spawner _spawner;
+    public Level CurrentLevel { get; private set; }
 
-    public override void Initialize()
+    public override void Initialize(Service service)
     {
-        _spawner.Initialize(_level.BottlesAmount);
+        base.Initialize(service);
+
+        CurrentLevel = GameManager.Instance.CurrentLevel;
     }
 }

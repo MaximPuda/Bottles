@@ -13,7 +13,21 @@ MonoBehaviour:
   m_Name: Level 1
   m_EditorClassIdentifier: 
   _bottlesAmount: 30
+  _bottleTypes:
+  - {fileID: 6314627315828496486, guid: d72bc94453e71e546b49853a6958fc8a, type: 3}
+  - {fileID: 6314627315828496486, guid: 8a3263df55f87dd43b09a3595ce6285b, type: 3}
+  - {fileID: 6314627315828496486, guid: 80475f10e6d52214f82b58e373ed5ac9, type: 3}
+  - {fileID: 6314627315828496486, guid: 235f56579507b3249a77c9133487be28, type: 3}
+  - {fileID: 6314627315828496486, guid: 157fc913aa660d2479fc60ec53c41e33, type: 3}
+  - {fileID: 6314627315828496486, guid: 9b4212120d9b90d4bb1802506060bbf3, type: 3}
+  _palettes:
+  - {fileID: 11400000, guid: 2220f1b74f8ad3f4189bc75fe47f7304, type: 2}
+  - {fileID: 11400000, guid: 64aa59b56583777419fba0d8068472ad, type: 2}
+  - {fileID: 11400000, guid: df6d21e0ded9fab47bea46c4ec8c67f5, type: 2}
+  - {fileID: 11400000, guid: 84fd79feda0937448a852deacf8e8b77, type: 2}
+  - {fileID: 11400000, guid: 12d455e7e40ba074fb54ac407a4ec70b, type: 2}
+  - {fileID: 11400000, guid: 62ffdbee01574ca42bf0e454d8239e7e, type: 2}
   _targets:
-  - _color: 2
-    _shape: 2
-    _amount: 5
+  - Color: 0
+    Shape: 0
+    Amount: 0

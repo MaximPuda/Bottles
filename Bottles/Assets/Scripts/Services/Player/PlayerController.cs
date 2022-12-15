@@ -10,8 +10,10 @@ public class PlayerController : Controller
 
     private float _lastTapTime = 0;
 
-    public override void Initialize()
+    public override void Initialize(Service service)
     {
+        base.Initialize(service);
+
         _cam = Camera.main;
     }
 
