@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Animator))]
 public class WagonController : Controller
 {
-    private Box[] _boxes;
+    private ItemsCollector[] _collectors;
 
     private int _closedCount;
     private Animator _animator;
@@ -20,18 +20,18 @@ public class WagonController : Controller
 
         _animator = GetComponent<Animator>();
 
-        _boxes = GetComponentsInChildren<Box>();
-        foreach (var box in _boxes)
+        _collectors = GetComponentsInChildren<ItemsCollector>();
+        foreach (var colllector in _collectors)
         {
-            box.Initialize();
-            box.BoxCloseEvent += OnBoxClose;
+            colllector.Initialize();
+            colllector.AllItemsCollectedEvent += OnBoxClose;
         }
     }
 
     private void OnDesable()
     {
-        foreach (var box in _boxes)
-            box.BoxCloseEvent -= OnBoxClose;
+        foreach (var box in _collectors)
+            box.AllItemsCollectedEvent -= OnBoxClose;
     }
 
     private void OnBoxClose(int combo)
@@ -39,7 +39,7 @@ public class WagonController : Controller
         _closedCount++;
         BoxCloseEvent?.Invoke(combo);
 
-        if (_closedCount == _boxes.Length)
+        if (_closedCount == _collectors.Length)
         {
             _animator.SetTrigger("Completed");
         }

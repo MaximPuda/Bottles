@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ICollectable
 {
-    public bool TryAddBottle(Bottle bottle);
+    public bool TryAddBottle(Item bottle);
 }

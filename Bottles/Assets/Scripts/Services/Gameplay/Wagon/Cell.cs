@@ -8,31 +8,32 @@ public class Cell : MonoBehaviour
     [SerializeField] private float _scaleFactor = 0.6f;
 
     public bool IsEmpty { get; private set; } = true;
-    public Bottle CurrentBottle { get; private set; }
+    public Item CurrentItem { get; private set; }
 
-    public event UnityAction BottleAddEvent;
-
-    public void Addbottle(Bottle bottle)
+    public void AddItem(Item item)
     {
-        CurrentBottle = bottle;
-        CurrentBottle.transform.parent = transform;
-        CurrentBottle.transform.localPosition = Vector3.zero;
-        CurrentBottle.transform.localScale = Vector3.one * _scaleFactor;
-        CurrentBottle.transform.localRotation = Quaternion.identity;
+        CurrentItem = item;
+        var itemTrans = CurrentItem.transform;
+        itemTrans.parent = transform;
+        itemTrans.localPosition = Vector3.zero;
+        itemTrans.localScale = Vector3.one * _scaleFactor;
+        itemTrans.localRotation = Quaternion.identity;
         
         IsEmpty = false;
-        BottleAddEvent?.Invoke();
     }
 
-    public void HideBottle()
+    public void HideItem()
     {
-        CurrentBottle.Hide();
+        CurrentItem.Hide();
     }
 
-    public void RemoveBottle()
+    public void RemoveItem()
     {
-        CurrentBottle.Crash();
-        CurrentBottle = null;
-        IsEmpty = true;
+        if(CurrentItem != null)
+        {
+           CurrentItem.Crash();
+            CurrentItem = null;
+            IsEmpty = true;
+        }
     }
 }

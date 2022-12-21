@@ -5,8 +5,8 @@ public class PlayerController : Controller
     private const float DOUBLE_TAP_TIME = 0.2f;
     
     private Camera _cam;
-    private Bottle _activeBottle;
-    private Bottle _lastBottle;
+    private Item _activeBottle;
+    private Item _lastBottle;
 
     private float _lastTapTime = 0;
 
@@ -49,7 +49,7 @@ public class PlayerController : Controller
     {
         _lastBottle = _activeBottle;
 
-        Bottle selected = SelectBootle(touch);
+        Item selected = SelectBootle(touch);
         if (selected != null)
         {
             _activeBottle = selected;
@@ -62,19 +62,19 @@ public class PlayerController : Controller
 
     private void DoubleTap(Touch touch)
     {
-        Bottle selected = SelectBootle(touch);
+        Item selected = SelectBootle(touch);
         if(_activeBottle == selected)
             _activeBottle.Crash();
     }
 
-    private Bottle SelectBootle(Touch touch)
+    private Item SelectBootle(Touch touch)
     {
         Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
         RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
-        Bottle selectedBottle;
+        Item selectedBottle;
         if (hit.collider != null)
         {
-            hit.collider.TryGetComponent<Bottle>(out selectedBottle);
+            hit.collider.TryGetComponent<Item>(out selectedBottle);
             return selectedBottle;
         }
         else return null;
@@ -104,8 +104,8 @@ public class PlayerController : Controller
             RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
             if (hit.collider != null)
             {
-                if (hit.collider.TryGetComponent<ICollectable>(out ICollectable Collectable))
-                    Collectable.TryAddBottle(_activeBottle);
+                if (hit.collider.TryGetComponent<ItemsCollector>(out ItemsCollector itemsCollector))
+                    itemsCollector.TryAddItem(_activeBottle);
             }
 
             if (_activeBottle.IsCollected)

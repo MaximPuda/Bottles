@@ -5,6 +5,6 @@ using UnityEngine;
 [System.Serializable] public class Target
 {
     public ColorsName Color;
-    public Shapes Shape;
+    public ItemType Shape;
     public int Amount;
 }

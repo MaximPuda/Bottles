@@ -1,4 +1,4 @@
 public enum ColorsName
 {
-    All, None, Red, Blue, Green, Yellow, Pink, Magenta
+    None, All, Empty, Red, Blue, Green, Yellow, Pink, Magenta
 }

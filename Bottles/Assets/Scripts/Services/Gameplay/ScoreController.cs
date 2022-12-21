@@ -17,7 +17,7 @@ public class ScoreController : Controller
     {
         base.Initialize(service);
 
-        CurrentService.TryGetController<WagonController>(out _currentWagon);
+        _currentWagon = ((GamePlayService)CurrentService).WagonCTRL;
         _currentWagon.BoxCloseEvent += CheckCombo;
     }
 

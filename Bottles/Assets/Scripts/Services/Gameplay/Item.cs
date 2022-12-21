@@ -1,27 +1,38 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
-public class Bottle : MonoBehaviour
+public class Item : MonoBehaviour
 {
     [SerializeField] private Transform _dragable;
-    [SerializeField] private SpriteRenderer _bottle;
+
+    [Header("Sprites")]
+    [SerializeField] private SpriteRenderer _main;
     [SerializeField] private SpriteRenderer _fill;
     [SerializeField] private SpriteRenderer _back;
     [SerializeField] private SpriteRenderer _outline;
+
+    [Header("Paricles")]
     [SerializeField] private ParticleSystem _uniFx;
     [SerializeField] private ParticleSystem _crashFX;
+
+    [Header("Settings")]
+    [SerializeField] private Transform _chacker;
     [SerializeField] private float _destroyDelay = 1f;
-    [SerializeField] private Shapes _shape;
-    [SerializeField] private ColorsName _color;
+    [SerializeField] private ItemType _type;
+    [SerializeField] private ColorPalette _color;
+    [SerializeField] private ColorPalette[] _palettes;
     [SerializeField] private Gradient _uniColor;
 
+    [Header("Movemenet")]
+    [SerializeField] private float _speed = 10f;
+    [SerializeField] private float _minDistanceBetween = 0.08f;
+
     public Transform Dragable => _dragable;
-    public Shapes CurrentShape => _shape;
-    public ColorsName CurrentColor => _color;
+    public ItemType Type => _type;
+    public ColorPalette Color => _color;
     public bool IsCollected { get; set; }
+    public bool IsFaced { get; private set; }
 
     private Rigidbody2D _rb;
     private Collider2D _collider;
@@ -39,9 +50,11 @@ public class Bottle : MonoBehaviour
 
     private void Update()
     {
-        if (CurrentColor == ColorsName.All)
+        TryToMove();
+
+        if (Color.ColorName == ColorsName.All)
         {
-            _tempColor = Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
+            _tempColor = UnityEngine.Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
             _uniColorIndexLerp = Mathf.Lerp(_uniColorIndexLerp, 1, _uniColorLerp * Time.deltaTime);
             _fill.color = _tempColor;
 
@@ -56,22 +69,29 @@ public class Bottle : MonoBehaviour
         }    
     }
 
-    public void SetColor(ColorPalette palette)
+    public void SetColor(ColorsName colorName)
     {
-        _color = palette.ColorName;
-
-        if (CurrentColor == ColorsName.None)
+        foreach (var palette in _palettes)
         {
-            _fill.enabled = true;
+            if (palette.ColorName == colorName)
+                _color = palette;
+        }
+
+        if (Color.ColorName == ColorsName.Empty)
+        {
             _fill.enabled = false;
-        }    
-        else if (CurrentColor == ColorsName.All)
+        }
+        else if (Color.ColorName == ColorsName.All)
         {
             _uniFx.enableEmission = true;
         }
-        else _fill.color = palette.Color;
+        else
+        {
+            _fill.color = Color.Color;
+            _uniFx.enableEmission = false;
+        }
 
-        var fxColor = palette.Color;
+        var fxColor = Color.Color;
         fxColor.a = 0.7f;
         _crashFX.startColor = fxColor;
     }
@@ -90,10 +110,28 @@ public class Bottle : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+
+    public void TryToMove()
+    {
+        var hit = Physics2D.Raycast(_chacker.position, Vector2.right);
+        if(hit == true) 
+        {
+            var minDistance = _rb.Distance(hit.collider);
+            if (minDistance.distance >= _minDistanceBetween)
+            {
+                _rb.velocity = Vector2.right * _speed;
+            }
+            else
+            {
+                _rb.velocity = Vector2.zero;
+            }
+        }
+    }
    
     public void Crash()
     {
-        _bottle.enabled = false;
+        transform.parent = null;
+        _main.enabled = false;
         _fill.enabled = false;
         _back.enabled = false;
         _outline.enabled = false;

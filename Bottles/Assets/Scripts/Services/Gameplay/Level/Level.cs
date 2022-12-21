@@ -7,13 +7,13 @@ public class Level : ScriptableObject
 {
     [Header("Settings")]
     [SerializeField] private int _bottlesAmount;
-    [SerializeField] private Bottle[] _bottleTypes;
+    [SerializeField] private Item[] _bottleTypes;
     [SerializeField] private ColorPalette[] _palettes;
 
     [Header("Targets")]
     [SerializeField] private Target[] _targets = new Target[3];
 
     public int BottlesAmount => _bottlesAmount;
-    public Bottle[] BottleTypes => _bottleTypes;
+    public Item[] BottleTypes => _bottleTypes;
     public ColorPalette[] ColorPalettes => _palettes;
 }

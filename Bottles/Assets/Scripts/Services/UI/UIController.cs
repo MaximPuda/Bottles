@@ -5,30 +5,29 @@ using UnityEngine;
 public class UIController : Controller
 {
     [SerializeField] private UIView _view;
-    [SerializeField] private ScoreController _scoreSystem;
 
-    private ScoreController _score; 
+    private ScoreController _score;
+    private TransporterController _transporter;
     public override void Initialize(Service service)
     {
         base.Initialize(service);
 
-        if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
-            if (gamePlay.TryGetController<ScoreController>(out _score))
-                _score.PonintsChangedEvent += UpdatePoints;
+        _view.IntitializeHUD();
 
+        if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
+        {
+            _score = gamePlay.ScoreCTRL;
+            _score.PonintsChangedEvent += UpdatePoints;
+
+            _transporter = gamePlay.TransporterCTRL;
+            _transporter.BottleSpawnEvent += UpdateBottlesAmount;
+        }    
     }
 
     private void OnDisable()
     {
         _score.PonintsChangedEvent += UpdatePoints;
-
-        //EventBus.OnBottleSpawn -= UpdateBottlesAmount;
-        //EventBus.OnGameOver -= ShowGameOverScreen;
-    }
-
-    private void Start()
-    {
-        _view.IntitializeHUD();
+        _transporter.BottleSpawnEvent -= UpdateBottlesAmount;
     }
 
     private void UpdatePoints(int points)
@@ -41,7 +40,7 @@ public class UIController : Controller
         _view.UpdateBottlesAmount(amount);
     }
 
-    private void ShowGameOverScreen()
+    public void ShowGameOverScreen()
     {
         _view.ShowGameOverScreen(true);
     }
