@@ -77,6 +77,7 @@ public class Item : MonoBehaviour, IInteractable
         }
         else if (Color.ColorName == ColorsName.All)
         {
+            _fill.enabled = true;
             _uniFx.enableEmission = true;
         }
         else
@@ -146,6 +147,21 @@ public class Item : MonoBehaviour, IInteractable
                 SetColor(itemSender.Color.ColorName);
                 itemSender.DestroyItem(false);
                 return true;
+            }
+            
+            if (itemSender.Type == Type)
+            {
+                SetColor(ColorsName.Empty);
+                itemSender.DestroyItem(false);
+                return true;
+            }
+
+            if (itemSender.Color.ColorName == ColorsName.Empty)
+            {
+                itemSender.SetColor(Color.ColorName);
+                itemSender.transform.parent = transform.parent;
+                itemSender.transform.position = transform.position;
+                DestroyItem(false);
             }
         }
 

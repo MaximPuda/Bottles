@@ -8,6 +8,8 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 {
     [SerializeField] private ItemType _collectedType;
     [SerializeField] private ColorsName _collectedColor;
+    //[SerializeField] private ItemType[] _collectedTypes;
+    //[SerializeField] private ColorsName[] _collectedColors;
     [SerializeField] private int _itemsAmount;
 
     public int ItemsAmount => _itemsAmount;
@@ -79,6 +81,13 @@ public class ItemsCollector : MonoBehaviour, IInteractable
             if (combo == 0)
                 Clear();
         }
+    }
+
+    private bool CheckTypes(Item itemSender)
+    {
+
+
+        return false;
     }
 
     private int GetCombo()
