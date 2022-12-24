@@ -64,7 +64,7 @@ public class PlayerController : Controller
     {
         Item selected = SelectBootle(touch);
         if(_activeBottle == selected)
-            _activeBottle.Crash();
+            _activeBottle.DestroyItem(true);
     }
 
     private Item SelectBootle(Touch touch)
@@ -104,14 +104,13 @@ public class PlayerController : Controller
             RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
             if (hit.collider != null)
             {
-                if (hit.collider.TryGetComponent<ItemsCollector>(out ItemsCollector itemsCollector))
-                    itemsCollector.TryAddItem(_activeBottle);
+                if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactor))
+                    interactor.Interact(_activeBottle);
             }
 
             if (_activeBottle.IsCollected)
             {
                 _activeBottle.Active(false);
-                _activeBottle.ActivePhysic(false);
                 _lastBottle = _activeBottle;
                 _activeBottle = null;
             }    

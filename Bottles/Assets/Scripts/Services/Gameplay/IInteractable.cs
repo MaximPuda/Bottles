@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICollectable
+public interface IInteractable
 {
-    public bool TryAddBottle(Item bottle);
+    public  bool Interact(Item itemSender);
 }

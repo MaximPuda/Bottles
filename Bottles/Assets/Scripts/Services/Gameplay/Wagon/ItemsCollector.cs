@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider2D), typeof(Animator), typeof(ItemsCollectorView))]
-public class ItemsCollector : MonoBehaviour
+public class ItemsCollector : MonoBehaviour, IInteractable
 {
     [SerializeField] private ItemType _collectedType;
     [SerializeField] private ColorsName _collectedColor;
@@ -39,20 +39,20 @@ public class ItemsCollector : MonoBehaviour
         _currentColor = _collectedColor;
     }
 
-    public bool TryAddItem(Item item)
+    public bool Interact(Item itemSender)
     {
-        if ((_collectedType == ItemType.All || item.Type == _collectedType)
-            && (_collectedColor ==  ColorsName.All || item.Color.ColorName == _collectedColor))
+        if ((_collectedType == ItemType.All || itemSender.Type == _collectedType)
+            && (_collectedColor ==  ColorsName.All || itemSender.Color.ColorName == _collectedColor))
         {
             for (int i = 0; i < _itemsAmount; i++)
             {
                 if (_items[i] == null)
                 {
-                    item.IsCollected = true;
-                    _items[i] = item;
+                    itemSender.OnColllect();
+                    _items[i] = itemSender;
                     _itemsCollected++;
 
-                    ItemAddedEvent?.Invoke(item);
+                    ItemAddedEvent?.Invoke(itemSender);
                     OnItemAdd();
                     return true;
                 }

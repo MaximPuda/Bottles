@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
-public class Item : MonoBehaviour
+public class Item : MonoBehaviour, IInteractable
 {
     [SerializeField] private Transform _dragable;
 
@@ -11,6 +11,7 @@ public class Item : MonoBehaviour
     [SerializeField] private SpriteRenderer _fill;
     [SerializeField] private SpriteRenderer _back;
     [SerializeField] private SpriteRenderer _outline;
+    [SerializeField] private GameObject _handler;
 
     [Header("Paricles")]
     [SerializeField] private ParticleSystem _uniFx;
@@ -24,15 +25,10 @@ public class Item : MonoBehaviour
     [SerializeField] private ColorPalette[] _palettes;
     [SerializeField] private Gradient _uniColor;
 
-    [Header("Movemenet")]
-    [SerializeField] private float _speed = 10f;
-    [SerializeField] private float _minDistanceBetween = 0.08f;
-
     public Transform Dragable => _dragable;
     public ItemType Type => _type;
     public ColorPalette Color => _color;
-    public bool IsCollected { get; set; }
-    public bool IsFaced { get; private set; }
+    public bool IsCollected { get; private set; }
 
     private Rigidbody2D _rb;
     private Collider2D _collider;
@@ -50,15 +46,13 @@ public class Item : MonoBehaviour
 
     private void Update()
     {
-        TryToMove();
-
         if (Color.ColorName == ColorsName.All)
         {
             _tempColor = UnityEngine.Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
             _uniColorIndexLerp = Mathf.Lerp(_uniColorIndexLerp, 1, _uniColorLerp * Time.deltaTime);
             _fill.color = _tempColor;
 
-            if (_uniColorIndexLerp > 0.95)
+            if (_uniColorIndexLerp > 0.99)
             { 
                 _uniColorIndex++;
                 _uniColorIndexLerp = 0;
@@ -87,6 +81,7 @@ public class Item : MonoBehaviour
         }
         else
         {
+            _fill.enabled = true;
             _fill.color = Color.Color;
             _uniFx.enableEmission = false;
         }
@@ -96,56 +91,71 @@ public class Item : MonoBehaviour
         _crashFX.startColor = fxColor;
     }
 
-    public void ActivePhysic(bool active)
+    public void OnColllect()
     {
-        _rb.simulated = active;
+        IsCollected = true;
+        _handler.SetActive(false);
+        _collider.enabled = false;
     }
 
     public void Active(bool active)
     {
         _outline.enabled = active;
+        if (active)
+            ChangeSortingLayer("Drag");
+        else
+            ChangeSortingLayer("Default");
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
     }
-
-    public void TryToMove()
-    {
-        var hit = Physics2D.Raycast(_chacker.position, Vector2.right);
-        if(hit == true) 
-        {
-            var minDistance = _rb.Distance(hit.collider);
-            if (minDistance.distance >= _minDistanceBetween)
-            {
-                _rb.velocity = Vector2.right * _speed;
-            }
-            else
-            {
-                _rb.velocity = Vector2.zero;
-            }
-        }
-    }
    
-    public void Crash()
+    public void DestroyItem(bool withFX)
     {
         transform.parent = null;
         _main.enabled = false;
         _fill.enabled = false;
         _back.enabled = false;
         _outline.enabled = false;
+        _handler.SetActive(false);
         _collider.enabled = false;
         enabled = false;
-        ActivePhysic(false);
 
-        _crashFX.Play();
-        StartCoroutine(DestroyWithDelay(_destroyDelay));
+        if (withFX)
+        {
+            _crashFX.Play();
+            StartCoroutine(DestroyWithDelay(_destroyDelay));
+        }
+        else Destroy(this.gameObject);
     }
 
     private IEnumerator DestroyWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         Destroy(this.gameObject);
+    }
+
+    public bool Interact(Item itemSender)
+    {
+        if (!IsCollected && itemSender != null && itemSender != this) 
+        {
+            if (itemSender.Type == ItemType.Bag)
+            {
+                SetColor(itemSender.Color.ColorName);
+                itemSender.DestroyItem(false);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void ChangeSortingLayer(string layerName)
+    {
+        _main.sortingLayerName = layerName;
+        _fill.sortingLayerName = layerName;
+        _back.sortingLayerName = layerName;
     }
 }

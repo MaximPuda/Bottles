@@ -1,4 +1,4 @@
 public enum ItemType
 {
-   None, All, Spehrical, Squere, Triangle, RevTriangle, Penta, SphericTriangle
+   None, All, Spehrical, Squere, Triangle, RevTriangle, Penta, SphericTriangle, Bag
 }

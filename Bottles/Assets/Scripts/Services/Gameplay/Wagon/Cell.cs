@@ -13,12 +13,11 @@ public class Cell : MonoBehaviour
     public void AddItem(Item item)
     {
         CurrentItem = item;
-        var itemTrans = CurrentItem.transform;
-        itemTrans.parent = transform;
-        itemTrans.localPosition = Vector3.zero;
-        itemTrans.localScale = Vector3.one * _scaleFactor;
-        itemTrans.localRotation = Quaternion.identity;
-        
+        CurrentItem.transform.parent = transform;
+        CurrentItem.transform.localPosition = Vector3.zero;
+        CurrentItem.transform.localScale = Vector3.one * _scaleFactor;
+        CurrentItem.transform.localRotation = Quaternion.identity;
+
         IsEmpty = false;
     }
 
@@ -31,7 +30,7 @@ public class Cell : MonoBehaviour
     {
         if(CurrentItem != null)
         {
-           CurrentItem.Crash();
+            CurrentItem.DestroyItem(true);
             CurrentItem = null;
             IsEmpty = true;
         }

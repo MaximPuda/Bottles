@@ -13,23 +13,20 @@ public class Spawner : MonoBehaviour
     public int ItemsAmount { get; private set; }
 
     public event UnityAction ItemSpawnedEvent;
-    public event UnityAction<bool> ActivationEvent; 
+    public event UnityAction<bool> ActivationEvent;
 
-    private GameObject _container;
-
+    private Transform _container;
     private Transform _prevBottle;
     private int _showItemsAmount;
     private bool _isStop;
 
-    public void Initialize(int bottlesAmount, int showItemsAmount, Item[] bottles, ColorPalette[] palettes)
+    public void Initialize(int bottlesAmount, int showItemsAmount, Transform container, Item[] bottles, ColorPalette[] palettes)
     {
         ItemsAmount = bottlesAmount;
         _showItemsAmount = showItemsAmount;
         _items = bottles;
         _palettes = palettes;
-
-        _container = Instantiate(new GameObject());
-        _container.name = "Bottles";
+        _container = container;
     }
 
     private void Update()

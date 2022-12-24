@@ -72,8 +72,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 917c684b169babd4b87b9bc29557f182, type: 3}
+  m_SortingOrder: 6
+  m_Sprite: {fileID: -601413581, guid: 468b38e41320dda428cefa7b2848f7c1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -144,9 +144,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2533971862511213410}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.022, z: 0}
-  m_LocalScale: {x: 0.9499999, y: 0.95, z: 0.95}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2533971861601140643}
   m_RootOrder: 0
@@ -228,7 +228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2533971862771524421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0059999544, z: 0}
+  m_LocalPosition: {x: 0, y: 0.037, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890318d3be4e694da252a79b68b7d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scaleFactor: 0.6
+  _scaleFactor: 0.75
 --- !u!1 &2533971862839051885
 GameObject:
   m_ObjectHideFlags: 0
@@ -273,8 +273,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2533971862839051885}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6, y: -0.0059999544, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: 0.6, y: 0.037, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2533971861601140643}
@@ -292,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890318d3be4e694da252a79b68b7d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scaleFactor: 0.6
+  _scaleFactor: 0.75
 --- !u!1 &2533971862869364037
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +305,7 @@ GameObject:
   - component: {fileID: 2533971862869364043}
   - component: {fileID: 2533971862869364040}
   - component: {fileID: 2533971862869364044}
-  - component: {fileID: 7438417258141563915}
+  - component: {fileID: 5950907009230305049}
   m_Layer: 0
   m_Name: BoxEmpty
   m_TagString: Untagged
@@ -358,7 +358,7 @@ BoxCollider2D:
   m_EdgeRadius: 0
 --- !u!95 &2533971862869364040
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -375,7 +375,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!114 &2533971862869364044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,7 +391,7 @@ MonoBehaviour:
   _collectedType: 1
   _collectedColor: 2
   _itemsAmount: 3
---- !u!114 &7438417258141563915
+--- !u!114 &5950907009230305049
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -400,7 +400,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2533971862869364037}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 838cf74c0581f8146ac96e6a3e19615c, type: 3}
+  m_Script: {fileID: 11500000, guid: f17d15201b0919e4dbf8528c2438bc2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2533971863166055109
@@ -428,7 +428,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2533971863166055109}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6, y: -0.006, z: 0}
+  m_LocalPosition: {x: -0.6, y: 0.037, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -447,4 +447,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8890318d3be4e694da252a79b68b7d9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scaleFactor: 0.6
+  _scaleFactor: 0.75
