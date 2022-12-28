@@ -5,8 +5,8 @@ public class PlayerController : Controller
     private const float DOUBLE_TAP_TIME = 0.2f;
     
     private Camera _cam;
-    private Item _activeBottle;
-    private Item _lastBottle;
+    private ItemController _activeItem;
+    private ItemController _lastItem;
 
     private float _lastTapTime = 0;
 
@@ -47,72 +47,75 @@ public class PlayerController : Controller
 
     private void Tap(Touch touch)
     {
-        _lastBottle = _activeBottle;
+        _lastItem = _activeItem;
 
-        Item selected = SelectBootle(touch);
+        ItemController selected = SelectItem(touch);
         if (selected != null)
         {
-            _activeBottle = selected;
-            _activeBottle.Active(true);
+            _activeItem = selected;
+            _activeItem.Active(true);
         }
 
-        if (_lastBottle != null && _lastBottle != _activeBottle)
-            _lastBottle.Active(false);
+        if (_lastItem != null && _lastItem != _activeItem)
+            _lastItem.Active(false);
     }
 
     private void DoubleTap(Touch touch)
     {
-        Item selected = SelectBootle(touch);
-        if(_activeBottle == selected)
-            _activeBottle.DestroyItem(true);
+        ItemController selected = SelectItem(touch);
+        if(_activeItem == selected)
+        {
+            _activeItem.DestroyItem(true);
+            _activeItem = null;
+        }
     }
 
-    private Item SelectBootle(Touch touch)
+    private ItemController SelectItem(Touch touch)
     {
         Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
         RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
-        Item selectedBottle;
+        ItemController selectedItem;
         if (hit.collider != null)
         {
-            hit.collider.TryGetComponent<Item>(out selectedBottle);
-            return selectedBottle;
+            hit.collider.TryGetComponent<ItemController>(out selectedItem);
+            return selectedItem;
         }
         else return null;
     }
 
     private void Drag(Touch touch)
     {
-        if (_activeBottle != null)
+        if (_activeItem != null)
         {
-            if (!_activeBottle.IsCollected)
+            if (!_activeItem.IsCollected)
             {
                 Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
-                _activeBottle.Dragable.parent = null;
-                _activeBottle.Dragable.position = touchWorldPos;
-                _activeBottle.Dragable.rotation = Quaternion.identity;
+                _activeItem.Dragable.parent = null;
+                _activeItem.Dragable.position = touchWorldPos;
+                _activeItem.Dragable.rotation = Quaternion.identity;
             }
         }
     }
 
     private void Drop(Touch touch)
     {
-        if (_activeBottle != null)
+        if (_activeItem != null)
         {
-            _activeBottle.Dragable.parent = _activeBottle.transform;
-            _activeBottle.Dragable.localPosition = Vector3.zero;
+            _activeItem.Dragable.parent = _activeItem.ActiveView.transform;
+            _activeItem.Dragable.localPosition = Vector3.zero;
             Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
             RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
             if (hit.collider != null)
             {
                 if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactor))
-                    interactor.Interact(_activeBottle);
+                    interactor.Interact(_activeItem);
             }
 
-            if (_activeBottle.IsCollected)
+            if (_activeItem.IsCollected)
             {
-                _activeBottle.Active(false);
-                _lastBottle = _activeBottle;
-                _activeBottle = null;
+                _activeItem.Active(false);
+                _lastItem = _activeItem;
+                _activeItem = null;
             }    
         }
     }

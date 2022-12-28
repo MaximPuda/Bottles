@@ -14,7 +14,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     public int ItemsAmount => _itemsAmount;
 
-    private Item[] _items;
+    private ItemController[] _items;
 
     private ItemsCollectorView _view;
     private Collider2D _collider;
@@ -23,7 +23,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     private ItemType _currentType;
     private ColorsName _currentColor;
 
-    public event UnityAction<Item> ItemAddedEvent;
+    public event UnityAction<ItemController> ItemAddedEvent;
     public event UnityAction<int> AllItemsCollectedEvent;
     public event UnityAction ClearItemsEvent;
 
@@ -35,15 +35,15 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         _collider = GetComponent<Collider2D>();
         _collider.isTrigger = true;
 
-        _items = new Item[_itemsAmount];
+        _items = new ItemController[_itemsAmount];
 
         _currentType = _collectedType;
         _currentColor = _collectedColor;
     }
 
-    public bool Interact(Item itemSender)
+    public bool Interact(ItemController itemSender)
     {
-        if ((_collectedType == ItemType.All || itemSender.Type == _collectedType)
+        if ((_collectedType == ItemType.All || itemSender.ActiveView.Type == _collectedType)
             && (_collectedColor ==  ColorsName.All || itemSender.Color.ColorName == _collectedColor))
         {
             for (int i = 0; i < _itemsAmount; i++)
@@ -95,7 +95,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         int typeMatch = 1;
         int colorMatch = 1;
         int combo = 0;
-        List<Item> itemsToChangeColor = new();
+        List<ItemController> itemsToChangeColor = new();
 
         _currentType = _items[0].Type;
         _currentColor = _items[0].Color.ColorName;

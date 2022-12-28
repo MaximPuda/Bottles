@@ -5,9 +5,10 @@ using UnityEngine.Events;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private ItemController _prefab;
     [SerializeField] private float _minDistanceBetweenBottles = 0.9f;
 
-    private Item[] _items;
+    private ItemType[] _types;
     private ColorPalette[] _palettes;
 
     public int ItemsAmount { get; private set; }
@@ -20,11 +21,11 @@ public class Spawner : MonoBehaviour
     private int _showItemsAmount;
     private bool _isStop;
 
-    public void Initialize(int bottlesAmount, int showItemsAmount, Transform container, Item[] bottles, ColorPalette[] palettes)
+    public void Initialize(int itemsAmount, int showItemsAmount, Transform container, ItemType[] itemTypes, ColorPalette[] palettes)
     {
-        ItemsAmount = bottlesAmount;
+        ItemsAmount = itemsAmount;
         _showItemsAmount = showItemsAmount;
-        _items = bottles;
+        _types = itemTypes;
         _palettes = palettes;
         _container = container;
     }
@@ -41,16 +42,17 @@ public class Spawner : MonoBehaviour
 
     private void SpawnRandom(Transform parent)
     {
+        int typeIndex = Random.Range(0, _types.Length);
         int colorIndex = Random.Range(0, _palettes.Length);
-        int bottlesIndex = Random.Range(0, _items.Length);
         Vector3 newPos = transform.position;
-        GameObject newBottle = Instantiate(_items[bottlesIndex].gameObject, newPos, Quaternion.identity);
-        newBottle.transform.parent = parent;
+        GameObject newItem = Instantiate(_prefab.gameObject, newPos, Quaternion.identity);
+        newItem.transform.parent = parent;
 
-        _prevBottle = newBottle.transform;
+        _prevBottle = newItem.transform;
 
-        Item bottle = newBottle.GetComponent<Item>();
-        bottle.SetColor(_palettes[colorIndex].ColorName);
+        ItemController item = newItem.GetComponent<ItemController>();
+        item.SetView(_types[typeIndex]);
+        item.SetColor(_palettes[colorIndex].ColorName);
 
         ItemSpawnedEvent?.Invoke();
     }

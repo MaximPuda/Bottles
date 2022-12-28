@@ -12,16 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60dffb71623774e47b396a4c792ddc95, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: 
-  _bottlesAmount: 30
-  _bottleTypes:
-  - {fileID: 6314627315828496486, guid: d72bc94453e71e546b49853a6958fc8a, type: 3}
-  - {fileID: 6314627315828496486, guid: 8a3263df55f87dd43b09a3595ce6285b, type: 3}
-  - {fileID: 6314627315828496486, guid: 80475f10e6d52214f82b58e373ed5ac9, type: 3}
-  - {fileID: 6314627315828496486, guid: 235f56579507b3249a77c9133487be28, type: 3}
-  - {fileID: 6314627315828496486, guid: 157fc913aa660d2479fc60ec53c41e33, type: 3}
-  - {fileID: 6314627315828496486, guid: 9b4212120d9b90d4bb1802506060bbf3, type: 3}
-  - {fileID: 6314627315828496486, guid: 56031d6701abb1c4cbfefede925604d2, type: 3}
-  - {fileID: 6314627315828496486, guid: a90cc4cd4ee5b514f9712a23b0b04b7f, type: 3}
+  _itemsAmount: 30
+  _itemTypes: 0100000002000000030000000400000005000000060000000700000008000000
   _palettes:
   - {fileID: 11400000, guid: 2220f1b74f8ad3f4189bc75fe47f7304, type: 2}
   - {fileID: 11400000, guid: 64aa59b56583777419fba0d8068472ad, type: 2}

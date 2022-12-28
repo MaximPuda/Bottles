@@ -28,7 +28,7 @@ public class TransporterController : Controller
         {
             Level level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
 
-            _spawner.Initialize(level.BottlesAmount, _capacity, _itemsContainer, level.BottleTypes, level.ColorPalettes);
+            _spawner.Initialize(level.ItemsAmount, _capacity, _itemsContainer, level.ItemTypes, level.ColorPalettes);
             _spawner.ItemSpawnedEvent += OnBottleSpawn;
             _spawner.ActivationEvent += Active;
         }

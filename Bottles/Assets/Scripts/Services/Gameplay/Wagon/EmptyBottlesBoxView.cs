@@ -25,7 +25,7 @@ public class EmptyBottlesBoxView : ItemsCollectorView
                 cell.RemoveItem();
     }
 
-    protected override void OnItemAdded(Item item)
+    protected override void OnItemAdded(ItemController item)
     {
         foreach (var cell in _cells)
         {

@@ -23,7 +23,7 @@ public abstract class ItemsCollectorView : MonoBehaviour
         Collector.ClearItemsEvent -= OnClearItems;
     }
 
-    protected abstract void OnItemAdded(Item item);
+    protected abstract void OnItemAdded(ItemController item);
     protected abstract void OnAllItemsCollected(int combo);
     protected abstract void OnClearItems();
 }

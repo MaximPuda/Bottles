@@ -6,14 +6,14 @@ using UnityEngine;
 public class Level : ScriptableObject
 {
     [Header("Settings")]
-    [SerializeField] private int _bottlesAmount;
-    [SerializeField] private Item[] _bottleTypes;
+    [SerializeField] private int _itemsAmount;
+    [SerializeField] private ItemType[] _itemTypes;
     [SerializeField] private ColorPalette[] _palettes;
 
     [Header("Targets")]
     [SerializeField] private Target[] _targets = new Target[3];
 
-    public int BottlesAmount => _bottlesAmount;
-    public Item[] BottleTypes => _bottleTypes;
+    public int ItemsAmount => _itemsAmount;
+    public ItemType[] ItemTypes => _itemTypes;
     public ColorPalette[] ColorPalettes => _palettes;
 }
