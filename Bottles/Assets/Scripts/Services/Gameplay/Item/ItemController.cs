@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
 public class ItemController : MonoBehaviour, IInteractable
@@ -62,8 +63,7 @@ public class ItemController : MonoBehaviour, IInteractable
             return;
         }
 
-        if (Type == ItemType.Bag && colorName == ColorsName.Empty ||
-            Type == ItemType.Bag && colorName == ColorsName.All)
+        if (Type == ItemType.Bag && colorName == ColorsName.Empty)
             colorName++;
 
         foreach (var palette in _palettes)
@@ -81,7 +81,7 @@ public class ItemController : MonoBehaviour, IInteractable
             ActiveView.EnableMulti(false);
             _uniFX.enableEmission = false;
         }
-        else if (Color.ColorName == ColorsName.All)
+        else if (Color.ColorName == ColorsName.Multi)
         {
             ActiveView.EnableFill(false);
             ActiveView.EnableMulti(true);
@@ -115,7 +115,6 @@ public class ItemController : MonoBehaviour, IInteractable
     public void DestroyItem(bool withFX)
     {
         transform.parent = null;
-
         ActiveView.OnDestroyItem();
 
         _stand.SetActive(false);
@@ -149,17 +148,27 @@ public class ItemController : MonoBehaviour, IInteractable
                 itemSender.DestroyItem(false);
                 return true;
             }
+
+            if (itemSender.Type == ItemType.Bag &&
+                ActiveView.Type == ItemType.Bag &&
+                itemSender.Color.ColorName == Color.ColorName)
+            {
+                SetColor(ColorsName.Multi);
+                _anim.Play("Item_TypeChange");
+                itemSender.DestroyItem(false);
+                return true;
+            }
             
-            if (itemSender.Type != ItemType.Bag && 
-                itemSender.Type != ItemType.All && 
+            if (itemSender.Type != ItemType.Bag &&
+                itemSender.Type != ItemType.Multi && 
                 itemSender.Type == ActiveView.Type)
             {
                 if (itemSender.Color.ColorName != ColorsName.Empty &&
-                    itemSender.Color.ColorName != ColorsName.All &&
+                    itemSender.Color.ColorName != ColorsName.Multi &&
                     itemSender.Color.ColorName == Color.ColorName)
                 {
-                    SetView(ItemType.All);
-                    SetColor(ColorsName.All);
+                    SetView(ItemType.Multi);
+                    SetColor(ColorsName.Multi);
                     _anim.Play("Item_TypeChange");
                 }
                 else
@@ -183,7 +192,7 @@ public class ItemController : MonoBehaviour, IInteractable
 
             if (itemSender.Type != ItemType.Bag &&
                 itemSender.Type != ActiveView.Type &&
-                itemSender.Color.ColorName != ColorsName.All &&
+                itemSender.Color.ColorName != ColorsName.Multi &&
                 itemSender.Color.ColorName != ColorsName.Empty && 
                 itemSender.Color.ColorName == Color.ColorName)
             {

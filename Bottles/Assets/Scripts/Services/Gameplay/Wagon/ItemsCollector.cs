@@ -6,10 +6,10 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D), typeof(Animator), typeof(ItemsCollectorView))]
 public class ItemsCollector : MonoBehaviour, IInteractable
 {
-    [SerializeField] private ItemType _collectedType;
-    [SerializeField] private ColorsName _collectedColor;
-    //[SerializeField] private ItemType[] _collectedTypes;
-    //[SerializeField] private ColorsName[] _collectedColors;
+    //[SerializeField] private ItemType _collectedType;
+    //[SerializeField] private ColorsName _collectedColor;
+    [SerializeField] private ItemType[] _acceptedTypes;
+    [SerializeField] private ColorsName[] _acceptedColors;
     [SerializeField] private int _itemsAmount;
 
     public int ItemsAmount => _itemsAmount;
@@ -36,15 +36,11 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         _collider.isTrigger = true;
 
         _items = new ItemController[_itemsAmount];
-
-        _currentType = _collectedType;
-        _currentColor = _collectedColor;
     }
 
     public bool Interact(ItemController itemSender)
     {
-        if ((_collectedType == ItemType.All || itemSender.ActiveView.Type == _collectedType)
-            && (_collectedColor ==  ColorsName.All || itemSender.Color.ColorName == _collectedColor))
+        if (IsTypeAccept(itemSender.Type) && IsColorAccept(itemSender.Color.ColorName))
         {
             for (int i = 0; i < _itemsAmount; i++)
             {
@@ -61,6 +57,24 @@ public class ItemsCollector : MonoBehaviour, IInteractable
             }
         }
 
+        return false;
+    }
+
+    private bool IsTypeAccept(ItemType senderType)
+    {
+        foreach (var type in _acceptedTypes)
+            if (senderType == type)
+                return true;
+
+        return false;
+    }
+
+    private bool IsColorAccept(ColorsName senderColorsName)
+    {
+        foreach (var color in _acceptedColors)
+            if (senderColorsName == color)
+                return true;
+       
         return false;
     }
 
@@ -83,13 +97,6 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         }
     }
 
-    private bool CheckTypes(Item itemSender)
-    {
-
-
-        return false;
-    }
-
     private int GetCombo()
     {
         int typeMatch = 1;
@@ -99,36 +106,28 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
         _currentType = _items[0].Type;
         _currentColor = _items[0].Color.ColorName;
-        if(_items[0].Color.ColorName == ColorsName.All)
+        if(_items[0].Color.ColorName == ColorsName.Multi)
             itemsToChangeColor.Add(_items[0]);
 
         for (int i = 1; i < _itemsCollected; i++)
         {
-            if (_currentType == ItemType.All)
+            if (_currentType == ItemType.Multi)
                 _currentType = _items[i].Type;
 
-            if (_currentColor == ColorsName.Empty)
-            {
-                if (_collectedColor == ColorsName.Empty)
-                    _currentColor = ColorsName.Empty;
-                else
-                    _currentColor = ColorsName.None;
-            }    
-
-            if(_currentColor == ColorsName.All)
-                _currentColor = _items[i].Color.ColorName;
-
-            if (_items[i].Color.ColorName == ColorsName.All)
+            if(_items[i].Type == _currentType || _items[i].Type == ItemType.Multi)
+                typeMatch++;
+           
+            if (_items[i].Color.ColorName == ColorsName.Multi)
                 itemsToChangeColor.Add(_items[i]);
 
-            if(_items[i].Type == _currentType || _items[i].Type == ItemType.All)
-                typeMatch++;
+            if(_currentColor == ColorsName.Multi)
+                _currentColor = _items[i].Color.ColorName;
 
-            if(_items[i].Color.ColorName == _currentColor || _items[i].Color.ColorName == ColorsName.All)
+            if(_items[i].Color.ColorName == _currentColor || _items[i].Color.ColorName == ColorsName.Multi)
                 colorMatch++;
         }
 
-        if(itemsToChangeColor.Count > 0 && _currentColor != ColorsName.All)
+        if(itemsToChangeColor.Count > 0 && _currentColor != ColorsName.Multi)
         {
             foreach (var item in itemsToChangeColor)
             {
@@ -153,9 +152,6 @@ public class ItemsCollector : MonoBehaviour, IInteractable
             _items[i] = null;
 
         _itemsCollected = 0;
-
-        _currentType = _collectedType;
-        _currentColor = _collectedColor;
 
         ClearItemsEvent?.Invoke();
     }

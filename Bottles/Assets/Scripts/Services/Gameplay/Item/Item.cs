@@ -45,7 +45,7 @@ public class Item : MonoBehaviour//,IInteractable
 
     private void Update()
     {
-        if (Color.ColorName == ColorsName.All)
+        if (Color.ColorName == ColorsName.Multi)
         {
             _tempColor = UnityEngine.Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
             _uniColorIndexLerp = Mathf.Lerp(_uniColorIndexLerp, 1, _uniColorLerp * Time.deltaTime);
@@ -74,7 +74,7 @@ public class Item : MonoBehaviour//,IInteractable
         {
             _fill.enabled = false;
         }
-        else if (Color.ColorName == ColorsName.All)
+        else if (Color.ColorName == ColorsName.Multi)
         {
             _fill.enabled = true;
             _uniFx.enableEmission = true;
