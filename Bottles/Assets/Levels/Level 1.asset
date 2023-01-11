@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60dffb71623774e47b396a4c792ddc95, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: 
-  _bottlesAmount: 30
+  _itemsAmount: 30
+  _itemTypes: 020000000300000004000000050000000600000007000000
+  _palettes:
+  - {fileID: 11400000, guid: 2220f1b74f8ad3f4189bc75fe47f7304, type: 2}
+  - {fileID: 11400000, guid: 64aa59b56583777419fba0d8068472ad, type: 2}
+  - {fileID: 11400000, guid: df6d21e0ded9fab47bea46c4ec8c67f5, type: 2}
+  - {fileID: 11400000, guid: 84fd79feda0937448a852deacf8e8b77, type: 2}
+  - {fileID: 11400000, guid: 12d455e7e40ba074fb54ac407a4ec70b, type: 2}
+  - {fileID: 11400000, guid: 62ffdbee01574ca42bf0e454d8239e7e, type: 2}
+  _targets:
+  - Color: 0
+    Shape: 0
+    Amount: 0
