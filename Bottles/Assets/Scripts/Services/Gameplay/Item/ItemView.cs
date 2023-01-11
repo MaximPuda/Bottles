@@ -47,9 +47,10 @@ public class ItemView : MonoBehaviour
 
     public void OnDestroyItem()
     {
-        _main.enabled = false;
-        _fill.enabled = false;
-        _back.enabled = false;
-        _outline.enabled = false;
+        _main.gameObject.SetActive(false);
+        _fill.gameObject.SetActive(false);
+        _back.gameObject.SetActive(false);
+        _multi.gameObject.SetActive(false);
+        _outline.gameObject.SetActive(false);
     }
 }

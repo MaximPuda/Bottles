@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Color", menuName = "Add new color", order = 2)]
+[CreateAssetMenu]
 public class ColorPalette: ScriptableObject
 {
     public ColorsName ColorName;

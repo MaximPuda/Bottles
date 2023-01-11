@@ -9,7 +9,6 @@ public class ItemController : MonoBehaviour, IInteractable
 
     [Header("Paricles")]
     [SerializeField] private GameObject _stand;
-    [SerializeField] private ParticleSystem _uniFX;
     [SerializeField] private ParticleSystem _crashFX;
     [SerializeField] private ParticleSystem _dustFX;
     [SerializeField] private ParticleSystem _paintFX;
@@ -19,6 +18,8 @@ public class ItemController : MonoBehaviour, IInteractable
     [SerializeField] private ColorPalette[] _palettes;
     [SerializeField] private Gradient _uniColor;
     [SerializeField] private Animation _anim;
+
+    [SerializeField] private Combo[] _combos;
 
     public ItemView ActiveView { get; private set; }
     public ItemType Type => ActiveView.Type;
@@ -57,12 +58,6 @@ public class ItemController : MonoBehaviour, IInteractable
 
     public void SetColor(ColorsName colorName)
     {
-        if (colorName == null)
-        {
-            Debug.LogWarning("Color is null");
-            return;
-        }
-
         if (Type == ItemType.Bag && colorName == ColorsName.Empty)
             colorName++;
 
@@ -79,20 +74,17 @@ public class ItemController : MonoBehaviour, IInteractable
         {
             ActiveView.EnableFill(false);
             ActiveView.EnableMulti(false);
-            _uniFX.enableEmission = false;
         }
         else if (Color.ColorName == ColorsName.Multi)
         {
             ActiveView.EnableFill(false);
             ActiveView.EnableMulti(true);
-            _uniFX.enableEmission = true;
         }
         else
         {
             ActiveView.EnableFill(true);
             ActiveView.EnableMulti(false);
             ActiveView.OnChangeColor(Color.Color);
-            _uniFX.enableEmission = false;
         }
     }
 
@@ -137,68 +129,134 @@ public class ItemController : MonoBehaviour, IInteractable
 
     public bool Interact(ItemController itemSender)
     {
-        if (!IsCollected && itemSender != null && itemSender != this) 
+        if (!IsCollected && itemSender != null && itemSender != this)
         {
-            if (itemSender.Type == ItemType.Bag && 
-                ActiveView.Type != ItemType.Bag)
-            {
-                SetColor(itemSender.Color.ColorName);
-                _anim.Play("Item_ColorChange");
-                PlayPaintFX(itemSender.Color.Color);
-                itemSender.DestroyItem(false);
-                return true;
-            }
+            //if (_combos == null)
+            //    return false;
 
-            if (itemSender.Type == ItemType.Bag &&
-                ActiveView.Type == ItemType.Bag &&
-                itemSender.Color.ColorName == Color.ColorName)
-            {
-                SetColor(ColorsName.Multi);
-                _anim.Play("Item_TypeChange");
-                itemSender.DestroyItem(false);
-                return true;
-            }
-            
+            //bool isDone = false;
+            //foreach (var combo in _combos)
+            //{
+            //    if (combo != null)
+            //    {
+            //        isDone = combo.TryDoCombo(itemSender, this);
+            //        if (isDone)
+            //            return true;
+            //    }
+            //}
+
+            //return false;
+
+            // Буталка + бутылка той же формы
             if (itemSender.Type != ItemType.Bag &&
-                itemSender.Type != ItemType.Multi && 
-                itemSender.Type == ActiveView.Type)
+                itemSender.Type != ItemType.Multi &&
+                itemSender.Color.ColorName != ColorsName.Empty &&
+                Color.ColorName != ColorsName.Empty &&
+                itemSender.Type == Type)
             {
-                if (itemSender.Color.ColorName != ColorsName.Empty &&
-                    itemSender.Color.ColorName != ColorsName.Multi &&
+                // Если цвета одиннаковые
+                if (itemSender.Color.ColorName != ColorsName.Multi &&
                     itemSender.Color.ColorName == Color.ColorName)
                 {
+                    // Универсальная с универсальным цветом
                     SetView(ItemType.Multi);
                     SetColor(ColorsName.Multi);
                     _anim.Play("Item_TypeChange");
                 }
-                else
+                else // Если цвета разные
                 {
+                    // Пустая той же формы
                     SetColor(ColorsName.Empty);
                     _anim.Play("Item_TypeChange");
                 }
-                
+
                 itemSender.DestroyItem(false);
+
                 return true;
             }
 
-            if (itemSender.Color.ColorName == ColorsName.Empty &&
-                Color.ColorName != ColorsName.Empty)
+            // Пустая + полная =  меняет форму полной бутылки наформу пустой
+            if (itemSender.Type != Type)
             {
-                SetView(itemSender.Type);
+                if (itemSender.Color.ColorName == ColorsName.Empty)
+                {
+                    SetView(itemSender.Type);
+                    _anim.Play("Item_TypeChange");
+                    itemSender.DestroyItem(false);
+
+                    return true;
+                }
+                else if (Color.ColorName == ColorsName.Empty)
+                {
+                    SetColor(itemSender.Color.ColorName);
+                    _anim.Play("Item_TypeChange");
+                    itemSender.DestroyItem(false);
+
+                    return true;
+                }
+            }
+
+            // Пустая + пустая той же формы = универсальная пустая
+            if (itemSender.Type == Type &&
+                itemSender.Color.ColorName == ColorsName.Empty &&
+                Color.ColorName == ColorsName.Empty)
+            {
+                SetView(ItemType.Multi);
                 _anim.Play("Item_TypeChange");
                 itemSender.DestroyItem(false);
+
                 return true;
             }
 
+            // Бутылка + бутылка того же цвета = горшок того же цвета
             if (itemSender.Type != ItemType.Bag &&
                 itemSender.Type != ActiveView.Type &&
                 itemSender.Color.ColorName != ColorsName.Multi &&
-                itemSender.Color.ColorName != ColorsName.Empty && 
+                itemSender.Color.ColorName != ColorsName.Empty &&
                 itemSender.Color.ColorName == Color.ColorName)
             {
                 SetView(ItemType.Bag);
                 _anim.Play("Item_TypeChange");
                 itemSender.DestroyItem(false);
+
+                return true;
+            }
+
+            // Горшок + бутылка = бутылка с цветом горшка
+            if (itemSender.Type != Type)
+            {
+                if (itemSender.Type == ItemType.Bag)
+                {
+                    SetColor(itemSender.Color.ColorName);
+                    PlayPaintFX(itemSender.Color.Color);
+
+                    itemSender.DestroyItem(false);
+                    _anim.Play("Item_ColorChange");
+
+                    return true;
+                }
+                else if (Type == ItemType.Bag)
+                {
+                    SetView(itemSender.Type);
+                    SetColor(Color.ColorName);
+                    PlayPaintFX(Color.Color);
+
+                    itemSender.DestroyItem(false);
+                    _anim.Play("Item_ColorChange");
+
+                    return true;
+                }
+            }
+
+            // Горшок + горшок с таким же цветом = горшок с универсальным цветом
+            if (itemSender.Type == ItemType.Bag &&
+                Type == ItemType.Bag &&
+                itemSender.Color.ColorName == Color.ColorName)
+            {
+                SetColor(ColorsName.Multi);
+                _anim.Play("Item_TypeChange");
+                itemSender.DestroyItem(false);
+
                 return true;
             }
         }

@@ -63,7 +63,7 @@ public class PlayerController : Controller
     private void DoubleTap(Touch touch)
     {
         ItemController selected = SelectItem(touch);
-        if(_activeItem == selected)
+        if(_activeItem != null &&_activeItem == selected)
         {
             _activeItem.DestroyItem(true);
             _activeItem = null;
