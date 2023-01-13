@@ -511,10 +511,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52787a42d77de924aac8ba5f5d03a679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _highlight: {fileID: 0}
   _main: {fileID: 2533971862511213408}
   _closed: {fileID: 1681954046535244632}
   _fill: {fileID: 2480740507059376535}
   _filledFX: {fileID: 8009001600353060260}
+  _fillWaveTargets:
+  - -0.2
+  - 0.2
+  - 0
+  - -0.1
+  - 0
+  _filledWaveFXEnable: 0
 --- !u!1 &3002478602900919193
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,62 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class TransporterController : Controller
 {
-    [SerializeField] private Transform _itemsContainer;
-    [SerializeField] private Transform _targetPoint;
-    [SerializeField] private GameObject _handlerPrefab;
-    [SerializeField] private float _handlerOffsetY;
+    [SerializeField] private ItemController _prefab;
+    [SerializeField] private TransporterLine[] _lines;
     [SerializeField] private float _distanceBetween;
-    [SerializeField] private Vector2 _direction;
     [SerializeField] private float _speed;
-    [SerializeField] private int _capacity;
     [SerializeField] private bool _enabled;
 
-    public event UnityAction<int> BottleSpawnEvent;
+    public event UnityAction<int> ItemsLeftEvent;
 
-    private Spawner _spawner;
+    private ItemPool _itemPool;
 
     public override void Initialize(Service service)
     {
         base.Initialize(service);
 
-        _spawner = GetComponentInChildren<Spawner>();
-        if (_spawner != null)
+        if (_lines != null)
         {
             Level level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
+            _itemPool = new ItemPool("MainItemPool", level.ItemsAmount, _prefab, transform);
+            _itemPool.PoolChangeEvent += OnItmesLeft;
+            _itemPool.PoolEmptyEvent += OnItemsOver;
 
-            _spawner.Initialize(level.ItemsAmount, _capacity, _itemsContainer, level.ItemTypes, level.ColorPalettes);
-            _spawner.ItemSpawnedEvent += OnBottleSpawn;
-            _spawner.ActivationEvent += Active;
+            foreach (var line in _lines)
+            {
+                line.Spawner.Initialize(_itemPool, line.Capacity, line.ItemsContainer, level.ItemTypes, level.ColorPalettes);
+            }
         }
     }
 
     private void OnDisable()
     {
-        _spawner.ItemSpawnedEvent -= OnBottleSpawn;
-        _spawner.ActivationEvent -= Active;
+        if(_itemPool != null)
+        {
+            _itemPool.PoolChangeEvent -= OnItmesLeft;
+            _itemPool.PoolEmptyEvent -= OnItemsOver;
+        }
     }
 
     private void Update()
     {
         if (_enabled)
-            TryToMove();
+            MoveAll();
     }
 
-    private void TryToMove()
+    private void MoveAll()
     {
-        if (_targetPoint != null)
+        if(_lines != null)
         {
-            for (int i = 0; i < _itemsContainer.childCount; i++)
+            foreach (var line in _lines)
             {
-                var itemTransform =_itemsContainer.GetChild(i);
+                TryToMove(line.TargetPoint, line.ItemsContainer);
+            }
+        }
+    }
+
+    private void TryToMove(Transform targetPoint, Transform itemsContainer)
+    {
+        if (targetPoint != null)
+        {
+            for (int i = 0; i < itemsContainer.childCount; i++)
+            {
+                var itemTransform =itemsContainer.GetChild(i);
                 if(i > 0)
                 {
-                    float newX = _targetPoint.position.x - (_distanceBetween * i);
-                    var newPos = new Vector2(newX, _targetPoint.position.y);
+                    float newX = targetPoint.position.x - (_distanceBetween * i);
+                    var newPos = new Vector2(newX, targetPoint.position.y);
                     float dist = newPos.x - itemTransform.position.x;
 
                     if (dist > 0.01f)
@@ -64,10 +75,10 @@ public class TransporterController : Controller
                 }
                 else
                 {
-                    float dist = _targetPoint.position.x - itemTransform.position.x;
+                    float dist = targetPoint.position.x - itemTransform.position.x;
 
                     if (dist > 0.01f)
-                        itemTransform.position = Vector2.Lerp(itemTransform.position, _targetPoint.position, _speed * Time.deltaTime);
+                        itemTransform.position = Vector2.Lerp(itemTransform.position, targetPoint.position, _speed * Time.deltaTime);
                 }
             }
         }
@@ -76,8 +87,13 @@ public class TransporterController : Controller
 
     public void Active(bool active) => _enabled = active;
 
-    private void OnBottleSpawn()
+    private void OnItmesLeft(int itemsLeft)
     {
-        BottleSpawnEvent?.Invoke(0);
+        ItemsLeftEvent?.Invoke(itemsLeft);
+    }
+
+    private void OnItemsOver()
+    {
+
     }
 }

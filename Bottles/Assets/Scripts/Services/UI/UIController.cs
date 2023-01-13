@@ -20,14 +20,14 @@ public class UIController : Controller
             _score.PonintsChangedEvent += UpdatePoints;
 
             _transporter = gamePlay.TransporterCTRL;
-            _transporter.BottleSpawnEvent += UpdateBottlesAmount;
+            _transporter.ItemsLeftEvent += UpdateBottlesAmount;
         }    
     }
 
     private void OnDisable()
     {
         _score.PonintsChangedEvent += UpdatePoints;
-        _transporter.BottleSpawnEvent -= UpdateBottlesAmount;
+        _transporter.ItemsLeftEvent -= UpdateBottlesAmount;
     }
 
     private void UpdatePoints(int points)

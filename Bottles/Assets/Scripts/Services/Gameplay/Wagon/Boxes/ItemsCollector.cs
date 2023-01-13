@@ -11,6 +11,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     [SerializeField] private ColorsName[] _acceptedColors;
     [SerializeField] private bool _colorsEnable;
     [SerializeField] private int _itemsAmount;
+    [SerializeField] private float _delayClosedAnimationStart = 1.1f;
 
     public int ItemsAmount => _itemsAmount;
 
@@ -21,7 +22,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     private int _itemsCollected = 0;
     private ItemType _currentType;
     private ColorsName _currentColor;
-    
+
     private List<ItemController> _itemsToChangeColor = new();
     private List<ItemController> _itemsToChangeType = new();
 
@@ -42,7 +43,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     public bool Interact(ItemController itemSender)
     {
-        if ((_acceptedTypes[0] == ItemType.None || IsTypeAccept(itemSender.Type)) && 
+        if ((_acceptedTypes[0] == ItemType.None || IsTypeAccept(itemSender.Type)) &&
             (_acceptedColors[0] == ColorsName.None || IsColorAccept(itemSender.Color.ColorName)))
         {
             for (int i = 0; i < _itemsAmount; i++)
@@ -64,7 +65,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     }
 
     private bool IsTypeAccept(ItemType senderType)
-    { 
+    {
         foreach (var type in _acceptedTypes)
             if (senderType == type)
                 return true;
@@ -77,7 +78,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         foreach (var color in _acceptedColors)
             if (senderColorsName == color)
                 return true;
-       
+
         return false;
     }
 
@@ -88,11 +89,11 @@ public class ItemsCollector : MonoBehaviour, IInteractable
             int combo = GetCombo();
 
             if (combo > 0)
-                AllItemsCollectedEvent?.Invoke(combo);
+                StartCoroutine(AllCollectedInvoke(combo));
             else
                 Clear();
         }
-        else if(_itemsCollected > 1)
+        else if (_itemsCollected > 1)
         {
             int combo = GetCombo();
             if (combo == 0)
@@ -106,13 +107,13 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         int colorMatch = 1;
         int combo = 0;
 
-        _currentType =  _items[0].Type;
+        _currentType = _items[0].Type;
         _currentColor = _items[0].Color.ColorName;
-        
-        if(_items[0].Type == ItemType.Multi)
-                _itemsToChangeType.Add(_items[0]);
 
-        if(_items[0].Color.ColorName == ColorsName.Multi)
+        if (_items[0].Type == ItemType.Multi)
+            _itemsToChangeType.Add(_items[0]);
+
+        if (_items[0].Color.ColorName == ColorsName.Multi)
             _itemsToChangeColor.Add(_items[0]);
 
         for (int i = 1; i < _itemsCollected; i++)
@@ -175,5 +176,11 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         _itemsCollected = 0;
 
         ClearItemsEvent?.Invoke();
+    }
+
+    private IEnumerator AllCollectedInvoke(int combo)
+    {
+        yield return new WaitForSeconds(_delayClosedAnimationStart);
+        AllItemsCollectedEvent?.Invoke(combo);
     }
 }

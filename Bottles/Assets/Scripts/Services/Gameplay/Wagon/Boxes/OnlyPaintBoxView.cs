@@ -8,9 +8,12 @@ public class OnlyPaintBoxView : ItemsCollectorView
     [SerializeField] private SpriteRenderer _closed;
     [SerializeField] private SpriteRenderer _fill;
     [SerializeField] private ParticleSystem _filledFX;
+    [SerializeField] private float[] _fillWaveTargets;
+    [SerializeField] private bool _filledWaveFXEnable;
 
     private Cell[] _cells;
     private int _collectedItems = 0;
+    private ColorPalette _currentColor;
     private float _currentFillLevel = 0;
     private float _targetFillLevel;
 
@@ -49,12 +52,23 @@ public class OnlyPaintBoxView : ItemsCollectorView
         {
             if (_cells[i].IsEmpty)
             {
+                if (i == 0 || _currentColor.ColorName == ColorsName.Multi)
+                    _currentColor = item.Color;
+
                 _collectedItems++;
                 _cells[i].AddItem(item);
                 _cells[i].HideItem();
 
-                _fill.material.color = item.Color.Color;
-                _filledFX.startColor = item.Color.Color;
+                if(_currentColor.ColorName == ColorsName.Multi)
+                {
+                    _fill.material.SetFloat("_Multi", 1);
+                }
+                else
+                {
+                    _fill.material.SetFloat("_Multi", 0);
+                    _fill.material.color = _currentColor.Color;
+                    _filledFX.startColor = _currentColor.Color;
+                }
                 
                 StartCoroutine(ChangeFillLevel());
                 _filledFX.Play();
@@ -68,10 +82,24 @@ public class OnlyPaintBoxView : ItemsCollectorView
     {
         float time = 0;
         _targetFillLevel = 1f / _cells.Length * _collectedItems;
+        float rotation = 0f;
+        int rotationTargetIndex = 0;
         while (time < 1)
         {
             _currentFillLevel = Mathf.Lerp(_currentFillLevel, _targetFillLevel, time);
             _fill.material.SetFloat("_Level", _currentFillLevel);
+            
+            if (_filledWaveFXEnable)
+            {
+                rotation = Mathf.Lerp(rotation, _fillWaveTargets[rotationTargetIndex], time);
+                    
+                _fill.material.SetFloat("_Rotation", rotation);
+
+                if (Mathf.Abs(_fillWaveTargets[rotationTargetIndex] - rotation) < 0.01f)
+                    if (rotationTargetIndex < _fillWaveTargets.Length - 1)
+                        rotationTargetIndex++;
+            }
+            
             time = time + Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }

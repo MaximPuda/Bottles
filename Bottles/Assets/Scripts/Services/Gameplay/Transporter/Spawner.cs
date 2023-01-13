@@ -1,42 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private ItemController _prefab;
-    [SerializeField] private float _minDistanceBetweenBottles = 0.9f;
-
+    private ItemPool _itemPool;
     private ItemType[] _types;
     private ColorPalette[] _palettes;
 
-    public int ItemsAmount { get; private set; }
-
-    public event UnityAction ItemSpawnedEvent;
-    public event UnityAction<bool> ActivationEvent;
-
     private Transform _container;
-    private Transform _prevBottle;
     private int _showItemsAmount;
-    private bool _isStop;
 
-    public void Initialize(int itemsAmount, int showItemsAmount, Transform container, ItemType[] itemTypes, ColorPalette[] palettes)
+    private const float TIME_BETWEEN_SPAWN = 0.1f;
+    private float _currentTime = 0;
+
+    public void Initialize(ItemPool pool, int showItemsAmount, Transform container, ItemType[] itemTypes, ColorPalette[] palettes)
     {
-        ItemsAmount = itemsAmount;
         _showItemsAmount = showItemsAmount;
         _types = itemTypes;
         _palettes = palettes;
         _container = container;
+        _itemPool = pool;
     }
 
     private void Update()
     {
-        if (!_isStop)
+        _currentTime += Time.deltaTime;
+        if (_itemPool.Count > 0 && _container.childCount < _showItemsAmount)
         {
-            if (ItemsAmount > 0 && (_prevBottle == null || Vector3.Magnitude(transform.position - _prevBottle.position) >= _minDistanceBetweenBottles)
-                && _container.transform.childCount < _showItemsAmount)
-                SpawnRandom(_container.transform);
+            if (_currentTime >= TIME_BETWEEN_SPAWN)
+            {
+                SpawnRandom(_container);
+                _currentTime = 0;
+            }
         }
     }
 
@@ -44,18 +39,13 @@ public class Spawner : MonoBehaviour
     {
         int typeIndex = Random.Range(0, _types.Length);
         int colorIndex = Random.Range(0, _palettes.Length);
-        Vector3 newPos = transform.position;
-        GameObject newItem = Instantiate(_prefab.gameObject, newPos, Quaternion.identity);
-        newItem.transform.parent = parent;
+        
+        ItemController itemToSpawn = _itemPool.GetItem();
+        itemToSpawn.transform.position = transform.position;
+        itemToSpawn.transform.parent = _container;
 
-        _prevBottle = newItem.transform;
-
-        ItemController item = newItem.GetComponent<ItemController>();
+        ItemController item = itemToSpawn.GetComponent<ItemController>();
         item.SetView(_types[typeIndex]);
         item.SetColor(_palettes[colorIndex].ColorName);
-
-        ItemSpawnedEvent?.Invoke();
     }
-
-    private void Stop() => _isStop = true;
 }
