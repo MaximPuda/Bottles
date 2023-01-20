@@ -5,7 +5,7 @@ public class Spawner : MonoBehaviour
 {
     private ItemPool _itemPool;
     private ItemType[] _types;
-    private ColorPalette[] _palettes;
+    private ItemColor[] _palettes;
 
     private Transform _container;
     private int _showItemsAmount;
@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     private const float TIME_BETWEEN_SPAWN = 0.1f;
     private float _currentTime = 0;
 
-    public void Initialize(ItemPool pool, int showItemsAmount, Transform container, ItemType[] itemTypes, ColorPalette[] palettes)
+    public void Initialize(ItemPool pool, int showItemsAmount, Transform container, ItemType[] itemTypes, ItemColor[] palettes)
     {
         _showItemsAmount = showItemsAmount;
         _types = itemTypes;
@@ -43,9 +43,7 @@ public class Spawner : MonoBehaviour
         ItemController itemToSpawn = _itemPool.GetItem();
         itemToSpawn.transform.position = transform.position;
         itemToSpawn.transform.parent = _container;
-
-        ItemController item = itemToSpawn.GetComponent<ItemController>();
-        item.SetView(_types[typeIndex]);
-        item.SetColor(_palettes[colorIndex].ColorName);
+        itemToSpawn.SetView(_types[typeIndex].Type);
+        itemToSpawn.SetColor(_palettes[colorIndex].Name);
     }
 }

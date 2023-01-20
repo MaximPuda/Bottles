@@ -13,7 +13,7 @@ public class ComboEmptyAndFull : Combo
         // Пустая + полная =  меняет форму полной бутылки наформу пустой
         if (itemSender.Type != itemTarget.Type)
         {
-            if (itemSender.Color.ColorName == ColorsName.Empty)
+            if (itemSender.Color.Name == ColorsName.Empty)
             {
                 itemTarget.SetView(itemSender.Type);
                 //_anim.Play("Item_TypeChange");
@@ -21,9 +21,9 @@ public class ComboEmptyAndFull : Combo
 
                 return true;
             }
-            else if (itemTarget.Color.ColorName == ColorsName.Empty)
+            else if (itemTarget.Color.Name == ColorsName.Empty)
             {
-                itemTarget. SetColor(itemSender.Color.ColorName);
+                itemTarget. SetColor(itemSender.Color.Name);
                 //_anim.Play("Item_TypeChange");
                 itemSender.DestroyItem(false);
 

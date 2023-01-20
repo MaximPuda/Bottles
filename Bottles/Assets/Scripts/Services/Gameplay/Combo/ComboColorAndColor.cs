@@ -11,13 +11,13 @@ public class ComboColorAndColor : Combo
         }
 
         // Бутылка + бутылка того же цвета = горшок того же цвета
-        if (itemSender.Type != ItemType.Bag &&
+        if (itemSender.Type != TypeNames.Bag &&
             itemSender.Type != itemTarget.Type &&
-            itemSender.Color.ColorName != ColorsName.Multi &&
-            itemSender.Color.ColorName != ColorsName.Empty &&
-            itemSender.Color.ColorName == itemTarget.Color.ColorName)
+            itemSender.Color.Name != ColorsName.Multi &&
+            itemSender.Color.Name != ColorsName.Empty &&
+            itemSender.Color.Name == itemTarget.Color.Name)
         {
-            itemTarget.SetView(ItemType.Bag);
+            itemTarget.SetView(TypeNames.Bag);
             //_anim.Play("Item_TypeChange");
             itemSender.DestroyItem(false);
 

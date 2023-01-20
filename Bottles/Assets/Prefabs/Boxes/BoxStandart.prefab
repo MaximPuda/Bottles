@@ -73,12 +73,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 4216135475609570933, guid: 5bf5bdf7fdc9da0428f8383bd5bb9792, type: 3}
+  m_Sprite: {fileID: 7070112933944689935, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.9855072, y: 0.9884058}
+  m_Size: {x: 1.9571428, y: 0.9742857}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -192,12 +192,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 2683288963372428710, guid: 5bf5bdf7fdc9da0428f8383bd5bb9792, type: 3}
+  m_Sprite: {fileID: -5766939026741465414, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.9855072, y: 1.0550724}
+  m_Size: {x: 1.9571428, y: 1.04}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -301,9 +301,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _acceptedTypes: 01000000020000000300000004000000050000000600000007000000
   _typesEnable: 1
-  _acceptedColors: 0100000002000000030000000400000005000000060000000700000008000000
+  _acceptedColors: 01000000030000000400000005000000060000000700000008000000
   _colorsEnable: 1
   _itemsAmount: 3
+  _delayClosedAnimationStart: 1.1
 --- !u!114 &7438417258141563915
 MonoBehaviour:
   m_ObjectHideFlags: 0

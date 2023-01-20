@@ -26,7 +26,7 @@ public class TransporterController : Controller
 
             foreach (var line in _lines)
             {
-                line.Spawner.Initialize(_itemPool, line.Capacity, line.ItemsContainer, level.ItemTypes, level.ColorPalettes);
+                line.Spawner.Initialize(_itemPool, line.Capacity, line.ItemsContainer, level.ItemTypes, level.ItemColors);
             }
         }
     }

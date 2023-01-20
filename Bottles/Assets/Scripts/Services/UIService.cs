@@ -19,4 +19,10 @@ public class UIService : Service
         base.OnWinEnter();
         UiCTRL.ShowGameOverScreen();
     }
+
+    protected override void OnLoseEnter()
+    {
+        base.OnLoseEnter();
+        UiCTRL.ShowGameOverScreen();
+    }
 }

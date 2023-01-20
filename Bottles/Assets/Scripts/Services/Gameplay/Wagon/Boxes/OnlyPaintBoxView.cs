@@ -13,7 +13,7 @@ public class OnlyPaintBoxView : ItemsCollectorView
 
     private Cell[] _cells;
     private int _collectedItems = 0;
-    private ColorPalette _currentColor;
+    private ItemColor _currentColor;
     private float _currentFillLevel = 0;
     private float _targetFillLevel;
 
@@ -52,14 +52,14 @@ public class OnlyPaintBoxView : ItemsCollectorView
         {
             if (_cells[i].IsEmpty)
             {
-                if (i == 0 || _currentColor.ColorName == ColorsName.Multi)
+                if (i == 0 || _currentColor.Name == ColorsName.Multi)
                     _currentColor = item.Color;
 
                 _collectedItems++;
                 _cells[i].AddItem(item);
                 _cells[i].HideItem();
 
-                if(_currentColor.ColorName == ColorsName.Multi)
+                if(_currentColor.Name == ColorsName.Multi)
                 {
                     _fill.material.SetFloat("_Multi", 1);
                 }

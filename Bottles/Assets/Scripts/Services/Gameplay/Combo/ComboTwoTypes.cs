@@ -11,18 +11,18 @@ public class ComboTwoTypes : Combo
         }
 
         // Буталка + бутылка той же формы
-        if (itemSender.Type != ItemType.Bag &&
-            itemSender.Type != ItemType.Multi &&
-            itemSender.Color.ColorName != ColorsName.Empty &&
-            itemTarget.Color.ColorName != ColorsName.Empty &&
+        if (itemSender.Type != TypeNames.Bag &&
+            itemSender.Type != TypeNames.Multi &&
+            itemSender.Color.Name != ColorsName.Empty &&
+            itemTarget.Color.Name != ColorsName.Empty &&
             itemSender.Type == itemTarget.Type)
         {
             // Если цвета одиннаковые
-            if (itemSender.Color.ColorName != ColorsName.Multi &&
-                itemSender.Color.ColorName == itemTarget.Color.ColorName)
+            if (itemSender.Color.Name != ColorsName.Multi &&
+                itemSender.Color.Name == itemTarget.Color.Name)
             {
                 // Универсальная с универсальным цветом
-                itemTarget.SetView(ItemType.Multi);
+                itemTarget.SetView(TypeNames.Multi);
                 itemTarget.SetColor(ColorsName.Multi);
                 //itemTarger._anim.Play("Item_TypeChange");
             }

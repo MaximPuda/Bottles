@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Collider2D), typeof(Animator), typeof(ItemsCollectorView))]
 public class ItemsCollector : MonoBehaviour, IInteractable
 {
-    [SerializeField] private ItemType[] _acceptedTypes;
+    [SerializeField] private TypeNames[] _acceptedTypes;
     [SerializeField] private bool _typesEnable;
     [SerializeField] private ColorsName[] _acceptedColors;
     [SerializeField] private bool _colorsEnable;
@@ -20,7 +20,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     private Collider2D _collider;
 
     private int _itemsCollected = 0;
-    private ItemType _currentType;
+    private TypeNames _currentType;
     private ColorsName _currentColor;
 
     private List<ItemController> _itemsToChangeColor = new();
@@ -43,8 +43,8 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     public bool Interact(ItemController itemSender)
     {
-        if ((_acceptedTypes[0] == ItemType.None || IsTypeAccept(itemSender.Type)) &&
-            (_acceptedColors[0] == ColorsName.None || IsColorAccept(itemSender.Color.ColorName)))
+        if ((_acceptedTypes[0] == TypeNames.None || IsTypeAccept(itemSender.Type)) &&
+            (_acceptedColors[0] == ColorsName.None || IsColorAccept(itemSender.Color.Name)))
         {
             for (int i = 0; i < _itemsAmount; i++)
             {
@@ -64,7 +64,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         return false;
     }
 
-    private bool IsTypeAccept(ItemType senderType)
+    private bool IsTypeAccept(TypeNames senderType)
     {
         foreach (var type in _acceptedTypes)
             if (senderType == type)
@@ -108,42 +108,42 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         int combo = 0;
 
         _currentType = _items[0].Type;
-        _currentColor = _items[0].Color.ColorName;
+        _currentColor = _items[0].Color.Name;
 
-        if (_items[0].Type == ItemType.Multi)
+        if (_items[0].Type == TypeNames.Multi)
             _itemsToChangeType.Add(_items[0]);
 
-        if (_items[0].Color.ColorName == ColorsName.Multi)
+        if (_items[0].Color.Name == ColorsName.Multi)
             _itemsToChangeColor.Add(_items[0]);
 
         for (int i = 1; i < _itemsCollected; i++)
         {
-            if (_currentType == ItemType.Multi)
+            if (_currentType == TypeNames.Multi)
                 _currentType = _items[i].Type;
 
             if (_currentColor == ColorsName.Multi)
-                _currentColor = _items[i].Color.ColorName;
+                _currentColor = _items[i].Color.Name;
 
             if (_typesEnable)
             {
-                if (_items[i].Type == _currentType || _items[i].Type == ItemType.Multi)
+                if (_items[i].Type == _currentType || _items[i].Type == TypeNames.Multi)
                     typeMatch++;
             }
 
             if (_colorsEnable)
             {
-                if (_items[i].Color.ColorName == _currentColor || _items[i].Color.ColorName == ColorsName.Multi)
+                if (_items[i].Color.Name == _currentColor || _items[i].Color.Name == ColorsName.Multi)
                     colorMatch++;
             }
 
-            if (_items[i].Type == ItemType.Multi)
+            if (_items[i].Type == TypeNames.Multi)
                 _itemsToChangeType.Add(_items[i]);
 
-            if (_items[i].Color.ColorName == ColorsName.Multi)
+            if (_items[i].Color.Name == ColorsName.Multi)
                 _itemsToChangeColor.Add(_items[i]);
         }
 
-        if (_itemsToChangeType.Count > 0 && _currentType != ItemType.Multi)
+        if (_itemsToChangeType.Count > 0 && _currentType != TypeNames.Multi)
         {
             foreach (var item in _itemsToChangeType)
                 item.SetView(_currentType);

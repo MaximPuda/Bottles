@@ -297,7 +297,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6314627315828496487}
   - component: {fileID: 3415983876636948851}
-  - component: {fileID: 7931655246888271341}
   m_Layer: 0
   m_Name: Bottle_3
   m_TagString: Item
@@ -341,22 +340,6 @@ MonoBehaviour:
   _fill: {fileID: 6314627316083647637}
   _multi: {fileID: 7631549224774791317}
   _back: {fileID: 7793868464253603538}
---- !u!111 &7931655246888271341
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314627315828496484}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 7400000, guid: 0e55e963362b33e42bd093d36fe7a0d8, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &6314627316083647635
 GameObject:
   m_ObjectHideFlags: 0

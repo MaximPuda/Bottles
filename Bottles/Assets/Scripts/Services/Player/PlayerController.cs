@@ -1,12 +1,28 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerController : Controller
 {
+    public event UnityAction<int> MovesLeftEvent;
+    
     private const float DOUBLE_TAP_TIME = 0.2f;
     
     private Camera _cam;
     private ItemController _activeItem;
     private ItemController _lastItem;
+
+    private int _moves;
+
+    public int Moves 
+    {
+        get => _moves;
+
+        private set 
+        {
+            _moves = value;
+            MovesLeftEvent?.Invoke(_moves);
+        } 
+    }
 
     private float _lastTapTime = 0;
 
@@ -15,6 +31,7 @@ public class PlayerController : Controller
         base.Initialize(service);
 
         _cam = Camera.main;
+        Moves = 35;
     }
 
     private void Update()
@@ -23,24 +40,19 @@ public class PlayerController : Controller
         {
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
-            {
-                float timeSinceLatTap = Time.time - _lastTapTime;
+                Tap(touch);
 
-                if (timeSinceLatTap <= DOUBLE_TAP_TIME)
-                    DoubleTap(touch);
-                else Tap(touch);
-                
-                _lastTapTime = Time.time; 
-            }
 
             if (touch.phase == TouchPhase.Moved)
-            {
                 Drag(touch);
-            }
 
             if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
+                Drop(touch); 
+
+            if (Moves == 0)
             {
-                Drop(touch);
+                enabled = false;
+                GameManager.Instance.Lose();
             }
         }
     }
@@ -67,6 +79,7 @@ public class PlayerController : Controller
         {
             _activeItem.DestroyItem(true);
             _activeItem = null;
+            Moves--;
         }
     }
 
@@ -108,15 +121,14 @@ public class PlayerController : Controller
             if (hit.collider != null)
             {
                 if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactor))
-                    interactor.Interact(_activeItem);
-            }
-
-            if (_activeItem.IsCollected)
-            {
-                _activeItem.Active(false);
-                _lastItem = _activeItem;
-                _activeItem = null;
-            }    
+                {
+                    if (interactor.Interact(_activeItem))
+                    {
+                        Moves--;
+                        _activeItem = null;
+                    }
+                }
+            } 
         }
     }
 }

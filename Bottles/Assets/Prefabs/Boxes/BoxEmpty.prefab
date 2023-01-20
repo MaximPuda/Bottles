@@ -72,13 +72,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
-  m_Sprite: {fileID: 6417575547351123633, guid: 5bf5bdf7fdc9da0428f8383bd5bb9792, type: 3}
+  m_SortingOrder: 7
+  m_Sprite: {fileID: -725556892483024893, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.7142663, y: 0.88266665}
+  m_Size: {x: 1.9571428, y: 1.04}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -276,12 +276,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 6253434560612819668, guid: 5bf5bdf7fdc9da0428f8383bd5bb9792, type: 3}
+  m_Sprite: {fileID: -2384340012311487131, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.7142663, y: 0.88266665}
+  m_Size: {x: 1.9571428, y: 1.04}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -349,7 +349,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.93, y: 0.92}
+  m_Size: {x: 1.94, y: 1}
   m_EdgeRadius: 0
 --- !u!95 &2533971862869364040
 Animator:
@@ -388,6 +388,7 @@ MonoBehaviour:
   _acceptedColors: 02000000
   _colorsEnable: 0
   _itemsAmount: 3
+  _delayClosedAnimationStart: 1.1
 --- !u!114 &5950907009230305049
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,8 +6,6 @@ using UnityEngine.Events;
 
 public abstract class Service : MonoBehaviour
 {
-    //[SerializeField] protected List<Controller> Controllers;
-
     public bool isReady { get; private set; }
 
     public event UnityAction InitFinishedEvent;
@@ -28,13 +26,6 @@ public abstract class Service : MonoBehaviour
     }
 
     protected abstract void InitAllControllers();
-    //{
-    //    foreach (var controller in Controllers)
-    //        controller.Initialize(this);
-
-    //    foreach (var controller in Controllers)
-    //        controller.OnStart();
-    //}
 
     private void OnDestroy()
     {
@@ -45,21 +36,6 @@ public abstract class Service : MonoBehaviour
         GameManager.Instance.WinEnterEvent -= OnWinEnter;
         GameManager.Instance.LoseEnterEvent -= OnLoseEnter;
     }
-
-    //public bool TryGetController<T>(out T controller) where T :  Controller
-    //{
-    //    foreach (var cont in Controllers)
-    //    {
-    //        if (cont.GetType() == typeof(T))
-    //        {
-    //            controller = (T)cont;
-    //            return true;
-    //        }
-    //    }
-
-    //    controller = null;
-    //    return false;
-    //}
 
     protected virtual void OnMenuEnter() { }
     protected virtual void OnPlayEnter() { Debug.Log(this.ToString() + " in play mode!"); }

@@ -19,14 +19,14 @@ public class Item : MonoBehaviour//,IInteractable
 
     [Header("Settings")]
     [SerializeField] private float _destroyDelay = 1f;
-    [SerializeField] private ItemType _type;
-    [SerializeField] private ColorPalette _color;
-    [SerializeField] private ColorPalette[] _palettes;
+    [SerializeField] private TypeNames _type;
+    [SerializeField] private ItemColor _color;
+    [SerializeField] private ItemColor[] _palettes;
     [SerializeField] private Gradient _uniColor;
 
     public Transform Dragable => _dragable;
-    public ItemType Type => _type;
-    public ColorPalette Color => _color;
+    public TypeNames Type => _type;
+    public ItemColor Color => _color;
     public bool IsCollected { get; private set; }
 
     private Rigidbody2D _rb;
@@ -45,7 +45,7 @@ public class Item : MonoBehaviour//,IInteractable
 
     private void Update()
     {
-        if (Color.ColorName == ColorsName.Multi)
+        if (Color.Name == ColorsName.Multi)
         {
             _tempColor = UnityEngine.Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
             _uniColorIndexLerp = Mathf.Lerp(_uniColorIndexLerp, 1, _uniColorLerp * Time.deltaTime);
@@ -66,15 +66,15 @@ public class Item : MonoBehaviour//,IInteractable
     {
         foreach (var palette in _palettes)
         {
-            if (palette.ColorName == colorName)
+            if (palette.Name == colorName)
                 _color = palette;
         }
 
-        if (Color.ColorName == ColorsName.Empty)
+        if (Color.Name == ColorsName.Empty)
         {
             _fill.enabled = false;
         }
-        else if (Color.ColorName == ColorsName.Multi)
+        else if (Color.Name == ColorsName.Multi)
         {
             _fill.enabled = true;
             _uniFx.enableEmission = true;
@@ -141,9 +141,9 @@ public class Item : MonoBehaviour//,IInteractable
     {
         if (!IsCollected && itemSender != null && itemSender != this) 
         {
-            if (itemSender.Type == ItemType.Bag)
+            if (itemSender.Type == TypeNames.Bag)
             {
-                SetColor(itemSender.Color.ColorName);
+                SetColor(itemSender.Color.Name);
                 itemSender.DestroyItem(false);
                 return true;
             }
@@ -155,9 +155,9 @@ public class Item : MonoBehaviour//,IInteractable
                 return true;
             }
 
-            if (itemSender.Color.ColorName == ColorsName.Empty)
+            if (itemSender.Color.Name == ColorsName.Empty)
             {
-                itemSender.SetColor(Color.ColorName);
+                itemSender.SetColor(Color.Name);
                 itemSender.transform.parent = transform.parent;
                 itemSender.transform.position = transform.position;
                 DestroyItem(false);

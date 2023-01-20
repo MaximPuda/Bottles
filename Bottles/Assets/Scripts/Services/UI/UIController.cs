@@ -7,7 +7,7 @@ public class UIController : Controller
     [SerializeField] private UIView _view;
 
     private ScoreController _score;
-    private TransporterController _transporter;
+    private PlayerController _playerController;
     public override void Initialize(Service service)
     {
         base.Initialize(service);
@@ -18,16 +18,19 @@ public class UIController : Controller
         {
             _score = gamePlay.ScoreCTRL;
             _score.PonintsChangedEvent += UpdatePoints;
-
-            _transporter = gamePlay.TransporterCTRL;
-            _transporter.ItemsLeftEvent += UpdateBottlesAmount;
         }    
+
+        if (ServiceManager.TryGetService<PlayerService>(out PlayerService player))
+        {
+            _playerController = player.PlayerCTRL;
+            _playerController.MovesLeftEvent += UpdateMoves;
+        }
     }
 
     private void OnDisable()
     {
-        _score.PonintsChangedEvent += UpdatePoints;
-        _transporter.ItemsLeftEvent -= UpdateBottlesAmount;
+        _score.PonintsChangedEvent -= UpdatePoints;
+        _playerController.MovesLeftEvent -= UpdateMoves;
     }
 
     private void UpdatePoints(int points)
@@ -35,9 +38,9 @@ public class UIController : Controller
         _view.UpdatePoints(points);
     }
 
-    private void UpdateBottlesAmount(int amount)
+    private void UpdateMoves(int amount)
     {
-        _view.UpdateBottlesAmount(amount);
+       _view.UpdateMoves(amount);
     }
 
     public void ShowGameOverScreen()

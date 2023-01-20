@@ -34,6 +34,7 @@ public class ItemPool
         for (int i = 0; i < capacity; i++)
         {
             ItemController newItem = GameObject.Instantiate(ItemPrefab);
+            newItem.Inititalize(this);
             newItem.transform.parent = Container;
             
             PutItem(newItem);
@@ -42,6 +43,7 @@ public class ItemPool
 
     public void PutItem(ItemController item)
     {
+        item.Reset();
         item.transform.parent = Container;
         item.gameObject.SetActive(false);
         

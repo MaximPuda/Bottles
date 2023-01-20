@@ -19,7 +19,7 @@ public class UIView : MonoBehaviour
         _pointsLabel.text = points.ToString();
     }
 
-    public void UpdateBottlesAmount(int amount)
+    public void UpdateMoves(int amount)
     {
         _bottlesAmount.text = amount.ToString();
     }

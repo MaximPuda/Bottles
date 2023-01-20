@@ -9883,6 +9883,7 @@ Animation:
   m_Animations:
   - {fileID: 7400000, guid: 3f1c3fd9903a7b743b42cb08536ad320, type: 2}
   - {fileID: 7400000, guid: 73e5995b3c430b04eb80e870e1fb9a5e, type: 2}
+  - {fileID: 7400000, guid: 8eaaedc3bd6701d43a099e47a497aec2, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
@@ -15708,7 +15709,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2316276111549898014, guid: 02c85d341d4c6a44f872723d5b2c3859, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2316276111549898015, guid: 02c85d341d4c6a44f872723d5b2c3859, type: 3}
       propertyPath: m_RootOrder

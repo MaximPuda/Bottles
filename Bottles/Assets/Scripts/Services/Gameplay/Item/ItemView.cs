@@ -6,7 +6,7 @@ public class ItemView : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private Transform _dragable;
-    [SerializeField] private ItemType _type;
+    [SerializeField] private TypeNames _type;
 
     [Header("Sprites")]
     [SerializeField] private SpriteRenderer _main;
@@ -15,7 +15,7 @@ public class ItemView : MonoBehaviour
     [SerializeField] private SpriteRenderer _multi;
     [SerializeField] private SpriteRenderer _back;
 
-    public ItemType Type => _type;
+    public TypeNames Type => _type;
     public Transform Dragable => _dragable;
     
     public void OnChangeColor(Color color) => _fill.color = color;
@@ -45,12 +45,16 @@ public class ItemView : MonoBehaviour
         _multi.sortingLayerName = layerName;
     }
 
-    public void OnDestroyItem()
+    public void Reset() => EnableAllRanderers(true);
+
+    public void OnDestroyItem() => EnableAllRanderers(false);
+
+    private void EnableAllRanderers(bool enable)
     {
-        _main.gameObject.SetActive(false);
-        _fill.gameObject.SetActive(false);
-        _back.gameObject.SetActive(false);
-        _multi.gameObject.SetActive(false);
-        _outline.gameObject.SetActive(false);
+        _main.gameObject.SetActive(enable);
+        _fill.gameObject.SetActive(enable);
+        _back.gameObject.SetActive(enable);
+        _multi.gameObject.SetActive(enable);
+        _outline.gameObject.SetActive(enable);
     }
 }
