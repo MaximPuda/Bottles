@@ -4,7 +4,7 @@ using UnityEngine;
 public class Level : ScriptableObject
 {
     [Header("Settings")]
-    [SerializeField] private int _itemsAmount;
+    [SerializeField] private int _moves;
     [SerializeField] private ItemType[] _itemTypes;
     [SerializeField] private ItemColor[] _itemColors;
 
@@ -14,8 +14,9 @@ public class Level : ScriptableObject
     [Header("Grid")]
     [SerializeField] private GridLine[] _cellsAmount;
 
-    public int ItemsAmount => _itemsAmount;
+    public int Moves => _moves;
     public ItemType[] ItemTypes => _itemTypes;
     public ItemColor[] ItemColors => _itemColors;
     public ItemController ItemPrefab => _itemPrefab;
+    public GridLine[] Grid => _cellsAmount;
 }

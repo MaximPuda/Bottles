@@ -7,6 +7,8 @@ public class LevelController : Controller
 {
     public Level CurrentLevel { get; private set; }
 
+    private PlayerController _playerController;
+
     private WagonController _currentWagon;
     public override void Initialize(Service service)
     {
@@ -15,8 +17,13 @@ public class LevelController : Controller
         CurrentLevel = GameManager.Instance.CurrentLevel;
 
         _currentWagon = ((GamePlayService)CurrentService).WagonCTRL;
-
         _currentWagon.WagonCompletedEvent += OnWagonCompleted;
+
+        if (ServiceManager.TryGetService<PlayerService>(out PlayerService player))
+        {
+            _playerController = player.PlayerCTRL;
+            _playerController.MovesEndedEvent += OnMovesEnded;
+        }
     }
 
     private void OnDisable()
@@ -27,5 +34,10 @@ public class LevelController : Controller
     private void OnWagonCompleted()
     {
         GameManager.Instance.Win();
+    }
+
+    private void OnMovesEnded()
+    {
+        GameManager.Instance.Lose();
     }
 }

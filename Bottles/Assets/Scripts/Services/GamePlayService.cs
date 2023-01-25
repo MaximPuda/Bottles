@@ -31,6 +31,12 @@ public class GamePlayService : Service
     protected override void OnLoseEnter()
     {
         base.OnLoseEnter();
+    }
+
+    protected override void OnMenuEnter()
+    {
+        base.OnMenuEnter();
+
         _grid.ClearGrid();
     }
 }

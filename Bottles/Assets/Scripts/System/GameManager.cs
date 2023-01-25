@@ -142,6 +142,11 @@ public class GameManager : MonoBehaviour
         CurrentState = GameStates.Lose;
     }
 
+    public void Continue()
+    {
+        CurrentState = GameStates.Play;
+    }
+
     public void Pause()
     {
         if(CurrentState == GameStates.Pause)

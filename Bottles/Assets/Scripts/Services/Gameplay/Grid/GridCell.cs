@@ -19,7 +19,7 @@ public class GridCell : MonoBehaviour
 
     public event UnityAction<GridCell> CellFreeEvent;
 
-    private ItemController _currentItem;
+    public ItemController CurrentItem { get; private set; }
 
     private void Update()
     {
@@ -31,11 +31,11 @@ public class GridCell : MonoBehaviour
     {
         if (IsEmpty)
         {
-            _currentItem = itemSender;
-            _currentItem.transform.parent = _currentItemContainer;
-            _currentItem.transform.localPosition = Vector3.zero;
-            _currentItem.transform.localScale = Vector3.one;
-            _currentItem.PlaySpawnAnim();
+            CurrentItem = itemSender;
+            CurrentItem.transform.parent = _currentItemContainer;
+            CurrentItem.transform.localPosition = Vector3.zero;
+            CurrentItem.transform.localScale = Vector3.one;
+            CurrentItem.PlaySpawnAnim();
 
             IsEmpty = false;
             return true;
@@ -46,15 +46,15 @@ public class GridCell : MonoBehaviour
 
     public void Clear()
     {
-        _currentItem.DestroyItem(true);
-        _currentItem = null;
+        CurrentItem.DestroyItem(true);
+        CurrentItem = null;
         IsEmpty = true;
     }
 
     private void OnCellFree()
     {
         IsEmpty = true;
-        _currentItem = null;
+        CurrentItem = null;
         CellFreeEvent?.Invoke(this);
     }
 

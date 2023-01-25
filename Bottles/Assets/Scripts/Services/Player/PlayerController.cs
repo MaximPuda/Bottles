@@ -4,10 +4,13 @@ using UnityEngine.Events;
 public class PlayerController : Controller
 {
     public event UnityAction<int> MovesLeftEvent;
+    public event UnityAction MovesEndedEvent;
     
     private const float DOUBLE_TAP_TIME = 0.2f;
     
     private Camera _cam;
+    private Level _level;
+
     private ItemController _activeItem;
     private ItemController _lastItem;
 
@@ -31,7 +34,11 @@ public class PlayerController : Controller
         base.Initialize(service);
 
         _cam = Camera.main;
-        Moves = 35;
+
+        if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
+            _level = gamePlay.LevelCTRL.CurrentLevel;
+
+        Moves = _level.Moves;
     }
 
     private void Update()
@@ -50,10 +57,7 @@ public class PlayerController : Controller
                 Drop(touch); 
 
             if (Moves == 0)
-            {
-                enabled = false;
-                GameManager.Instance.Lose();
-            }
+                MovesEndedEvent?.Invoke();
         }
     }
 
@@ -130,5 +134,10 @@ public class PlayerController : Controller
                 }
             } 
         }
+    }
+
+    public void AddMoves(int moves)
+    {
+        Moves += moves;
     }
 }

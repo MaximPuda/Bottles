@@ -193,7 +193,7 @@ public class ItemController : MonoBehaviour, IInteractable
             }
 
             // Пустая + полная =  меняет форму полной бутылки наформу пустой
-            if (itemSender.Type != Type)
+            if (itemSender.Type != Type && itemSender.Color.Name != Color.Name)
             {
                 if (itemSender.Color.Name == ColorsName.Empty)
                 {

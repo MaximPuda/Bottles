@@ -20,7 +20,7 @@ public class TransporterController : Controller
         if (_lines != null)
         {
             Level level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
-            _itemPool = new ItemPool("MainItemPool", level.ItemsAmount, _prefab, transform);
+            _itemPool = new ItemPool("MainItemPool", level.Moves, _prefab, transform);
             _itemPool.PoolChangeEvent += OnItmesLeft;
             _itemPool.PoolEmptyEvent += OnItemsOver;
 

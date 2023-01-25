@@ -18,7 +18,7 @@ public class UIController : Controller
         {
             _score = gamePlay.ScoreCTRL;
             _score.PonintsChangedEvent += UpdatePoints;
-        }    
+        }
 
         if (ServiceManager.TryGetService<PlayerService>(out PlayerService player))
         {
@@ -40,17 +40,39 @@ public class UIController : Controller
 
     private void UpdateMoves(int amount)
     {
-       _view.UpdateMoves(amount);
+        _view.UpdateMoves(amount);
     }
 
-    public void ShowGameOverScreen()
+    public void ShowLoseScreen()
     {
-        _view.ShowGameOverScreen(true);
+        _view.ShowLoseScreen(true);
     }
 
-    public void OnRestartBtnClick() => GameManager.Instance.Restart();
+    public void ShowWinScreen()
+    {
+        _view.ShowWinScreen(true, _score.Points);
+    }
 
-    public void OnBackBtnClick() => GameManager.Instance.BackToMenu();
+    public void OnRestartBtnClick()
+    {
+        _view.ShowLoseScreen(false);
+        GameManager.Instance.Restart();
+    }
 
-    public void OnPauseBtnClick() => GameManager.Instance.Pause();
+    public void OnBackBtnClick()
+    {
+        _view.ShowLoseScreen(false);
+        GameManager.Instance.BackToMenu();
+    }
+
+    public void OnAddMovesClick()
+    {
+        _view.ShowLoseScreen(false);
+        GameManager.Instance.Continue();
+    }
+
+    public void OnPauseBtnClick()
+    {
+        GameManager.Instance.Pause();
+    }
 }

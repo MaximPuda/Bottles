@@ -4,8 +4,12 @@ using TMPro;
 
 public class UIView : MonoBehaviour
 {
+    [Header("HUD")]
     [SerializeField] private TextMeshProUGUI _pointsLabel;
-    [SerializeField] private TextMeshProUGUI _bottlesAmount;
+    [SerializeField] private TextMeshProUGUI _movesLabel;
+
+    [Header("WinScreen")]
+    [SerializeField] private TextMeshProUGUI _resultPoints;
 
     [SerializeField] private Animator _animator;
 
@@ -21,11 +25,17 @@ public class UIView : MonoBehaviour
 
     public void UpdateMoves(int amount)
     {
-        _bottlesAmount.text = amount.ToString();
+        _movesLabel.text = amount.ToString();
     }
 
-    public void ShowGameOverScreen(bool show)
+    public void ShowLoseScreen(bool show)
     {
-        _animator.SetBool("GameOver", show);
+        _animator.SetBool("Lose", show);
+    }
+
+    public void ShowWinScreen(bool show, int score)
+    {
+        _animator.SetBool("Win", show);
+        _resultPoints.text = "x" + score.ToString();
     }
 }

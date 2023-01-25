@@ -1,46 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GridController : Controller
 {
     [SerializeField] private GridCell _cell;
-    [SerializeField] private int _columns;
-    [SerializeField] private int _rows;
+    [SerializeField] private int _maxRowLength = 7;
     [SerializeField] private float _showHideDelay = 0.01f;
+    [SerializeField] private bool _outlineEnabled = true;
+    [SerializeField] private float _outlineOffset = 0.2f;
 
-    private GridCell[,] _grid;
+    public event UnityAction AllCellPurchasedEvent;
+    
+    private GridRow[] _grid;
     private float _cellSizeX;
     private float _cellSizeY;
 
     private bool _isCleared;
 
+    private Level _level;
     private ItemPool _itemPool;
     private GridSpawner _spawner;
+
+    private int _currentRowIndex;
+
+    private LineRenderer _outline;
 
     public override void Initialize(Service service)
     {
         base.Initialize(service);
 
+        _outline = GetComponentInChildren<LineRenderer>();
+
+        _level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
+
         Create();
+        PaintOutline();
         InitPoolAndSpawner();
         FillGrid();
     }
 
     private void InitPoolAndSpawner()
     {
-        Level level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
-
-        ItemController prefab = level.ItemPrefab;
+        ItemController prefab = _level.ItemPrefab;
         if (prefab == null)
         {
             Debug.LogWarning("Item prefab is not assigned to Grid");
             return;
         }
 
-        _itemPool = new ItemPool("MainItemPool", 50, level.ItemPrefab, transform);
+        _itemPool = new ItemPool("MainItemPool", 50, _level.ItemPrefab, transform);
 
-        _spawner = new GridSpawner(_itemPool, level.ItemTypes, level.ItemColors);
+        _spawner = new GridSpawner(_itemPool, _level.ItemTypes, _level.ItemColors);
     }
 
     private void Create()
@@ -51,48 +63,34 @@ public class GridController : Controller
             return;
         }
 
-        _grid = new GridCell[_columns, _rows];
         _cellSizeX = _cell.SizeX;
         _cellSizeY = _cell.SizeY;
 
-        float startX = _cellSizeX * (_columns - 1) / 2 * -1;
+        _grid = new GridRow[_level.Grid.Length];
 
         float offsetY = 0;
-        for (int y = 0; y < _rows; y++)
+        for (int row = 0; row < _grid.Length; row++)
         {
-            Transform lineContainer = new GameObject("Row " + y).transform;
-            lineContainer.parent = transform;
-            lineContainer.localPosition = new Vector2 (0, offsetY);
+            string rowName = "Row " + row;
+            _grid[row] = new GridRow(rowName, transform, _cellSizeX, offsetY, _maxRowLength);
+            _grid[row].EmptyCellEvent += FillGrid;
 
-            float offsetX = startX;
-            for (int x = 0; x < _columns; x++)
-            {
-                var newCell = Instantiate(_cell);
-                newCell.CellFreeEvent += AddItemInCell;
-                _grid[x, y] = newCell;
-                Transform newCellTrans = _grid[x, y].transform;
-                newCellTrans.parent = lineContainer;
-                newCellTrans.localPosition = new Vector2(offsetX, 0);
-                offsetX += _cellSizeX;
-            }
+            for (int x = 0; x < _level.Grid[row].CellsAmount; x++)
+                _grid[row].AddCell(_cell);
+
             offsetY += _cellSizeY;
         }
     }
 
     private void OnDisable()
     {
-        for (int y = 0; y < _rows; y++)
+        for (int row = 0; row < _grid.Length; row++)
         {
-            for (int x = 0; x < _columns; x++)
-            {
-                if (!_grid[x, y].IsEmpty)
-                {
-                   _grid[x, y].CellFreeEvent -= AddItemInCell;
-                }
-            }
+            _grid[row].EmptyCellEvent -= FillGrid;
         }
     }
 
+    [ContextMenu("Fill Grid")]
     public void FillGrid()
     {
         if (_itemPool == null)
@@ -104,51 +102,115 @@ public class GridController : Controller
 
     private IEnumerator Fill()
     {
-        for (int y = 0; y < _rows; y++)
+        for (int row = 0; row < _grid.Length; row++)
         {
-            for (int x = 0; x < _columns; x++)
+            while (!_grid[row].IsFull)
             {
-                if (_grid[x, y].IsEmpty)
-                {
-                    AddItemInCell(_grid[x, y]);
+                AddItemInRow(_grid[row]);
 
-                    yield return new WaitForSeconds(_showHideDelay);
-                }
+                yield return new WaitForSeconds(_showHideDelay);
             }
         }
     }
 
-    public void AddItemInCell(GridCell cell)
+    public void AddItemInRow(GridRow row)
     {
         if (!_isCleared)
         {
-            var newItem = _spawner.GetRandomItem();
-            if (newItem != null)
+            if (!row.IsFull)
             {
-                cell.AddItem(newItem);
+                var newItem = _spawner.GetRandomItem();
+                if (newItem != null)
+                    row.AddItem(newItem);
             }
         }
     }
 
+    [ContextMenu("Add new cell")]
+    public void AddCell()
+    {
+        for (int i = _currentRowIndex; i < _grid.Length; i++)
+        {
+            var row = _grid[_currentRowIndex];
+            if (row.CanAddCell())
+            {
+                row.AddCell(_cell);
+                PaintOutline();
+
+                _currentRowIndex++;
+                if (_currentRowIndex >= _grid.Length)
+                    _currentRowIndex = 0;
+                break;
+            }
+
+            _currentRowIndex++;
+            if (i == _currentRowIndex)
+            {
+                AllCellPurchasedEvent?.Invoke();
+                Debug.Log("All cell are Purchased");
+                break;
+            }
+        }
+    }
+
+    [ContextMenu("Clear grid")]
     public void ClearGrid()
     {
-        StartCoroutine(Clear());
+        foreach (var row in _grid)
+            StartCoroutine(row.ClearRow(_showHideDelay));
+
         _isCleared = true;
     }
 
-    private IEnumerator Clear()
+    [ContextMenu("Paint outline")]
+    private void PaintOutline()
     {
-        for (int y = 0; y < _rows; y++)
+        _outline.positionCount = 0;
+        List<Vector3> positions = new List<Vector3>();
+        
+        //Получение точек обводки левой стороны поля
+        for (int row = 0; row < _grid.Length; row++)
         {
-            for (int x = 0; x < _columns; x++)
-            {
-                if (!_grid[x, y].IsEmpty)
-                {
-                    _grid[x, y].Clear();
-
-                    yield return new WaitForSeconds(_showHideDelay);
-                }
-            }
+            Vector3 cellPosition = _grid[row].GetCellPosition(0);
+            
+            Vector3 point1 = new Vector3(cellPosition.x - _cellSizeX / 2, cellPosition.y - _cellSizeY / 2);
+            positions.Add(point1);
+           
+            Vector3 point2 = new Vector3(cellPosition.x - _cellSizeX / 2, cellPosition.y + _cellSizeY / 2);
+            positions.Add(point2);
         }
+
+        //Отзеркаливание точек по горизонтали
+        for (int i = positions.Count - 1; i >= 0 ; i--)
+        {
+            Vector3 point = new Vector3(positions[i].x * -1f, positions[i].y);
+            positions.Add(point);
+        }
+
+        _outline.positionCount = positions.Count;
+        _outline.SetPositions(positions.ToArray());
+        _outline.Simplify(0); //Удаляет дублирующие точки
     }
+
+    //public void ClearGrid()
+    //{
+    //    StartCoroutine(Clear());
+    //    _isCleared = true;
+    //}
+
+    //private IEnumerator Clear()
+    //{
+    //    for (int y = 0; y < _grid.Length; y++)
+    //    {
+    //        for (int x = 0; x < _grid[y].Count; x++)
+    //        {
+    //            if (!_grid[y]._cells[x].IsEmpty)
+    //            {
+    //                _grid[y]._cells[x].Clear();
+
+    //                yield return new WaitForSeconds(_showHideDelay);
+    //            }
+    //        }
+    //    }
+    //}
 }

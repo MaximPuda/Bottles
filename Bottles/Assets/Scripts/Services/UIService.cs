@@ -17,12 +17,12 @@ public class UIService : Service
     protected override void OnWinEnter()
     {
         base.OnWinEnter();
-        UiCTRL.ShowGameOverScreen();
+        UiCTRL.ShowWinScreen();
     }
 
     protected override void OnLoseEnter()
     {
         base.OnLoseEnter();
-        UiCTRL.ShowGameOverScreen();
+        UiCTRL.ShowLoseScreen();
     }
 }

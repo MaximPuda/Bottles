@@ -46,5 +46,4 @@ public class ScoreController : Controller
     }
 
     private void AddPoints(int points) => Points += points;
-    private void ApllyPenalty(int penalty) => Points -= penalty;
 }
