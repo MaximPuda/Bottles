@@ -43,7 +43,7 @@ public class Spawner : MonoBehaviour
         ItemController itemToSpawn = _itemPool.GetItem();
         itemToSpawn.transform.position = transform.position;
         itemToSpawn.transform.parent = _container;
-        itemToSpawn.SetView(_types[typeIndex].Type);
+        itemToSpawn.SetType(_types[typeIndex].Type);
         itemToSpawn.SetColor(_palettes[colorIndex].Name);
     }
 }

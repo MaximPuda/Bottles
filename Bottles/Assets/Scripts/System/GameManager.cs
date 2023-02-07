@@ -7,8 +7,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Level _currentLevel;
+    [SerializeField] private Level[] _levels;
 
     public static GameManager Instance { get; private set; }
+    public int LevelsAmount => _levels.Length;
     public Level CurrentLevel => _currentLevel;
 
     public event UnityAction MenuEnterEvent;
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour
     public event UnityAction LoseEnterEvent;
 
     private bool _isReady;
+    private int _currentLevelIndex;
     private GameStates _currrentState;
     private GameStates _nextState;
 
@@ -101,19 +104,41 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadSceneAsync(int sceneIndex, GameStates state)
     {
+        LoadingViewer.Instance.In();
+
         AsyncOperation loading = SceneManager.LoadSceneAsync(sceneIndex);
         
         while(!loading.isDone)
             yield return null;
 
-        _nextState = state;
+       _nextState = state;
         ServiceManager.InitAllServices();
+        LoadingViewer.Instance.Out();
     }
 
-    public void SetLevel(Level level)
+    public void SetLevel(int levelIndex)
     {
-        if (level != null)
-            _currentLevel = level;
+        if (_levels == null)
+            return;
+        
+        _currentLevelIndex = levelIndex;
+        _currentLevel = _levels[levelIndex];
+        Play();
+
+    }
+
+    public void PlayNextLevel()
+    {
+        if (_levels == null)
+            return;
+
+        if (_currentLevelIndex < _levels.Length - 1)
+        {
+            _currentLevelIndex++;
+            _currentLevel = _levels[_currentLevelIndex];
+        }
+
+        Play();
     }
 
     public void Play()

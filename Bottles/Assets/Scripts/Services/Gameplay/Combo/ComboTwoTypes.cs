@@ -13,23 +13,23 @@ public class ComboTwoTypes : Combo
         // Буталка + бутылка той же формы
         if (itemSender.Type != TypeNames.Bag &&
             itemSender.Type != TypeNames.Multi &&
-            itemSender.Color.Name != ColorsName.Empty &&
-            itemTarget.Color.Name != ColorsName.Empty &&
+            itemSender.Color.Name != ColorNames.Empty &&
+            itemTarget.Color.Name != ColorNames.Empty &&
             itemSender.Type == itemTarget.Type)
         {
             // Если цвета одиннаковые
-            if (itemSender.Color.Name != ColorsName.Multi &&
+            if (itemSender.Color.Name != ColorNames.Multi &&
                 itemSender.Color.Name == itemTarget.Color.Name)
             {
                 // Универсальная с универсальным цветом
-                itemTarget.SetView(TypeNames.Multi);
-                itemTarget.SetColor(ColorsName.Multi);
+                itemTarget.SetType(TypeNames.Multi);
+                itemTarget.SetColor(ColorNames.Multi);
                 //itemTarger._anim.Play("Item_TypeChange");
             }
             else // Если цвета разные
             {
                 // Пустая той же формы
-                itemTarget.SetColor(ColorsName.Empty);
+                itemTarget.SetColor(ColorNames.Empty);
                 //itemTarger._anim.Play("Item_TypeChange");
             }
 

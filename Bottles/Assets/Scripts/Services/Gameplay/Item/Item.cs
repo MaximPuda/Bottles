@@ -45,7 +45,7 @@ public class Item : MonoBehaviour//,IInteractable
 
     private void Update()
     {
-        if (Color.Name == ColorsName.Multi)
+        if (Color.Name == ColorNames.Multi)
         {
             _tempColor = UnityEngine.Color.Lerp(_tempColor, _uniColor.colorKeys[_uniColorIndex].color, _uniColorLerp * Time.deltaTime);
             _uniColorIndexLerp = Mathf.Lerp(_uniColorIndexLerp, 1, _uniColorLerp * Time.deltaTime);
@@ -62,7 +62,7 @@ public class Item : MonoBehaviour//,IInteractable
         }    
     }
 
-    public void SetColor(ColorsName colorName)
+    public void SetColor(ColorNames colorName)
     {
         foreach (var palette in _palettes)
         {
@@ -70,11 +70,11 @@ public class Item : MonoBehaviour//,IInteractable
                 _color = palette;
         }
 
-        if (Color.Name == ColorsName.Empty)
+        if (Color.Name == ColorNames.Empty)
         {
             _fill.enabled = false;
         }
-        else if (Color.Name == ColorsName.Multi)
+        else if (Color.Name == ColorNames.Multi)
         {
             _fill.enabled = true;
             _uniFx.enableEmission = true;
@@ -150,12 +150,12 @@ public class Item : MonoBehaviour//,IInteractable
             
             if (itemSender.Type == Type)
             {
-                SetColor(ColorsName.Empty);
+                SetColor(ColorNames.Empty);
                 itemSender.DestroyItem(false);
                 return true;
             }
 
-            if (itemSender.Color.Name == ColorsName.Empty)
+            if (itemSender.Color.Name == ColorNames.Empty)
             {
                 itemSender.SetColor(Color.Name);
                 itemSender.transform.parent = transform.parent;

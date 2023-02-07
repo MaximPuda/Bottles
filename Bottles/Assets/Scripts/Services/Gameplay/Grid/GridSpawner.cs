@@ -3,17 +3,19 @@ using UnityEngine;
 public class GridSpawner
 {
     private ItemPool _itemPool;
+    private GridController _grid;
     private ItemType[] _types;
     private ItemColor[] _colors;
 
     private int _accumulatedTypeWeights;
     private int _accumulatedColorWeights;
 
-    public GridSpawner(ItemPool pool, ItemType[] itemTypes, ItemColor[] colors)
+    public GridSpawner(ItemPool pool, GridController grid, ItemType[] itemTypes, ItemColor[] colors)
     {
+        _itemPool = pool;
+        _grid = grid;
         _types = itemTypes;
         _colors = colors;
-        _itemPool = pool;
 
         foreach (var type in _types)
             type.Weight = 0;
@@ -41,7 +43,22 @@ public class GridSpawner
         }
     }
 
-    public ItemController GetRandomItem()
+    public ItemController GetItem()
+    {
+        ItemController newItem = GetRandomItem();
+        while (_grid.CheckItemInGird(newItem))
+        {
+            if (newItem != null)
+                newItem.DestroyItem(false);
+
+            newItem = GetRandomItem();
+            Debug.Log("Item respawned!");
+        }
+
+        return newItem;
+    }
+
+    private ItemController GetRandomItem()
     {
         ItemController itemToSpawn = _itemPool.GetItem();
 
@@ -51,7 +68,7 @@ public class GridSpawner
         ItemType randomType = _types[GetRandomTypeIndex()];
         ItemColor randomColor = _colors[GetRandomColorIndex()];
 
-        itemToSpawn.SetView(randomType.Type);
+        itemToSpawn.SetType(randomType.Type);
         itemToSpawn.SetColor(randomColor.Name);
 
         return itemToSpawn;

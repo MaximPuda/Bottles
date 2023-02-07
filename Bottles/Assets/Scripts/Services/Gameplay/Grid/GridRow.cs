@@ -116,6 +116,18 @@ public class GridRow
         _fullCellsCount = 0;
     }
 
+    public bool CheckItemInRow(ItemController itemSample)
+    {
+        if (itemSample == null)
+            return false;
+
+        foreach (var cell in _cells)
+            if (cell.CheckItemMatch(itemSample))
+                return true;
+
+        return false;
+    }
+
     public Vector3 GetCellPosition(int index)
     {
         return _cells[index].transform.position;

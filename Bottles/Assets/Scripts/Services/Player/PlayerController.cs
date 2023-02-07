@@ -27,8 +27,6 @@ public class PlayerController : Controller
         } 
     }
 
-    private float _lastTapTime = 0;
-
     public override void Initialize(Service service)
     {
         base.Initialize(service);
@@ -120,8 +118,10 @@ public class PlayerController : Controller
         {
             _activeItem.Dragable.parent = _activeItem.ActiveView.transform;
             _activeItem.Dragable.localPosition = Vector3.zero;
+            
             Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
             RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
+            
             if (hit.collider != null)
             {
                 if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactor))

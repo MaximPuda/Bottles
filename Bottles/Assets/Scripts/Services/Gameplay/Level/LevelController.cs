@@ -10,6 +10,7 @@ public class LevelController : Controller
     private PlayerController _playerController;
 
     private WagonController _currentWagon;
+
     public override void Initialize(Service service)
     {
         base.Initialize(service);
@@ -38,6 +39,12 @@ public class LevelController : Controller
 
     private void OnMovesEnded()
     {
-        GameManager.Instance.Lose();
+        if (!_currentWagon.IsCompleted)
+            GameManager.Instance.Lose();
+    }
+
+    public override void OnStart()
+    {
+        base.OnStart();
     }
 }

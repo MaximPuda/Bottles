@@ -8,10 +8,12 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 {
     [SerializeField] private TypeNames[] _acceptedTypes;
     [SerializeField] private bool _typesEnable;
-    [SerializeField] private ColorsName[] _acceptedColors;
+    [SerializeField] private ColorNames[] _acceptedColors;
     [SerializeField] private bool _colorsEnable;
     [SerializeField] private int _itemsAmount;
     [SerializeField] private float _delayClosedAnimationStart = 1.1f;
+
+    [SerializeField] private ParticleSystem _coinFx;
 
     public int ItemsAmount => _itemsAmount;
 
@@ -21,7 +23,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     private int _itemsCollected = 0;
     private TypeNames _currentType;
-    private ColorsName _currentColor;
+    private ColorNames _currentColor;
 
     private List<ItemController> _itemsToChangeColor = new();
     private List<ItemController> _itemsToChangeType = new();
@@ -44,7 +46,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     public bool Interact(ItemController itemSender)
     {
         if ((_acceptedTypes[0] == TypeNames.None || IsTypeAccept(itemSender.Type)) &&
-            (_acceptedColors[0] == ColorsName.None || IsColorAccept(itemSender.Color.Name)))
+            (_acceptedColors[0] == ColorNames.None || IsColorAccept(itemSender.Color.Name)))
         {
             for (int i = 0; i < _itemsAmount; i++)
             {
@@ -73,7 +75,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         return false;
     }
 
-    private bool IsColorAccept(ColorsName senderColorsName)
+    private bool IsColorAccept(ColorNames senderColorsName)
     {
         foreach (var color in _acceptedColors)
             if (senderColorsName == color)
@@ -89,7 +91,10 @@ public class ItemsCollector : MonoBehaviour, IInteractable
             int combo = GetCombo();
 
             if (combo > 0)
+            {
+                _coinFx.Play();
                 StartCoroutine(AllCollectedInvoke(combo));
+            }
             else
                 Clear();
         }
@@ -113,7 +118,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         if (_items[0].Type == TypeNames.Multi)
             _itemsToChangeType.Add(_items[0]);
 
-        if (_items[0].Color.Name == ColorsName.Multi)
+        if (_items[0].Color.Name == ColorNames.Multi)
             _itemsToChangeColor.Add(_items[0]);
 
         for (int i = 1; i < _itemsCollected; i++)
@@ -121,7 +126,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
             if (_currentType == TypeNames.Multi)
                 _currentType = _items[i].Type;
 
-            if (_currentColor == ColorsName.Multi)
+            if (_currentColor == ColorNames.Multi)
                 _currentColor = _items[i].Color.Name;
 
             if (_typesEnable)
@@ -132,26 +137,26 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
             if (_colorsEnable)
             {
-                if (_items[i].Color.Name == _currentColor || _items[i].Color.Name == ColorsName.Multi)
+                if (_items[i].Color.Name == _currentColor || _items[i].Color.Name == ColorNames.Multi)
                     colorMatch++;
             }
 
             if (_items[i].Type == TypeNames.Multi)
                 _itemsToChangeType.Add(_items[i]);
 
-            if (_items[i].Color.Name == ColorsName.Multi)
+            if (_items[i].Color.Name == ColorNames.Multi)
                 _itemsToChangeColor.Add(_items[i]);
         }
 
         if (_itemsToChangeType.Count > 0 && _currentType != TypeNames.Multi)
         {
             foreach (var item in _itemsToChangeType)
-                item.SetView(_currentType);
+                item.SetType(_currentType);
 
             _itemsToChangeType.Clear();
         }
 
-        if (_itemsToChangeColor.Count > 0 && _currentColor != ColorsName.Multi)
+        if (_itemsToChangeColor.Count > 0 && _currentColor != ColorNames.Multi)
         {
             foreach (var item in _itemsToChangeColor)
                 item.SetColor(_currentColor);
@@ -183,4 +188,12 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         yield return new WaitForSeconds(_delayClosedAnimationStart);
         AllItemsCollectedEvent?.Invoke(combo);
     }
+
+    public void SetParticleForceField(ParticleSystemForceField field)
+    {
+        if (field == null)
+            return;
+
+        _coinFx.externalForces.AddInfluence(field);
+    }    
 }

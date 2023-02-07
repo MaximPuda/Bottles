@@ -37,6 +37,13 @@ public class ItemView : MonoBehaviour
             ChangeSortingLayer("Default");
     }
 
+    public void OnLock(bool locked)
+    {
+        if (locked)
+            ChangeSortingLayer("Lock");
+        else ChangeSortingLayer("Default");
+    }    
+
     private void ChangeSortingLayer(string layerName)
     {
         _main.sortingLayerName = layerName;

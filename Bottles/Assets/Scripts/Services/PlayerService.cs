@@ -5,13 +5,18 @@ using UnityEngine;
 public class PlayerService : Service
 {
     [SerializeField] private PlayerController _player;
+    [SerializeField] private PlayerData _data;
 
     public PlayerController PlayerCTRL => _player;
+    public PlayerData PlayerDataCTRL => _data;
 
     protected override void InitAllControllers()
     {
         _player.Initialize(this);
+        _data.Initialize(this);
+
         _player.OnStart();
+        _data.OnStart();
     }
 
     protected override void OnPlayEnter()
@@ -40,5 +45,12 @@ public class PlayerService : Service
         base.OnPauseEnter();
 
         _player.enabled = false;
+    }
+
+    protected override void OnMenuEnter()
+    {
+        base.OnMenuEnter();
+
+        _data.SaveData();
     }
 }

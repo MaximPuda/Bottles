@@ -7,6 +7,7 @@ public class UIView : MonoBehaviour
     [Header("HUD")]
     [SerializeField] private TextMeshProUGUI _pointsLabel;
     [SerializeField] private TextMeshProUGUI _movesLabel;
+    [SerializeField] private TextMeshProUGUI _lifesLabel;
 
     [Header("WinScreen")]
     [SerializeField] private TextMeshProUGUI _resultPoints;
@@ -26,6 +27,11 @@ public class UIView : MonoBehaviour
     public void UpdateMoves(int amount)
     {
         _movesLabel.text = amount.ToString();
+    }
+
+    public void UpdateLifes(int amount, int max)
+    {
+        _lifesLabel.text = amount.ToString() + "/" + max.ToString();
     }
 
     public void ShowLoseScreen(bool show)

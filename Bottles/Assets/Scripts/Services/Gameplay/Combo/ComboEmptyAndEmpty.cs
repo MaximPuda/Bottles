@@ -14,10 +14,10 @@ public class ComboEmptyAndEmpty : Combo
 
         // ѕуста€ + пуста€ той же формы = универсальна€ пуста€
         if (itemSender.Type == itemTarget.Type &&
-            itemSender.Color.Name == ColorsName.Empty &&
-            itemTarget.Color.Name == ColorsName.Empty)
+            itemSender.Color.Name == ColorNames.Empty &&
+            itemTarget.Color.Name == ColorNames.Empty)
         {
-            itemTarget.SetView(TypeNames.Multi);
+            itemTarget.SetType(TypeNames.Multi);
             //_anim.Play("Item_TypeChange");
             itemSender.DestroyItem(false);
 

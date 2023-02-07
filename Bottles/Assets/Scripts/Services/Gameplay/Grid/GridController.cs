@@ -38,7 +38,7 @@ public class GridController : Controller
         Create();
         PaintOutline();
         InitPoolAndSpawner();
-        FillGrid();
+        //FillGrid();
     }
 
     private void InitPoolAndSpawner()
@@ -52,7 +52,7 @@ public class GridController : Controller
 
         _itemPool = new ItemPool("MainItemPool", 50, _level.ItemPrefab, transform);
 
-        _spawner = new GridSpawner(_itemPool, _level.ItemTypes, _level.ItemColors);
+        _spawner = new GridSpawner(_itemPool, this, _level.ItemTypes, _level.ItemColors);
     }
 
     private void Create()
@@ -119,11 +119,27 @@ public class GridController : Controller
         {
             if (!row.IsFull)
             {
-                var newItem = _spawner.GetRandomItem();
+                var newItem = _spawner.GetItem();
                 if (newItem != null)
                     row.AddItem(newItem);
             }
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="itemSample"></param>
+    /// <returns>Возвращает true, если на поле уже есть хотя бы один ItemController c таким же типом и цветом, что и itemSampler</returns>
+    public bool CheckItemInGird(ItemController itemSample)
+    {
+        if (itemSample == null)
+            return false;
+
+        foreach (var row in _grid)
+            if (row.CheckItemInRow(itemSample))
+                return true;
+        return false;
     }
 
     [ContextMenu("Add new cell")]

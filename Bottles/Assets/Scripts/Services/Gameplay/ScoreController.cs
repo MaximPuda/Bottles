@@ -12,6 +12,7 @@ public class ScoreController : Controller
     public event UnityAction<int> PonintsChangedEvent;
 
     private WagonController _currentWagon;
+    private PlayerData _data;
 
     public override void Initialize(Service service)
     {
@@ -19,6 +20,9 @@ public class ScoreController : Controller
 
         _currentWagon = ((GamePlayService)CurrentService).WagonCTRL;
         _currentWagon.BoxCloseEvent += CheckCombo;
+
+        ServiceManager.TryGetService<PlayerService>(out PlayerService playerService);
+        _data = playerService.PlayerDataCTRL;
     }
 
     private void OnDisable()
@@ -46,4 +50,9 @@ public class ScoreController : Controller
     }
 
     private void AddPoints(int points) => Points += points;
+
+    public void SendTotal()
+    {
+        _data.Coins += Points;
+    }
 }
