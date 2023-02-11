@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class MenuUIController : Controller
 {
-    [SerializeField] private ScrollRect _scrollRect;
     [SerializeField] private Animator _animator;
     [SerializeField] private LevelButton _levelButton;
     [SerializeField] private Transform _levelsGrid;
@@ -52,19 +51,5 @@ public class MenuUIController : Controller
     public void OnLevelsBackBtnClick()
     {
         _animator.SetBool("Levels", false);
-    }
-
-    public void ScrollViewMove(float ScrollPosition)
-    {
-        StartCoroutine(ScrollAnimation(ScrollPosition));
-    }
-
-    private IEnumerator ScrollAnimation(float endPosition)
-    {
-        while (Mathf.Abs(endPosition - _scrollRect.horizontalNormalizedPosition) >= 0.01f)
-        {
-            _scrollRect.horizontalNormalizedPosition = Mathf.Lerp(_scrollRect.horizontalNormalizedPosition, endPosition, 10 * Time.deltaTime);
-            yield return null;
-        }
     }
 }

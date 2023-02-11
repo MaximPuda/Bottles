@@ -41,7 +41,46 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 19830fe7d57df394d985a6773d6d6958, type: 2}
   _itemPrefab: {fileID: 7408829381597142155, guid: 5c380a3b440774b4892867da6278bb58, type: 3}
   _boxesPrefab: {fileID: 5144134290460182251, guid: a3a38d99037d4b749811abdcd97f6118, type: 3}
-  _cellsAmount:
-  - _cellsAmount: 5
-  - _cellsAmount: 3
-  - _cellsAmount: 5
+  _rows:
+  - _cells:
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+  - _cells:
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+  - _cells:
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0
+    - _locker: {fileID: 0}
+      _itemType: 0
+      _itemColor: 0

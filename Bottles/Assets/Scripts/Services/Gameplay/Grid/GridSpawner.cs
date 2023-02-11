@@ -46,6 +46,9 @@ public class GridSpawner
     public ItemController GetItem()
     {
         ItemController newItem = GetRandomItem();
+        if (newItem == null)
+            return null;
+
         while (_grid.CheckItemInGird(newItem))
         {
             if (newItem != null)
@@ -56,6 +59,30 @@ public class GridSpawner
         }
 
         return newItem;
+    }
+
+    public ItemController GetItem(TypeNames type, ColorNames color)
+    {
+        ItemController itemToSpawn = _itemPool.GetItem();
+
+        if (itemToSpawn == null)
+            return null;
+
+        if (type == TypeNames.None)
+        {
+            ItemType randomType = _types[GetRandomTypeIndex()];
+            itemToSpawn.SetType(randomType.Type);
+        }
+        else itemToSpawn.SetType(type);
+
+        if (color == ColorNames.None)
+        {
+            ItemColor randomColor = _colors[GetRandomColorIndex()];
+            itemToSpawn.SetColor(randomColor.Name);
+        }
+        else itemToSpawn.SetColor(color);
+
+        return itemToSpawn;
     }
 
     private ItemController GetRandomItem()

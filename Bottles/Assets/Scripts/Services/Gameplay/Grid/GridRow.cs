@@ -29,14 +29,29 @@ public class GridRow
 
     public bool AddCell(GridCell prefab)
     {
+        return AddCell(prefab, null, null);
+    }
+
+    public bool AddCell(GridCell prefab, GridCellSettings settings, ItemController item)
+    {
         if (Count < _maxLength)
         {
             var newCell = GameObject.Instantiate(prefab, Container);
             _cells.Add(newCell);
 
             newCell.CellFreeEvent += OnCellFree;
+            newCell.AddLocker(settings.Locker);
 
-            IsFull = false;
+            if (item != null)
+            {
+                newCell.AddItem(item);
+                _fullCellsCount++;
+            }
+
+            if (_fullCellsCount >= Count)
+                IsFull = true;
+            else IsFull = false;
+
             EmptyCellEvent?.Invoke();
 
             Arrange();

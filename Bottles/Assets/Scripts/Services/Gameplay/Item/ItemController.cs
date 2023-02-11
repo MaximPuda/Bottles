@@ -114,7 +114,16 @@ public class ItemController : MonoBehaviour, IInteractable
 
     public void Active(bool active) => ActiveView.OnActive(active);
 
-    public void Hide() => gameObject.SetActive(false);
+    public void Hide(bool hide)
+    { 
+        if (hide)
+            ActiveView.gameObject.SetActive(false);
+        else
+        {
+            ActiveView.gameObject.SetActive(true);
+            PlaySpawnAnim();
+        }    
+    }
 
     public void Reset()
     {
@@ -184,6 +193,10 @@ public class ItemController : MonoBehaviour, IInteractable
 
             //return false;
 
+            // Слайм не взаимодействует ни с чем
+            if (Type == TypeNames.Slime)
+                return false;
+
             // Буталка + бутылка той же формы
             if (itemSender.Type != TypeNames.Bag &&
                 itemSender.Type != TypeNames.Multi &&
@@ -229,7 +242,9 @@ public class ItemController : MonoBehaviour, IInteractable
             }
 
             // Пустая + полная =  меняет форму полной бутылки на форму пустой
-            if (itemSender.Type != Type && itemSender.Color.Name != Color.Name)
+            if (itemSender.Type != TypeNames.Slime && 
+                itemSender.Type != Type && 
+                itemSender.Color.Name != Color.Name)
             {
                 if (itemSender.Color.Name == ColorNames.Empty)
                 {
@@ -285,6 +300,7 @@ public class ItemController : MonoBehaviour, IInteractable
 
             // Бутылка + бутылка того же цвета = горшок того же цвета
             if (Type != TypeNames.Bag &&
+                itemSender.Type != TypeNames.Slime &&
                 itemSender.Type != TypeNames.Bag &&
                 itemSender.Type != ActiveView.Type &&
                 itemSender.Color.Name != ColorNames.Multi &&
@@ -299,7 +315,7 @@ public class ItemController : MonoBehaviour, IInteractable
             }
 
             // Горшок + бутылка = бутылка с цветом горшка
-            if (itemSender.Type != Type)
+            if (itemSender.Type != Type && itemSender.Type != TypeNames.Slime)
             {
                 if( itemSender.Color.Name != Color.Name)
                 {
@@ -328,7 +344,7 @@ public class ItemController : MonoBehaviour, IInteractable
             }
 
             // Горшок + бутылка с таким же цветом = бутылка с универсальным цветом
-            if (itemSender.Type != Type)
+            if (itemSender.Type != Type && itemSender.Type != TypeNames.Slime)
             {
                 if (itemSender.Color.Name == Color.Name)
                 {
@@ -364,6 +380,17 @@ public class ItemController : MonoBehaviour, IInteractable
                 SetColor(ColorNames.Multi);
                 _anim.Play("Item_TypeChange");
                 itemSender.DestroyItem(false);
+
+                return true;
+            }
+
+            // Слайм + пустая бутылка = слайм уничтожается, а бутылка окрашивается
+            if (itemSender.Type == TypeNames.Slime && Color.Name == ColorNames.Empty)
+            {
+                SetColor(itemSender.Color.Name);
+                itemSender.DestroyItem(false);
+                PlayPaintFX(itemSender.Color.Color);
+                _anim.Play("Item_ColorChange");
 
                 return true;
             }

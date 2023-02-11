@@ -5,7 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class GridLine
 {
-    [SerializeField] private int _cellsAmount;
+    [SerializeField] private GridCellSettings[] _cells;
 
-    public int CellsAmount => _cellsAmount;
+    public GridCellSettings[] Cells => _cells;
+    public int Amount => _cells.Length;
 }

@@ -21617,6 +21617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cell: {fileID: 2595904664283533398, guid: a44cc2a568efe9547bdb2b7123b96007, type: 3}
+  _poolCapacity: 100
   _maxRowLength: 6
   _showHideDelay: 0.01
   _outlineEnabled: 1
@@ -22517,7 +22518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036197a90af81ac439cdbbaa260faf73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentLevel: {fileID: 11400000, guid: a5ae4873d8fa9404191195f6488dacb4, type: 2}
+  _currentLevel: {fileID: 11400000, guid: 37985069ec4ce0f4eb8cbd1a367b4453, type: 2}
   _levels: []
 --- !u!4 &2082897981
 Transform:
@@ -22747,7 +22748,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1890450172}
         m_TargetAssemblyTypeName: GridController, Assembly-CSharp
-        m_MethodName: AddCell
+        m_MethodName: AddNewCell
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

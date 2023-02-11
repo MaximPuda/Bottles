@@ -46,6 +46,6 @@ public class GamePlayService : Service
 
     private void OnWagonIn()
     {
-        GridCTRL.FillGrid();
+        GridCTRL.ShowItems();
     }
 }

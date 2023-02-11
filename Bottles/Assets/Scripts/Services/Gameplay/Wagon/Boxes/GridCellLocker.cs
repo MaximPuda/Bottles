@@ -5,15 +5,19 @@ using UnityEngine;
 
 public class GridCellLocker : MonoBehaviour
 {
-    [SerializeField] private GameObject _locker;
-
     public event UnityAction UnlockedEvent;
 
-    private bool _isEmpty = false;
+    private int _childCount;
+    private bool _isEmpty = true;
 
     private void Update()
     {
-        if (transform.childCount == 0)
+        _childCount = transform.childCount;
+
+        if (_isEmpty && _childCount > 0)
+            _isEmpty = false;
+
+        if (!_isEmpty && transform.childCount == 0)
             UnlockedEvent?.Invoke();
     }
 }

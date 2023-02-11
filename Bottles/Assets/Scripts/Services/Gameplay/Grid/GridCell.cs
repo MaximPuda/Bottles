@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -5,13 +6,13 @@ using UnityEngine.Events;
 public class GridCell : MonoBehaviour
 {
     [SerializeField] private Transform _currentItemContainer;
-    [SerializeField] private bool _IsLocked;
-    [SerializeField] private GridCellLocker _locker;
 
     [SerializeField] private float _sizeX;
     [SerializeField] private float _sizeY;
     [SerializeField] private bool _showBorders;
 
+    private GridCellLocker _locker;
+    private bool _isLocked;
     public float SizeX => _sizeX;
     public float SizeY => _sizeY;
 
@@ -21,28 +22,39 @@ public class GridCell : MonoBehaviour
 
     public ItemController CurrentItem { get; private set; }
 
-    private void Awake()
+    public void Initialize(Transform locker)
     {
+        _locker = GetComponentInChildren<GridCellLocker>();
+
         if (_locker != null)
         {
-            if (_IsLocked)
-            {
-                _locker.gameObject.SetActive(true);
-                _locker.UnlockedEvent += Unlock;
-            }
-            else _locker.gameObject.SetActive(false);
+            _locker.UnlockedEvent += Unlock;
+            AddLocker(locker);
         }
     }
 
     private void Update()
     {
-        if (!IsEmpty && _currentItemContainer.childCount == 0)
+        if (_currentItemContainer.childCount == 0)
             OnCellFree();
     }
+    
     private void OnDisable()
     {
         if (_locker != null)
             _locker.UnlockedEvent -= Unlock;
+    }
+
+    internal void AddLocker(Transform locker)
+    {
+        if (locker == null)
+            return;
+
+        Transform instance = Instantiate(locker, _locker.transform);
+        locker.localPosition = Vector3.zero;
+
+        _isLocked = true;
+        _locker.gameObject.SetActive(true);
     }
 
     public bool AddItem(ItemController itemSender)
@@ -54,7 +66,7 @@ public class GridCell : MonoBehaviour
             CurrentItem.transform.localPosition = Vector3.zero;
             CurrentItem.transform.localScale = Vector3.one;
             CurrentItem.PlaySpawnAnim();
-            CurrentItem.Lock(_IsLocked);
+            CurrentItem.Lock(_isLocked);
 
             IsEmpty = false;
             return true;
@@ -62,6 +74,8 @@ public class GridCell : MonoBehaviour
 
         return false;
     }
+
+    public void HideItem(bool hide) => CurrentItem.Hide(hide);
 
     public bool CheckItemMatch(ItemController itemSample)
     {
@@ -91,7 +105,7 @@ public class GridCell : MonoBehaviour
 
     private void Unlock()
     {
-        _IsLocked = false;
+        _isLocked = false;
         _locker.gameObject.SetActive(false);
         CurrentItem.Lock(false);
     }

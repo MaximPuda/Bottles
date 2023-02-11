@@ -41,7 +41,7 @@ public class PlayerController : Controller
 
     private void Update()
     {
-        if (GameManager.Instance.CurrentState == GameStates.Play && Input.touchCount > 0)
+        if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
