@@ -137,7 +137,7 @@ public class GridRow
             return false;
 
         foreach (var cell in _cells)
-            if (cell.CheckItemMatch(itemSample))
+            if (cell.CheckItemFullMatch(itemSample))
                 return true;
 
         return false;

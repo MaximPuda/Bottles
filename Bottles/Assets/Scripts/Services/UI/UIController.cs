@@ -48,7 +48,7 @@ public class UIController : Controller
 
     private void UpdateLifes()
     {
-        _view.UpdateLifes(_playerData.Lifes, _playerData.MaxLifes);
+        _view.UpdateLifes(_playerData.Lifes, _playerData.MaxLifes, _playerData.SecondsLeft);
     }
 
     private void UpdateMoves(int amount)

@@ -39,12 +39,18 @@ public class LevelController : Controller
 
     private void OnMovesEnded()
     {
-        if (!_currentWagon.IsCompleted)
-            GameManager.Instance.Lose();
+        StartCoroutine(CheckLevelCompleteWithDelay());
     }
 
     public override void OnStart()
     {
         base.OnStart();
+    }
+
+    private IEnumerator CheckLevelCompleteWithDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        if (!_currentWagon.IsCompleted)
+            GameManager.Instance.Lose();
     }
 }

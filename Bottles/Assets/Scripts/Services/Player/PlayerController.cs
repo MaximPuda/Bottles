@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -23,7 +24,11 @@ public class PlayerController : Controller
         private set 
         {
             _moves = value;
+            
             MovesLeftEvent?.Invoke(_moves);
+            
+            if (_moves <= 0)
+                MovesEndedEvent?.Invoke();
         } 
     }
 
@@ -34,9 +39,11 @@ public class PlayerController : Controller
         _cam = Camera.main;
 
         if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
+        {
             _level = gamePlay.LevelCTRL.CurrentLevel;
-
-        Moves = _level.Moves;
+            Moves = _level.Moves;
+        }
+       
     }
 
     private void Update()
@@ -47,16 +54,13 @@ public class PlayerController : Controller
             if (touch.phase == TouchPhase.Began)
                 Tap(touch);
 
-
             if (touch.phase == TouchPhase.Moved)
                 Drag(touch);
 
             if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
                 Drop(touch); 
-
-            if (Moves == 0)
-                MovesEndedEvent?.Invoke();
         }
+
     }
 
     private void Tap(Touch touch)

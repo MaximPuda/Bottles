@@ -21617,6 +21617,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cell: {fileID: 2595904664283533398, guid: a44cc2a568efe9547bdb2b7123b96007, type: 3}
+  _sameItems: 4
   _poolCapacity: 100
   _maxRowLength: 6
   _showHideDelay: 0.01
@@ -22518,7 +22519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 036197a90af81ac439cdbbaa260faf73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentLevel: {fileID: 11400000, guid: 37985069ec4ce0f4eb8cbd1a367b4453, type: 2}
+  _currentLevel: {fileID: 11400000, guid: b89245c936cfada4c869e2075dcbb6b6, type: 2}
   _levels: []
 --- !u!4 &2082897981
 Transform:
@@ -22857,6 +22858,7 @@ MonoBehaviour:
   _maxLifes: 0
   _lifes: 0
   _coins: 0
+  _secondsToAddLife: 900
 --- !u!1001 &3061902365161002494
 PrefabInstance:
   m_ObjectHideFlags: 0

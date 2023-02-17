@@ -7,10 +7,13 @@ using UnityEngine.UI;
 public class MenuUIController : Controller
 {
     [SerializeField] private Animator _animator;
+    [SerializeField] private MenuUIView _view;
+
     [SerializeField] private LevelButton _levelButton;
     [SerializeField] private Transform _levelsGrid;
 
     private int _levelsAmount;
+    private PlayerData _playerData;
 
     public override void Initialize(Service service)
     {
@@ -18,6 +21,19 @@ public class MenuUIController : Controller
 
         _levelsAmount = GameManager.Instance.LevelsAmount;
         CreateLevelButtons();
+
+        if (ServiceManager.TryGetService<PlayerService>(out PlayerService player))
+        {
+            _playerData = player.PlayerDataCTRL;
+            _playerData.DataChangedEvent += UpdateLifes;
+            _playerData.DataChangedEvent += UpdateCoins;
+        }
+    }
+
+    private void OnDisable()
+    {
+        _playerData.DataChangedEvent -= UpdateLifes;
+        _playerData.DataChangedEvent -= UpdateCoins;
     }
 
     private void CreateLevelButtons()
@@ -52,4 +68,14 @@ public class MenuUIController : Controller
     {
         _animator.SetBool("Levels", false);
     }
+
+    private void UpdateLifes()
+    {
+        _view.UpdateLifes(_playerData.Lifes, _playerData.MaxLifes, _playerData.SecondsLeft);
+    }
+
+    private void UpdateCoins()
+    {
+        _view.UpdateCoins(_playerData.Coins);
+    }    
 }

@@ -30,7 +30,7 @@ MonoBehaviour:
   - _type: 7
     _chance: 100
   - _type: 8
-    _chance: 50
+    _chance: 25
   _itemColors:
   - {fileID: 11400000, guid: 64aa59b56583777419fba0d8068472ad, type: 2}
   - {fileID: 11400000, guid: df6d21e0ded9fab47bea46c4ec8c67f5, type: 2}

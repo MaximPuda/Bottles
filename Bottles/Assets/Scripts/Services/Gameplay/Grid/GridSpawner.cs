@@ -68,6 +68,9 @@ public class GridSpawner
         if (itemToSpawn == null)
             return null;
 
+        if (type == TypeNames.None && color == ColorNames.None)
+            return GetItem();
+
         if (type == TypeNames.None)
         {
             ItemType randomType = _types[GetRandomTypeIndex()];

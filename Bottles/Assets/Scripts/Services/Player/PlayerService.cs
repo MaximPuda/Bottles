@@ -31,6 +31,7 @@ public class PlayerService : Service
         base.OnLoseEnter();
 
         _player.enabled = false;
+        _data.Lifes--;
     }
 
     protected override void OnWinEnter()
@@ -50,7 +51,5 @@ public class PlayerService : Service
     protected override void OnMenuEnter()
     {
         base.OnMenuEnter();
-
-        _data.SaveData();
     }
 }

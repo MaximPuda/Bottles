@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,9 +7,12 @@ using UnityEngine.Events;
 public class PlayerData: Controller
 {
     [SerializeField] private string _playerName;
+    [SerializeField] private string _lastPlayed;
+    [SerializeField] private DateTime _date;
     [SerializeField] private int _maxLifes;
     [SerializeField] private int _lifes;
     [SerializeField] private int _coins;
+    [SerializeField] private int _secondsToAddLife = 900;
 
     public string PlayerName
     {
@@ -35,6 +39,17 @@ public class PlayerData: Controller
                 _lifes = value;
             else _lifes = _maxLifes;
 
+            if (value < 0)
+                _lifes = 0;
+
+            if(_lifes < _maxLifes)
+            {
+                if(SecondsLeft <= 0)
+                    SecondsLeft = _secondsToAddLife;
+                
+                StartCoroutine(WaitToAddLife());
+            }
+
             DataChangedEvent?.Invoke(); 
         }
 
@@ -52,12 +67,12 @@ public class PlayerData: Controller
             DataChangedEvent?.Invoke();
         }
 
-        get { return _maxLifes; }
+        get { return _coins; }
     }
+    
+    public int SecondsLeft { get; private set; }
 
     public event UnityAction DataChangedEvent;
-
-    private DateTime _date;
     
     public override void Initialize(Service service)
     {
@@ -66,10 +81,15 @@ public class PlayerData: Controller
         LoadData();
     }
 
+    private void OnDisable()
+    {
+        SaveData();
+    }
+
     [ContextMenu("Save Data")]
     public void SaveData()
     {
-        var save = new Save(_playerName, _lifes, _maxLifes, _coins);
+        Save save = new Save(PlayerName, Lifes, MaxLifes, SecondsLeft, Coins);
 
         SaveSystem.Save(save);
     }
@@ -81,21 +101,76 @@ public class PlayerData: Controller
         if (save == null)
         {
             Debug.LogWarning("Failed to load!");
+            ResetData();
             return;
         }
 
-        _playerName = save.PlayerName;
+        PlayerName = save.PlayerName;
         _date = DateTime.ParseExact(save.Date, "u", CultureInfo.InvariantCulture);
-        _maxLifes = save.MaxLifes;
-        _lifes = save.Lifes;
-        _coins = save.Coins;
+        _lastPlayed = _date.ToString();
+        MaxLifes = save.MaxLifes;
+        Lifes = save.Lifes + GetEarnedLifes();
+        SecondsLeft = GetTimerLeft(save.SecondsLeft);
+        Coins = save.Coins;
 
         DataChangedEvent?.Invoke();
+    }
+
+    public void ResetData()
+    {
+        PlayerName = "User";
+        _date = DateTime.Now;
+        MaxLifes = 5;
+        Lifes = 3;
+        SecondsLeft = 900;
+        Coins = 0;
+
+        SaveData();
     }
 
     [ContextMenu("Delete Data File")]
     public void DeleteDataFile()
     {
         SaveSystem.DeleteSave();
+    }
+
+    private IEnumerator WaitToAddLife()
+    {
+        while(SecondsLeft > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            SecondsLeft--;
+            DataChangedEvent?.Invoke();
+        }
+        Lifes++;
+    }    
+
+    private int GetSpandedSec()
+    { 
+        TimeSpan spent = DateTime.Now.Subtract(_date);
+        return (int)spent.TotalSeconds;
+    }
+
+    private int GetEarnedLifes()
+    {
+        int spentSec = GetSpandedSec();
+        int earnedLifes = 0;
+
+        if (SecondsLeft > 0)
+            earnedLifes = (spentSec + _secondsToAddLife - SecondsLeft) / _secondsToAddLife;
+        else
+            earnedLifes = spentSec / _secondsToAddLife;
+
+        return earnedLifes;
+    }
+
+    private int GetTimerLeft(int savedTimer)
+    {
+        int spentSec = GetSpandedSec();
+        int result = savedTimer - spentSec;
+
+        if (result > 0)
+            return result;
+        return 0;
     }
 }

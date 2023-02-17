@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -29,9 +31,16 @@ public class UIView : MonoBehaviour
         _movesLabel.text = amount.ToString();
     }
 
-    public void UpdateLifes(int amount, int max)
+    public void UpdateLifes(int amount, int max, int seconds)
     {
-        _lifesLabel.text = amount.ToString() + "/" + max.ToString();
+        if (seconds <= 0)
+            _lifesLabel.text = amount.ToString() + "/" + max.ToString();
+        else
+        {
+            TimeSpan time = TimeSpan.FromSeconds(seconds);
+            string left = time.ToString("mm':'ss");
+            _lifesLabel.text = amount.ToString() + "/" + max.ToString() + "\n" + left;
+        }
     }
 
     public void ShowLoseScreen(bool show)

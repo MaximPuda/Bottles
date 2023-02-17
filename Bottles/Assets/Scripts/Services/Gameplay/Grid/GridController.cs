@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class GridController : Controller
 {
     [SerializeField] private GridCell _cell;
+    [SerializeField] private int _sameItems = 4;
     [SerializeField] private int _poolCapacity = 50;
     [SerializeField] private int _maxRowLength = 7;
     [SerializeField] private float _showHideDelay = 0.01f;
@@ -119,16 +120,6 @@ public class GridController : Controller
     {
         StartCoroutine(ShowItemsCoroutine(_showHideDelay));
     }   
-    
-    private IEnumerator ShowItemsCoroutine(float delay)
-    {
-        foreach (var row in _grid)
-            foreach (var cell in row)
-            {
-                cell.HideItem(false);
-                yield return new WaitForSeconds(_showHideDelay);
-            }
-    }    
 
     public void ArrangeRow(int index)
     {
@@ -143,24 +134,14 @@ public class GridController : Controller
         }
     }
 
-    //[ContextMenu("Fill Grid")]
-    //public void FillGrid()
-    //{
-    //    if (_itemPool == null)
-    //        return;
-
-    //    StartCoroutine(Fill());
-    //    _isCleared = false;
-    //}
-
-    private IEnumerator Fill()
+    [ContextMenu("Fill Grid")]
+    public void FillGrid()
     {
-        foreach (var row in _grid)
-            foreach (var cell in row)
-            {
-                AddItemInCell(cell);
-                yield return new WaitForSeconds(_showHideDelay);
-            }
+        if (_itemPool == null)
+            return;
+
+        StartCoroutine(Fill());
+        _isCleared = false;
     }
 
     public void AddItemInCell(GridCell cell)
@@ -187,11 +168,28 @@ public class GridController : Controller
             return false;
 
         foreach (var row in _grid)
-            foreach (var cell in row)
-                if (cell.CheckItemMatch(itemSample))
-                    return true;
-        
-        return false;
+            if(row != null)
+                foreach (var cell in row)
+                    if (cell != null)
+                        if(cell.CheckItemFullMatch(itemSample))
+                            return true;
+
+        int types = 0;
+        int colors = 0;
+
+        foreach (var row in _grid)
+            if (row != null)
+                foreach (var cell in row)
+                    if (cell != null)
+                    {
+                        if (cell.CheckType(itemSample))
+                        types++;
+
+                        if (cell.CheckColor(itemSample))
+                        colors++;
+                    }
+
+        return types >= _sameItems || colors >= _sameItems;
     }
 
     [ContextMenu("Add new cell")]
@@ -264,6 +262,27 @@ public class GridController : Controller
         _isCleared = true;
     }
 
+    #region Coroutines
+    private IEnumerator ShowItemsCoroutine(float delay)
+    {
+        foreach (var row in _grid)
+            foreach (var cell in row)
+            {
+                cell.HideItem(false);
+                yield return new WaitForSeconds(_showHideDelay);
+            }
+    }    
+    
+    private IEnumerator Fill()
+    {
+        foreach (var row in _grid)
+            foreach (var cell in row)
+            {
+                AddItemInCell(cell);
+                yield return new WaitForSeconds(_showHideDelay);
+            }
+    }
+    
     private IEnumerator Clear()
     {
         for (int row = 0; row < _grid.Length; row++)
@@ -279,4 +298,5 @@ public class GridController : Controller
             }
         }
     }
+    #endregion
 }

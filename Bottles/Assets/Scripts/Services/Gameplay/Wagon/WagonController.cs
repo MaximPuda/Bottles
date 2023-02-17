@@ -13,9 +13,11 @@ public class WagonController : Controller
     public bool IsCompleted { get; private set; }
 
     public event UnityAction WagonInEvent;
+    public event UnityAction WagonOutEvent;
     public event UnityAction<int> BoxCloseEvent;
     public event UnityAction WagonCompletedEvent;
-   
+
+
     private ItemsCollector[] _collectors;
 
     private int _closedCount;
@@ -67,6 +69,11 @@ public class WagonController : Controller
     private void OnWagonIn()
     {
         WagonInEvent?.Invoke();
+    }
+
+    private void OnWagonOut()
+    {
+        WagonOutEvent?.Invoke();
     }
 
     private void OnBoxClose(int combo)

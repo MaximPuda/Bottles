@@ -77,7 +77,7 @@ public class GridCell : MonoBehaviour
 
     public void HideItem(bool hide) => CurrentItem.Hide(hide);
 
-    public bool CheckItemMatch(ItemController itemSample)
+    public bool CheckItemFullMatch(ItemController itemSample)
     {
         if (CurrentItem == null || itemSample == null)
             return false;
@@ -87,6 +87,22 @@ public class GridCell : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public bool CheckColor(ItemController itemSample)
+    {
+        if (CurrentItem == null || itemSample == null)
+            return false;
+
+        return CurrentItem.Color.Name == itemSample.Color.Name;
+    }
+
+    public bool CheckType(ItemController itemSample)
+    {
+        if (CurrentItem == null || itemSample == null)
+            return false;
+
+        return CurrentItem.Type == itemSample.Type;
     }
 
     public void Clear()

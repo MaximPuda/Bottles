@@ -19,22 +19,27 @@ public class GamePlayService : Service
         _score.Initialize(this);
         _wagon.Initialize(this);
         _wagon.WagonInEvent += OnWagonIn;
+        _wagon.WagonOutEvent += OnWagonOut;
 
         _level.OnStart();
         _grid.OnStart();
         _score.OnStart();
         _wagon.OnStart();
     }
+
     protected override void OnWinEnter()
     {
         base.OnWinEnter();
 
         _score.SendTotal();
+        GridCTRL.ClearGrid();
     }
 
     protected override void OnLoseEnter()
     {
         base.OnLoseEnter();
+
+        GridCTRL.ClearGrid();
     }
 
     protected override void OnMenuEnter()
@@ -47,5 +52,10 @@ public class GamePlayService : Service
     private void OnWagonIn()
     {
         GridCTRL.ShowItems();
+    }
+
+    private void OnWagonOut()
+    {
+        
     }
 }
