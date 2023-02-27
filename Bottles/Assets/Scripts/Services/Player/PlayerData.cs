@@ -121,7 +121,7 @@ public class PlayerData: Controller
         PlayerName = "User";
         _date = DateTime.Now;
         MaxLifes = 5;
-        Lifes = 3;
+        Lifes = 5;
         SecondsLeft = 900;
         Coins = 0;
 

@@ -2,49 +2,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OnlyTypesBoxView : ItemsCollectorView
+public class OnlyTypesBoxView : BoxView
 {
     [SerializeField] private SpriteRenderer _currentTypeRenderer;
     [SerializeField] private Sprite _defaultTypeSprite;
     [SerializeField] private BoxTypeSprite[] _boxTypeSprites;
 
-    private Cell[] _cells;
-
-    public override void Initialize(ItemsCollector collector)
+    public override void Initialize(BoxController collector)
     {
         base.Initialize(collector);
 
-        _cells = GetComponentsInChildren<Cell>();
-        _currentTypeRenderer.sprite = _defaultTypeSprite;
+        foreach (var cell in Cells)
+        {
+            if (!cell.IsEmpty)
+            {
+                SetTypeSprite(cell.Item);
+                break;
+            }
+        }
     }
 
-    protected override void OnAllItemsCollected(int combo)
-    {
-        Animator.SetTrigger("Close");
-        foreach (var cell in _cells)
-            cell.HideItem();
-    }
 
     protected override void OnClearItems()
     {
-        foreach (var cell in _cells)
-            if (cell != null)
-                cell.RemoveItem();
-
-        _currentTypeRenderer.sprite = _defaultTypeSprite;
+        base.OnClearItems();
     }
 
     protected override void OnItemAdded(ItemController item)
     {
-        foreach (var cell in _cells)
-        {
-            if(cell.IsEmpty)
-            {
-                cell.AddItem(item);
-                SetTypeSprite(item);
-                return;
-            }    
-        }
+        base.OnItemAdded(item);
+
+        if (_currentTypeRenderer.sprite == null ||
+            _currentTypeRenderer.sprite == _defaultTypeSprite)
+            SetTypeSprite(item);
+    }
+
+    protected override void OnAllItemsCollected(int combo)
+    {
+        base.OnAllItemsCollected(combo);
+
+        foreach (var cell in Cells)
+            cell.HideItem();
     }
 
     private void SetTypeSprite(ItemController item)

@@ -40,7 +40,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 12d455e7e40ba074fb54ac407a4ec70b, type: 2}
   - {fileID: 11400000, guid: 62ffdbee01574ca42bf0e454d8239e7e, type: 2}
   _itemPrefab: {fileID: 7408829381597142155, guid: 5c380a3b440774b4892867da6278bb58, type: 3}
-  _boxesPrefab: {fileID: 5144134290460182251, guid: eaf8d3a75cfad244dad25c84b1bceceb, type: 3}
+  _boxesPrefab: {fileID: 5144134290460182251, guid: 160958214819a904fbcbbbcee6e5bd3b, type: 3}
   _rows:
   - _cells:
     - _locker: {fileID: 0}

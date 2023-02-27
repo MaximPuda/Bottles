@@ -1,18 +1,21 @@
 using UnityEngine;
 
 [RequireComponent (typeof(Animator))]
-public abstract class ItemsCollectorView : MonoBehaviour
+public abstract class BoxView : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _highlight;
-    protected ItemsCollector Collector;
+    protected BoxController Collector;
     protected Animator Animator;
+    protected BoxCell[] Cells;
 
-    public virtual void Initialize(ItemsCollector collector)
+    public virtual void Initialize(BoxController collector)
     {
         Collector = collector;
         Collector.ItemAddedEvent += OnItemAdded;
         Collector.AllItemsCollectedEvent += OnAllItemsCollected;
         Collector.ClearItemsEvent += OnClearItems;
+
+        Cells = GetComponentsInChildren<BoxCell>();
 
         Animator = GetComponent<Animator>();
     }
@@ -26,7 +29,12 @@ public abstract class ItemsCollectorView : MonoBehaviour
         Collector.ClearItemsEvent -= OnClearItems;
     }
 
-    protected abstract void OnItemAdded(ItemController item);
-    protected abstract void OnAllItemsCollected(int combo);
-    protected abstract void OnClearItems();
+    protected virtual void OnItemAdded(ItemController item) {}
+
+    protected virtual void OnAllItemsCollected(int combo)
+    {
+        Animator.SetTrigger("Close");
+    }
+
+    protected virtual void OnClearItems() {}
 }

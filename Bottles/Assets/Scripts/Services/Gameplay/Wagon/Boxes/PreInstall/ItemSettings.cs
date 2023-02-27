@@ -7,4 +7,5 @@ public class ItemSettings
 {
     public TypeNames ItemType;
     public ColorNames ItemColor;
+    public Vector3 StartPosition;
 }

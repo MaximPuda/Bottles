@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OnlyPaintBoxView : ItemsCollectorView
+public class OnlyPaintBoxView : BoxView
 {
     [SerializeField] private SpriteRenderer _main;
     [SerializeField] private SpriteRenderer _closed;
@@ -11,17 +11,26 @@ public class OnlyPaintBoxView : ItemsCollectorView
     [SerializeField] private float[] _fillWaveTargets;
     [SerializeField] private bool _filledWaveFXEnable;
 
-    private Cell[] _cells;
     private int _collectedItems = 0;
+    private int _preinstalled = 0;
+
     private ItemColor _currentColor;
+    
     private float _currentFillLevel = 0;
     private float _targetFillLevel;
 
-    public override void Initialize(ItemsCollector collector)
+    public override void Initialize(BoxController collector)
     {
         base.Initialize(collector);
 
-        _cells = GetComponentsInChildren<Cell>();
+        foreach (var cell in Cells)
+        {
+            if (!cell.IsEmpty)
+            {
+                OnItemAdded(cell.Item);
+                _preinstalled++;
+            }
+        }
     }
 
     protected override void OnAllItemsCollected(int combo)
@@ -34,54 +43,47 @@ public class OnlyPaintBoxView : ItemsCollectorView
 
     protected override void OnClearItems()
     {
-        foreach (var cell in _cells)
-            if (cell != null)
-            {
-                cell.RemoveItem();
-                _collectedItems = 0;
-                _targetFillLevel = 0;
+        base.OnClearItems();
 
-                _filledFX.Stop();
-                StartCoroutine(ChangeFillLevel());
-            }
+        _collectedItems = _preinstalled;
+        _targetFillLevel = _preinstalled;
+
+        _filledFX.Stop();
+        StartCoroutine(ChangeFillLevel());
     }
 
     protected override void OnItemAdded(ItemController item)
     {
-        for (int i = 0; i < _cells.Length; i++)
+        base.OnItemAdded(item);
+
+        item.Hide(true);
+
+        if (_currentColor == null)
+            _currentColor = item.Color;
+
+        _collectedItems++;
+
+        if (_currentColor.Name == ColorNames.Multi)
         {
-            if (_cells[i].IsEmpty)
-            {
-                if (i == 0 || _currentColor.Name == ColorNames.Multi)
-                    _currentColor = item.Color;
-
-                _collectedItems++;
-                _cells[i].AddItem(item);
-                _cells[i].HideItem();
-
-                if(_currentColor.Name == ColorNames.Multi)
-                {
-                    _fill.material.SetFloat("_Multi", 1);
-                }
-                else
-                {
-                    _fill.material.SetFloat("_Multi", 0);
-                    _fill.material.color = _currentColor.Color;
-                    _filledFX.startColor = _currentColor.Color;
-                }
-                
-                StartCoroutine(ChangeFillLevel());
-                _filledFX.Play();
-
-                return;
-            }
+            _fill.material.SetFloat("_Multi", 1);
         }
+        else
+        {
+            _fill.material.SetFloat("_Multi", 0);
+            _fill.material.color = _currentColor.Color;
+            _filledFX.startColor = _currentColor.Color;
+        }
+
+        StartCoroutine(ChangeFillLevel());
+        _filledFX.Play();
+
+        return;
     }
 
     private IEnumerator ChangeFillLevel()
     {
         float time = 0;
-        _targetFillLevel = 1f / _cells.Length * _collectedItems;
+        _targetFillLevel = 1f / Cells.Length * _collectedItems;
         float rotation = 0f;
         int rotationTargetIndex = 0;
         while (time < 1)

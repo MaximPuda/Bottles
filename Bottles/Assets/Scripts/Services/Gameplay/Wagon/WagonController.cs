@@ -18,7 +18,7 @@ public class WagonController : Controller
     public event UnityAction WagonCompletedEvent;
 
 
-    private ItemsCollector[] _collectors;
+    private BoxController[] _collectors;
 
     private int _closedCount;
     private Animator _animator;
@@ -33,7 +33,7 @@ public class WagonController : Controller
         _level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
         SetBoxes();
 
-        _collectors = GetComponentsInChildren<ItemsCollector>();
+        _collectors = GetComponentsInChildren<BoxController>();
         foreach (var colllector in _collectors)
         {
             colllector.Initialize();

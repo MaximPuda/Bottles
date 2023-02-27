@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EmptyBottlesBoxView : ItemsCollectorView
+public class EmptyBottlesBoxView : BoxView
 {
-    private Cell[] _cells;
+    private BoxCell[] _cells;
 
-    public override void Initialize(ItemsCollector collector)
+    public override void Initialize(BoxController collector)
     {
         base.Initialize(collector);
 
-        _cells = GetComponentsInChildren<Cell>();
+        _cells = GetComponentsInChildren<BoxCell>();
     }
 
     protected override void OnAllItemsCollected(int combo)
@@ -22,7 +22,7 @@ public class EmptyBottlesBoxView : ItemsCollectorView
     {
         foreach (var cell in _cells)
             if (cell != null)
-                cell.RemoveItem();
+                cell.Clear();
     }
 
     protected override void OnItemAdded(ItemController item)

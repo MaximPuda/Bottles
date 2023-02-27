@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Collider2D), typeof(Animator), typeof(ItemsCollectorView))]
-public class ItemsCollector : MonoBehaviour, IInteractable
+[RequireComponent(typeof(Collider2D), typeof(Animator), typeof(BoxView))]
+public class BoxController : MonoBehaviour, IInteractable
 {
     [SerializeField] private TypeNames[] _acceptedTypes;
     [SerializeField] private bool _typesEnable;
     [SerializeField] private ColorNames[] _acceptedColors;
     [SerializeField] private bool _colorsEnable;
-    [SerializeField] private int _itemsAmount;
     [SerializeField] private float _delayClosedAnimationStart = 1.1f;
 
     [SerializeField] private ParticleSystem _coinFx;
 
-    public int ItemsAmount => _itemsAmount;
-
-    private ItemController[] _items;
-    private ItemsCollectorView _view;
+    private BoxCell[] _cells;
+    private BoxView _view;
     private Collider2D _collider;
 
     private int _itemsCollected = 0;
@@ -34,26 +31,45 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     public void Initialize()
     {
-        _view = GetComponent<ItemsCollectorView>();
+        _cells = GetComponentsInChildren<BoxCell>();
+        if (_cells.Length > 0)
+        {
+            foreach (var cell in _cells)
+            {
+                cell.Initialize();
+                if (!cell.IsEmpty)
+                {
+                    if (IsAllAccept(cell.Item))
+                    {
+                        if (_currentType == TypeNames.None)
+                            _currentType = cell.Item.Type;
+
+                        if (_currentColor == ColorNames.None)
+                            _currentColor = cell.Item.Color.Name;
+
+                        _itemsCollected++;
+                    }
+                    else cell.Clear();
+                }
+            }
+        }
+
+        _view = GetComponent<BoxView>();
         _view.Initialize(this);
 
         _collider = GetComponent<Collider2D>();
         _collider.isTrigger = true;
-
-        _items = new ItemController[_itemsAmount];
     }
 
     public bool Interact(ItemController itemSender)
     {
-        if ((_acceptedTypes[0] == TypeNames.None || IsTypeAccept(itemSender.Type)) &&
-            (_acceptedColors[0] == ColorNames.None || IsColorAccept(itemSender.Color.Name)))
+        if (IsAllAccept(itemSender))
         {
-            for (int i = 0; i < _itemsAmount; i++)
+            foreach (var cell in _cells)
             {
-                if (_items[i] == null)
+                if (cell.IsEmpty)
                 {
-                    itemSender.OnColllect();
-                    _items[i] = itemSender;
+                    AddInCell(itemSender);
                     _itemsCollected++;
 
                     ItemAddedEvent?.Invoke(itemSender);
@@ -64,6 +80,12 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         }
 
         return false;
+    }
+
+    private bool IsAllAccept(ItemController item)
+    {
+        return (_acceptedTypes[0] == TypeNames.None || IsTypeAccept(item.Type)) &&
+            (_acceptedColors[0] == ColorNames.None || IsColorAccept(item.Color.Name));
     }
 
     private bool IsTypeAccept(TypeNames senderType)
@@ -84,9 +106,33 @@ public class ItemsCollector : MonoBehaviour, IInteractable
         return false;
     }
 
+    private void AddInCell(ItemController item)
+    {
+        Vector3 sender = item.DropPosition;
+        float minDistance = float.MaxValue;
+        int nearestCellIndex = 0;
+
+        // Вычислеям ближайшую свободную ячейку
+        for (int i = 0; i < _cells.Length; i++)
+        {
+            if (_cells[i].IsEmpty)
+            {
+                float distanceToCell = (sender - _cells[i].transform.position).magnitude;
+                if (distanceToCell < minDistance)
+                {
+                    minDistance = distanceToCell;
+                    nearestCellIndex = i;
+                }
+            }
+        }
+
+        if (_cells[nearestCellIndex] != null)
+            _cells[nearestCellIndex].AddItem(item);
+    }
+
     private void OnItemAdd()
     {
-        if (_itemsCollected == _items.Length)
+        if (_itemsCollected == _cells.Length)
         {
             int combo = GetCombo();
 
@@ -108,44 +154,38 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     private int GetCombo()
     {
-        int typeMatch = 1;
-        int colorMatch = 1;
+        int typeMatch = 0;
+        int colorMatch = 0;
         int combo = 0;
 
-        _currentType = _items[0].Type;
-        _currentColor = _items[0].Color.Name;
-
-        if (_items[0].Type == TypeNames.Multi)
-            _itemsToChangeType.Add(_items[0]);
-
-        if (_items[0].Color.Name == ColorNames.Multi)
-            _itemsToChangeColor.Add(_items[0]);
-
-        for (int i = 1; i < _itemsCollected; i++)
+        foreach (var cell in _cells)
         {
-            if (_currentType == TypeNames.Multi)
-                _currentType = _items[i].Type;
+            if (cell.IsEmpty)
+                continue;
 
-            if (_currentColor == ColorNames.Multi)
-                _currentColor = _items[i].Color.Name;
+            if (_currentType == TypeNames.Multi || _currentType == TypeNames.None)
+                _currentType = cell.Item.Type;
+
+            if (_currentColor == ColorNames.Multi || _currentColor == ColorNames.None)
+                _currentColor = cell.Item.Color.Name;
 
             if (_typesEnable)
             {
-                if (_items[i].Type == _currentType || _items[i].Type == TypeNames.Multi)
+                if (cell.Item.Type == _currentType || cell.Item.Type == TypeNames.Multi)
                     typeMatch++;
             }
 
             if (_colorsEnable)
             {
-                if (_items[i].Color.Name == _currentColor || _items[i].Color.Name == ColorNames.Multi)
+                if (cell.Item.Color.Name == _currentColor || cell.Item.Color.Name == ColorNames.Multi)
                     colorMatch++;
             }
 
-            if (_items[i].Type == TypeNames.Multi)
-                _itemsToChangeType.Add(_items[i]);
+            if (cell.Item.Type == TypeNames.Multi)
+                _itemsToChangeType.Add(cell.Item);
 
-            if (_items[i].Color.Name == ColorNames.Multi)
-                _itemsToChangeColor.Add(_items[i]);
+            if (cell.Item.Color.Name == ColorNames.Multi)
+                _itemsToChangeColor.Add(cell.Item);
         }
 
         if (_itemsToChangeType.Count > 0 && _currentType != TypeNames.Multi)
@@ -175,10 +215,17 @@ public class ItemsCollector : MonoBehaviour, IInteractable
 
     private void Clear()
     {
-        for (int i = 0; i < _items.Length; i++)
-            _items[i] = null;
+        foreach (var cell in _cells)
+        {
+            if (!cell.IsPreinstalled && !cell.IsEmpty)
+            {
+                cell.Clear();
+                _itemsCollected--;
+            }
+        }
 
-        _itemsCollected = 0;
+        _currentType = TypeNames.None;
+        _currentColor = ColorNames.None;
 
         ClearItemsEvent?.Invoke();
     }
@@ -186,6 +233,7 @@ public class ItemsCollector : MonoBehaviour, IInteractable
     private IEnumerator AllCollectedInvoke(int combo)
     {
         yield return new WaitForSeconds(_delayClosedAnimationStart);
+
         AllItemsCollectedEvent?.Invoke(combo);
     }
 

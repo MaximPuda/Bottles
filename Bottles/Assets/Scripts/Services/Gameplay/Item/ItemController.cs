@@ -30,6 +30,7 @@ public class ItemController : MonoBehaviour, IInteractable
     public TypeNames Type => ActiveView.Type;
     public ItemColor Color { get; private set; }
     public Transform Dragable => ActiveView.Dragable;
+    public Vector3 DropPosition { get; set; }
     public bool IsCollected { get; private set; }
 
     private Collider2D _collider;
@@ -50,129 +51,7 @@ public class ItemController : MonoBehaviour, IInteractable
     {
         _pool = pool;
     }
-
-    public void SetType(TypeNames itemType)
-    {
-        foreach (var view in _itemViews)
-        {
-            if (view.Type == itemType)
-            {
-                if(ActiveView != null)
-                    ActiveView.gameObject.SetActive(false);
-                
-                ActiveView = view;
-                ActiveView.gameObject.SetActive(true);
-
-                if (Color != null)
-                    SetColor(Color.Name);
-                
-                return;
-            }
-        }
-    }
-
-    public void SetColor(ColorNames colorName)
-    {
-        if (Type == TypeNames.Bag && colorName == ColorNames.Empty)
-            colorName++;
-
-        foreach (var palette in _palettes)
-        {
-            if (palette.Name == colorName)
-            {
-                Color = palette;
-                break;
-            }
-        }
-
-        if (Color.Name == ColorNames.Empty)
-        {
-            ActiveView.EnableFill(false);
-            ActiveView.EnableMulti(false);
-        }
-        else if (Color.Name == ColorNames.Multi)
-        {
-            ActiveView.EnableFill(false);
-            ActiveView.EnableMulti(true);
-        }
-        else
-        {
-            ActiveView.EnableFill(true);
-            ActiveView.EnableMulti(false);
-            ActiveView.OnChangeColor(Color.Color);
-        }
-    }
-
-    public void OnColllect()
-    {
-        IsCollected = true;
-        _stand.SetActive(false);
-        _collider.enabled = false;
-        PlayDustFX();
-        Active(false);
-    }
-
-    public void Active(bool active) => ActiveView.OnActive(active);
-
-    public void Hide(bool hide)
-    { 
-        if (hide)
-            ActiveView.gameObject.SetActive(false);
-        else
-        {
-            ActiveView.gameObject.SetActive(true);
-            PlaySpawnAnim();
-        }    
-    }
-
-    public void Reset()
-    {
-        enabled = true;
-
-        if (ActiveView != null)
-        {
-            ActiveView.Reset();
-            ActiveView.gameObject.SetActive(false);
-            ActiveView = null;
-        }
-
-        Color = null;
-        IsCollected = false;
-
-        _collider.enabled = true;
-    }
-
-    public void DestroyItem(bool withFX)
-    {
-        transform.parent = null;
-        ActiveView.OnDestroyItem();
-
-        _stand.SetActive(false);
-        _collider.enabled = false;
-        enabled = false;
-
-        if (withFX)
-        {
-            PlayCrashFX(Color.Color);
-            StartCoroutine(DestroyWithDelay(_destroyDelay));
-        }
-        else
-        {
-            if (_pool != null)
-                _pool.PutItem(this);
-            else Destroy(this.gameObject);
-        }
-    }
-
-    private IEnumerator DestroyWithDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        if (_pool != null)
-            _pool.PutItem(this);
-        else Destroy(this.gameObject);
-    }
-
+   
     public bool Interact(ItemController itemSender)
     {
         if (!IsCollected && itemSender != null && itemSender != this)
@@ -397,6 +276,128 @@ public class ItemController : MonoBehaviour, IInteractable
         }
 
         return false;
+    }
+
+    public void SetType(TypeNames itemType)
+    {
+        foreach (var view in _itemViews)
+        {
+            if (view.Type == itemType)
+            {
+                if(ActiveView != null)
+                    ActiveView.gameObject.SetActive(false);
+                
+                ActiveView = view;
+                ActiveView.gameObject.SetActive(true);
+
+                if (Color != null)
+                    SetColor(Color.Name);
+                
+                return;
+            }
+        }
+    }
+
+    public void SetColor(ColorNames colorName)
+    {
+        if (Type == TypeNames.Bag && colorName == ColorNames.Empty)
+            colorName++;
+
+        foreach (var palette in _palettes)
+        {
+            if (palette.Name == colorName)
+            {
+                Color = palette;
+                break;
+            }
+        }
+
+        if (Color.Name == ColorNames.Empty)
+        {
+            ActiveView.EnableFill(false);
+            ActiveView.EnableMulti(false);
+        }
+        else if (Color.Name == ColorNames.Multi)
+        {
+            ActiveView.EnableFill(false);
+            ActiveView.EnableMulti(true);
+        }
+        else
+        {
+            ActiveView.EnableFill(true);
+            ActiveView.EnableMulti(false);
+            ActiveView.OnChangeColor(Color.Color);
+        }
+    }
+
+    public void OnColllect()
+    {
+        IsCollected = true;
+        _stand.SetActive(false);
+        _collider.enabled = false;
+        PlayDustFX();
+        Active(false);
+    }
+
+    public void Active(bool active) => ActiveView.OnActive(active);
+
+    public void Hide(bool hide)
+    { 
+        if (hide)
+            ActiveView.gameObject.SetActive(false);
+        else
+        {
+            ActiveView.gameObject.SetActive(true);
+            PlaySpawnAnim();
+        }    
+    }
+
+    public void Reset()
+    {
+        enabled = true;
+
+        if (ActiveView != null)
+        {
+            ActiveView.Reset();
+            ActiveView.gameObject.SetActive(false);
+            ActiveView = null;
+        }
+
+        Color = null;
+        IsCollected = false;
+
+        _collider.enabled = true;
+    }
+
+    public void DestroyItem(bool withFX)
+    {
+        transform.parent = null;
+        ActiveView.OnDestroyItem();
+
+        _stand.SetActive(false);
+        _collider.enabled = false;
+        enabled = false;
+
+        if (withFX)
+        {
+            PlayCrashFX(Color.Color);
+            StartCoroutine(DestroyWithDelay(_destroyDelay));
+        }
+        else
+        {
+            if (_pool != null)
+                _pool.PutItem(this);
+            else Destroy(this.gameObject);
+        }
+    }
+
+    private IEnumerator DestroyWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (_pool != null)
+            _pool.PutItem(this);
+        else Destroy(this.gameObject);
     }
 
     public void Lock(bool locked)

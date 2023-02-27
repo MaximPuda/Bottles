@@ -66,7 +66,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             default:
-                throw new Exception("Wrong scene loaded!");
+                Debug.LogError("Wrong scene loaded!");
+                break;
         }
 
         ServiceManager.InitAllServices();

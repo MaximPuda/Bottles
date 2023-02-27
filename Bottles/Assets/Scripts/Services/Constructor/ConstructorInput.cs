@@ -1,49 +1,17 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class PlayerController : Controller
+public class ConstructorInput
 {
-    public event UnityAction<int> MovesLeftEvent;
-    public event UnityAction MovesEndedEvent;
-    
     private const float DOUBLE_TAP_TIME = 0.2f;
-    
+
     private Camera _cam;
-    private Level _level;
 
     private ItemController _activeItem;
-    private ItemController _lastItem;
+    private ItemController _lastItem; 
 
-    private int _moves;
-
-    public int Moves 
+    public void Awake()
     {
-        get => _moves;
-
-        private set 
-        {
-            _moves = value;
-            
-            MovesLeftEvent?.Invoke(_moves);
-            
-            if (_moves <= 0)
-                MovesEndedEvent?.Invoke();
-        } 
-    }
-
-    public override void Initialize(Service service)
-    {
-        base.Initialize(service);
-
         _cam = Camera.main;
-
-        if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
-        {
-            _level = gamePlay.LevelCTRL.CurrentLevel;
-            Moves = _level.Moves;
-        }
-       
     }
 
     private void Update()
@@ -58,7 +26,7 @@ public class PlayerController : Controller
                 Drag(touch);
 
             if (touch.phase == TouchPhase.Canceled || touch.phase == TouchPhase.Ended)
-                Drop(touch); 
+                Drop(touch);
         }
 
     }
@@ -81,11 +49,10 @@ public class PlayerController : Controller
     private void DoubleTap(Touch touch)
     {
         ItemController selected = SelectItem(touch);
-        if(_activeItem != null &&_activeItem == selected)
+        if (_activeItem != null && _activeItem == selected)
         {
             _activeItem.DestroyItem(true);
             _activeItem = null;
-            Moves--;
         }
     }
 
@@ -123,26 +90,20 @@ public class PlayerController : Controller
             _activeItem.DropPosition = _activeItem.Dragable.position;
             _activeItem.Dragable.parent = _activeItem.ActiveView.transform;
             _activeItem.Dragable.localPosition = Vector3.zero;
-            
+
             Vector2 touchWorldPos = _cam.ScreenToWorldPoint(touch.position);
             RaycastHit2D hit = Physics2D.Raycast(touchWorldPos, Vector3.forward);
-            
+
             if (hit.collider != null)
             {
                 if (hit.collider.TryGetComponent<IInteractable>(out IInteractable interactor))
                 {
                     if (interactor.Interact(_activeItem))
                     {
-                        Moves--;
                         _activeItem = null;
                     }
                 }
-            } 
+            }
         }
-    }
-
-    public void AddMoves(int moves)
-    {
-        Moves += moves;
     }
 }
