@@ -7,6 +7,7 @@ public class ItemView : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private Transform _dragable;
     [SerializeField] private TypeNames _type;
+    [SerializeField] private ItemColor _color;
 
     [Header("Sprites")]
     [SerializeField] private SpriteRenderer _main;
@@ -16,9 +17,14 @@ public class ItemView : MonoBehaviour
     [SerializeField] private SpriteRenderer _back;
 
     public TypeNames Type => _type;
+    public ItemColor Color => _color;
     public Transform Dragable => _dragable;
     
-    public void OnChangeColor(Color color) => _fill.color = color;
+    public void OnChangeColor(ItemColor color)
+    {
+        _color = color;
+        _fill.color = color.Color;
+    }
 
     public void EnableFill(bool enable) => _fill.enabled = enable;
 

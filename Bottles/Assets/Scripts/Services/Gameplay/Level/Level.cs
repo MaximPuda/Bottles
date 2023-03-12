@@ -6,6 +6,7 @@ public class Level : ScriptableObject
     [Header("SETTINGS")]
     [SerializeField] private string _name;
     [SerializeField] private int _moves;
+    [SerializeField] private TutorialList _tutorial;
     [SerializeField] private ItemType[] _itemTypes;
     [SerializeField] private ItemColor[] _itemColors;
     [Space(5)]
@@ -20,6 +21,7 @@ public class Level : ScriptableObject
 
     public string LelvelName => _name;
     public int Moves => _moves;
+    public TutorialList Tutorial => _tutorial;
     public ItemType[] ItemTypes => _itemTypes;
     public ItemColor[] ItemColors => _itemColors;
     public ItemController ItemPrefab => _itemPrefab;

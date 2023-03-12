@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
     public int LevelsAmount => _levels.Length;
-    public Level CurrentLevel => _currentLevel;
+    public Level CurrentLevel { get { return _currentLevel; } set { _currentLevel = value; } }
 
     public event UnityAction MenuEnterEvent;
     public event UnityAction PlayEnterEvent;
@@ -106,15 +106,15 @@ public class GameManager : MonoBehaviour
     private IEnumerator LoadSceneAsync(int sceneIndex, GameStates state)
     {
         LoadingViewer.Instance.In();
+        yield return new WaitForSeconds(1f);
 
         AsyncOperation loading = SceneManager.LoadSceneAsync(sceneIndex);
         
         while(!loading.isDone)
-            yield return null;
+            yield return new WaitForSeconds(1f);
 
        _nextState = state;
         ServiceManager.InitAllServices();
-        LoadingViewer.Instance.Out();
     }
 
     public void SetLevel(int levelIndex)

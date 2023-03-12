@@ -52,3 +52,9 @@ TagManager:
   - name: Drag
     uniqueID: 3883687429
     locked: 0
+  - name: Tutorial
+    uniqueID: 863204481
+    locked: 0
+  - name: MainUI
+    uniqueID: 304656397
+    locked: 0

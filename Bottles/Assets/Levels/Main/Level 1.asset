@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Level 1
   _moves: 15
+  _tutorial: 1
   _itemTypes:
   - _type: 2
     _chance: 100
@@ -37,47 +38,47 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 12d455e7e40ba074fb54ac407a4ec70b, type: 2}
   - {fileID: 11400000, guid: 62ffdbee01574ca42bf0e454d8239e7e, type: 2}
   _itemPrefab: {fileID: 7408829381597142155, guid: 5c380a3b440774b4892867da6278bb58, type: 3}
-  _boxesPrefab: {fileID: 5144134290460182251, guid: 3d4ced443ca70ca4a867f8ebfdbf1857, type: 3}
+  _boxesPrefab: {fileID: 5910213410978917958, guid: 7e8c54627ecadea41b86c3d0f560878f, type: 3}
   _rows:
   - _cells:
     - _locker: {fileID: 0}
       _itemType: 0
+      _itemColor: 5
+    - _locker: {fileID: 0}
+      _itemType: 5
       _itemColor: 0
     - _locker: {fileID: 0}
-      _itemType: 0
+      _itemType: 6
+      _itemColor: 3
+    - _locker: {fileID: 0}
+      _itemType: 7
+      _itemColor: 0
+  - _cells:
+    - _locker: {fileID: 0}
+      _itemType: 7
       _itemColor: 0
     - _locker: {fileID: 0}
-      _itemType: 0
+      _itemType: 3
       _itemColor: 0
     - _locker: {fileID: 0}
+      _itemType: 2
+      _itemColor: 3
+    - _locker: {fileID: 0}
+      _itemType: 3
+      _itemColor: 6
+    - _locker: {fileID: 0}
       _itemType: 0
-      _itemColor: 0
+      _itemColor: 5
   - _cells:
     - _locker: {fileID: 0}
       _itemType: 0
       _itemColor: 0
     - _locker: {fileID: 0}
       _itemType: 0
-      _itemColor: 0
+      _itemColor: 4
     - _locker: {fileID: 0}
       _itemType: 0
       _itemColor: 0
     - _locker: {fileID: 0}
-      _itemType: 0
-      _itemColor: 0
-    - _locker: {fileID: 0}
-      _itemType: 0
-      _itemColor: 0
-  - _cells:
-    - _locker: {fileID: 0}
-      _itemType: 0
-      _itemColor: 0
-    - _locker: {fileID: 0}
-      _itemType: 0
-      _itemColor: 0
-    - _locker: {fileID: 0}
-      _itemType: 0
-      _itemColor: 0
-    - _locker: {fileID: 0}
-      _itemType: 0
+      _itemType: 3
       _itemColor: 0

@@ -18,8 +18,6 @@ public class GamePlayService : Service
         _grid.Initialize(this);
         _score.Initialize(this);
         _wagon.Initialize(this);
-        _wagon.WagonInEvent += OnWagonIn;
-        _wagon.WagonOutEvent += OnWagonOut;
 
         _level.OnStart();
         _grid.OnStart();
@@ -31,7 +29,7 @@ public class GamePlayService : Service
     {
         base.OnWinEnter();
 
-        _score.SendTotal();
+        ScoreCTRL.SendTotal();
         GridCTRL.ClearGrid();
     }
 
@@ -46,16 +44,6 @@ public class GamePlayService : Service
     {
         base.OnMenuEnter();
 
-        _grid.ClearGrid();
-    }
-
-    private void OnWagonIn()
-    {
-        GridCTRL.ShowItems();
-    }
-
-    private void OnWagonOut()
-    {
-        
+        GridCTRL.ClearGrid();
     }
 }

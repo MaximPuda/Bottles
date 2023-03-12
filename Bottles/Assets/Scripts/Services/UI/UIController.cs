@@ -16,6 +16,7 @@ public class UIController : Controller
         base.Initialize(service);
 
         _view.IntitializeHUD();
+        _view.SetLevelName(GameManager.Instance.CurrentLevel.LelvelName);
 
         if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
         {
@@ -30,7 +31,6 @@ public class UIController : Controller
 
             _playerData = player.PlayerDataCTRL;
             _playerData.DataChangedEvent += UpdateLifes;
-
         }
     }
 
@@ -66,6 +66,11 @@ public class UIController : Controller
         _view.ShowWinScreen(true, _score.Points);
     }
 
+    public void HideLoading()
+    {
+        LoadingViewer.Instance.Out();
+    }
+
     public void OnRestartBtnClick()
     {
         _view.ShowLoseScreen(false);
@@ -77,8 +82,9 @@ public class UIController : Controller
         GameManager.Instance.PlayNextLevel();
     }
 
-    public void OnBackBtnClick()
+    public void OnBackBtnClick(Button sender)
     {
+        sender.interactable = false;
         _view.ShowLoseScreen(false);
         GameManager.Instance.BackToMenu();
     }

@@ -28,7 +28,10 @@ public class PlayerController : Controller
             MovesLeftEvent?.Invoke(_moves);
             
             if (_moves <= 0)
+            {
+                enabled = false;
                 MovesEndedEvent?.Invoke();
+            }    
         } 
     }
 

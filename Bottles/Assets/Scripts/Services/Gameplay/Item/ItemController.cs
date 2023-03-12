@@ -1,12 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
+[RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))][SelectionBase]
 public class ItemController : MonoBehaviour, IInteractable
 {
     [Header("MAIN")]
+    [ContextMenuItem("Apply", "ApplyStartSetting")]
     [SerializeField] private TypeNames _startType;
+    [ContextMenuItem("Apply", "ApplyStartSetting")]
     [SerializeField] private ColorNames _startColor;
     [Space(5)]
 
@@ -40,6 +43,27 @@ public class ItemController : MonoBehaviour, IInteractable
     {
         _collider = GetComponent<Collider2D>();
 
+        if (_startType != TypeNames.None && _startColor != ColorNames.None)
+        {
+            SetType(_startType);
+            SetColor(_startColor);
+        }
+
+        if (ActiveView == null)
+        {
+            foreach (var view in _itemViews)
+            {
+                if (view.gameObject.activeSelf == true)
+                {
+                    ActiveView = view;
+                    Color = view.Color;
+                }
+            }
+        }
+    }
+
+    public void ApplyStartSetting()
+    {
         if (_startType != TypeNames.None && _startColor != ColorNames.None)
         {
             SetType(_startType);
@@ -326,7 +350,7 @@ public class ItemController : MonoBehaviour, IInteractable
         {
             ActiveView.EnableFill(true);
             ActiveView.EnableMulti(false);
-            ActiveView.OnChangeColor(Color.Color);
+            ActiveView.OnChangeColor(Color);
         }
     }
 

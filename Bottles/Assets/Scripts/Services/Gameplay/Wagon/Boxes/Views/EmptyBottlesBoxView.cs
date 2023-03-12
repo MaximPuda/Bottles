@@ -27,13 +27,6 @@ public class EmptyBottlesBoxView : BoxView
 
     protected override void OnItemAdded(ItemController item)
     {
-        foreach (var cell in _cells)
-        {
-            if (cell.IsEmpty)
-            {
-                cell.AddItem(item);
-                return;
-            }
-        }
+ 
     }
 }

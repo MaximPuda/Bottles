@@ -77,5 +77,10 @@ public class MenuUIController : Controller
     private void UpdateCoins()
     {
         _view.UpdateCoins(_playerData.Coins);
-    }    
+    }
+
+    public void HideLoading()
+    {
+        LoadingViewer.Instance.Out();
+    }
 }

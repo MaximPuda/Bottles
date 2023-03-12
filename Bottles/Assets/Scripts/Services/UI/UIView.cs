@@ -10,6 +10,7 @@ public class UIView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _pointsLabel;
     [SerializeField] private TextMeshProUGUI _movesLabel;
     [SerializeField] private TextMeshProUGUI _lifesLabel;
+    [SerializeField] private TextMeshProUGUI _levelName;
 
     [Header("WinScreen")]
     [SerializeField] private TextMeshProUGUI _resultPoints;
@@ -52,5 +53,11 @@ public class UIView : MonoBehaviour
     {
         _animator.SetBool("Win", show);
         _resultPoints.text = "x" + score.ToString();
+    }
+
+    public void SetLevelName(string levelName)
+    {
+        if(_levelName != null)
+            _levelName.text = levelName;
     }
 }

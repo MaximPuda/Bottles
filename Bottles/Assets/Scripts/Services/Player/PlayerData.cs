@@ -122,9 +122,10 @@ public class PlayerData: Controller
         _date = DateTime.Now;
         MaxLifes = 5;
         Lifes = 5;
-        SecondsLeft = 900;
+        SecondsLeft = 0;
         Coins = 0;
 
+        DataChangedEvent?.Invoke();
         SaveData();
     }
 
@@ -132,6 +133,7 @@ public class PlayerData: Controller
     public void DeleteDataFile()
     {
         SaveSystem.DeleteSave();
+        ResetData();
     }
 
     private IEnumerator WaitToAddLife()

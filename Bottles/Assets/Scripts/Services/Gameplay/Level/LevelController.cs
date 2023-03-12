@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class LevelController : Controller
 {
+    [SerializeField] private PlayableDirector _levelIntro;
+    [SerializeField] private TutorialManager _tutManager;
     public Level CurrentLevel { get; private set; }
 
     private PlayerController _playerController;
@@ -25,6 +28,9 @@ public class LevelController : Controller
             _playerController = player.PlayerCTRL;
             _playerController.MovesEndedEvent += OnMovesEnded;
         }
+
+        _tutManager.Initialize();
+        _tutManager.SetTutorial(CurrentLevel.Tutorial);
     }
 
     private void OnDisable()
@@ -45,6 +51,9 @@ public class LevelController : Controller
     public override void OnStart()
     {
         base.OnStart();
+     
+        if (_levelIntro)
+            _levelIntro.Play();
     }
 
     private IEnumerator CheckLevelCompleteWithDelay()
