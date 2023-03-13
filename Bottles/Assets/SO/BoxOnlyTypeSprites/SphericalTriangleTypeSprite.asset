@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SphericalTriangleTypeSprite
   m_EditorClassIdentifier: 
   Type: 7
-  Sprite: {fileID: -6405922120963098850, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}
+  Sprite: {fileID: -2376259012540745824, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}

@@ -8,6 +8,7 @@ public class LevelController : Controller
 {
     [SerializeField] private PlayableDirector _levelIntro;
     [SerializeField] private TutorialManager _tutManager;
+
     public Level CurrentLevel { get; private set; }
 
     private PlayerController _playerController;

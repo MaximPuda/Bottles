@@ -4,16 +4,16 @@ using UnityEngine;
 public abstract class BoxView : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _highlight;
-    protected BoxController Collector;
+    protected BoxController Controller;
     protected Animator Animator;
     protected BoxCell[] Cells;
 
-    public virtual void Initialize(BoxController collector)
+    public virtual void Initialize(BoxController controller)
     {
-        Collector = collector;
-        Collector.ItemAddedEvent += OnItemAdded;
-        Collector.AllItemsCollectedEvent += OnAllItemsCollected;
-        Collector.ClearItemsEvent += OnClearItems;
+        Controller = controller;
+        Controller.ItemAddedEvent += OnItemAdded;
+        Controller.AllItemsCollectedEvent += OnAllItemsCollected;
+        Controller.ClearItemsEvent += OnClearItems;
 
         Cells = GetComponentsInChildren<BoxCell>();
 
@@ -24,9 +24,9 @@ public abstract class BoxView : MonoBehaviour
 
     private void OnDisable()
     {
-        Collector.ItemAddedEvent -= OnItemAdded;
-        Collector.AllItemsCollectedEvent -= OnAllItemsCollected;
-        Collector.ClearItemsEvent -= OnClearItems;
+        Controller.ItemAddedEvent -= OnItemAdded;
+        Controller.AllItemsCollectedEvent -= OnAllItemsCollected;
+        Controller.ClearItemsEvent -= OnClearItems;
     }
 
     protected virtual void OnItemAdded(ItemController item) {}

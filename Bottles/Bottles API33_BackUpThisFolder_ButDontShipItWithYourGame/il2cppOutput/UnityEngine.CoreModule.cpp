@@ -363,6 +363,8 @@ struct Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3;
 struct ComputeBuffer_t51EADA9015EBCC1B982C5584E9AB2734415A8233;
 // UnityEngine.ContextMenu
 struct ContextMenu_tAD34D12FC1C28194486FB5BF28B5954D0814E8EF;
+// UnityEngine.ContextMenuItemAttribute
+struct ContextMenuItemAttribute_t525674B49254AE58CBDA00408CE07A28A7DFAB89;
 // UnityEngine.Coroutine
 struct Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B;
 // UnityEngine.CreateAssetMenuAttribute
@@ -3235,6 +3237,15 @@ struct ComputeBuffer_t51EADA9015EBCC1B982C5584E9AB2734415A8233  : public Runtime
 	intptr_t ___m_Ptr_0;
 };
 
+// UnityEngine.ContextMenuItemAttribute
+struct ContextMenuItemAttribute_t525674B49254AE58CBDA00408CE07A28A7DFAB89  : public PropertyAttribute_t5E0CB5A6CDA6E24CBD4FF26DE3B0C29D8BB54BF0
+{
+	// System.String UnityEngine.ContextMenuItemAttribute::name
+	String_t* ___name_0;
+	// System.String UnityEngine.ContextMenuItemAttribute::function
+	String_t* ___function_1;
+};
+
 // UnityEngine.Coroutine
 struct Coroutine_t85EA685566A254C23F3FD77AB5BDFFFF8799596B  : public YieldInstruction_tFCE35FD0907950EFEE9BC2890AC664E41C53728D
 {
@@ -5349,6 +5360,10 @@ struct AppDomain_tFF7010567CBABAEEA7BB19835234D6485E16AD5F_ThreadStaticFields
 // UnityEngine.ComputeBuffer
 
 // UnityEngine.ComputeBuffer
+
+// UnityEngine.ContextMenuItemAttribute
+
+// UnityEngine.ContextMenuItemAttribute
 
 // UnityEngine.Coroutine
 
@@ -30294,6 +30309,28 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void PropertyAttribute__ctor_m19247686E165101
 {
 	{
 		Attribute__ctor_m79ED1BF1EE36D1E417BA89A0D9F91F8AAD8D19E2(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// System.Void UnityEngine.ContextMenuItemAttribute::.ctor(System.String,System.String)
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ContextMenuItemAttribute__ctor_m708EE135BBA69D24F6E27839DA1E1383ADA508E4 (ContextMenuItemAttribute_t525674B49254AE58CBDA00408CE07A28A7DFAB89* __this, String_t* ___0_name, String_t* ___1_function, const RuntimeMethod* method) 
+{
+	{
+		PropertyAttribute__ctor_m19247686E165101F140615C7306DC2DA3953D97D(__this, NULL);
+		String_t* L_0 = ___0_name;
+		__this->___name_0 = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___name_0), (void*)L_0);
+		String_t* L_1 = ___1_function;
+		__this->___function_1 = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___function_1), (void*)L_1);
 		return;
 	}
 }

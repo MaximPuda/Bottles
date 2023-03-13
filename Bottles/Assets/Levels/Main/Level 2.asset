@@ -41,7 +41,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 62ffdbee01574ca42bf0e454d8239e7e, type: 2}
   - {fileID: 11400000, guid: 19830fe7d57df394d985a6773d6d6958, type: 2}
   _itemPrefab: {fileID: 7408829381597142155, guid: 5c380a3b440774b4892867da6278bb58, type: 3}
-  _boxesPrefab: {fileID: 4174547711905457341, guid: 64904256ee0c0a844b279d4fd01e50ae, type: 3}
+  _boxesPrefab: {fileID: 5144134290460182251, guid: 26ed4b1bc1d592f409ec78c6083a0d80, type: 3}
   _rows:
   - _cells:
     - _locker: {fileID: 0}
