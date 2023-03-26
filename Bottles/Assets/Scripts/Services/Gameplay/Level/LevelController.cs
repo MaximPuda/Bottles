@@ -1,42 +1,65 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
 public class LevelController : Controller
 {
     [SerializeField] private PlayableDirector _levelIntro;
-    [SerializeField] private TutorialManager _tutManager;
+    [SerializeField] private ParticleSystemForceField _coinForceField;
 
-    public Level CurrentLevel { get; private set; }
+    public LevelPrefs CurrentLevel { get; private set; }
 
     private PlayerController _playerController;
-
-    private WagonController _currentWagon;
 
     public override void Initialize(Service service)
     {
         base.Initialize(service);
 
-        CurrentLevel = GameManager.Instance.CurrentLevel;
-
-        _currentWagon = ((GamePlayService)CurrentService).WagonCTRL;
-        _currentWagon.WagonCompletedEvent += OnWagonCompleted;
+        if (GameManager.Instance.CurrentLevel != null)
+        {
+            CurrentLevel = Instantiate(GameManager.Instance.CurrentLevel);
+            CurrentLevel.Intialize(_coinForceField);
+            CurrentLevel.Wagon.WagonCompletedEvent += OnWagonCompleted;
+        }
+        else
+        {
+            Debug.LogWarning("Current Level is not setted!");
+            return;
+        }
 
         if (ServiceManager.TryGetService<PlayerService>(out PlayerService player))
         {
             _playerController = player.PlayerCTRL;
             _playerController.MovesEndedEvent += OnMovesEnded;
         }
+    }
+    public override void OnStart()
+    {
+        base.OnStart();
 
-        _tutManager.Initialize();
-        _tutManager.SetTutorial(CurrentLevel.Tutorial);
+        if (_levelIntro)
+            _levelIntro.Play();
     }
 
     private void OnDisable()
     {
-        _currentWagon.WagonCompletedEvent -= OnWagonCompleted;
+        CurrentLevel.Wagon.WagonCompletedEvent -= OnWagonCompleted;
+    }
+
+    public void ShowWagon()
+    {
+        CurrentLevel.Wagon.OnStart();
+    }
+    public void ShowGrid()
+    {
+        CurrentLevel.Grid.ShowItems();
+    }
+
+    public void StartTutorial()
+    {
+        if (CurrentLevel.Tutorial != null)
+            CurrentLevel.Tutorial.StartTutorial();
     }
 
     private void OnWagonCompleted()
@@ -49,18 +72,10 @@ public class LevelController : Controller
         StartCoroutine(CheckLevelCompleteWithDelay());
     }
 
-    public override void OnStart()
-    {
-        base.OnStart();
-     
-        if (_levelIntro)
-            _levelIntro.Play();
-    }
-
     private IEnumerator CheckLevelCompleteWithDelay()
     {
         yield return new WaitForSeconds(1f);
-        if (!_currentWagon.IsCompleted)
+        if (!CurrentLevel.Wagon.IsCompleted)
             GameManager.Instance.Lose();
     }
 }

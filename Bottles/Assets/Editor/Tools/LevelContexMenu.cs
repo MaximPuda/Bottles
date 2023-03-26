@@ -8,17 +8,14 @@ public class LevelContexMenu
     [MenuItem("Assets/Set Level as Current")]
     public static void SetAsCurrent()
     {
-        ScriptableObject selection = Selection.activeObject as ScriptableObject;
-        Level level = selection as Level;
+        LevelPrefs selection = Selection.activeGameObject.GetComponent<LevelPrefs>();
 
-        Object.FindObjectOfType<GameManager>().CurrentLevel = level;
+        Object.FindObjectOfType<GameManager>().CurrentLevel = selection;
     }
 
     [MenuItem("Assets/Set Level as Current", true)]
     public static bool SetAsCurrentValidator()
     {
-        ScriptableObject selection = Selection.activeObject as ScriptableObject;
-        Level level = selection as Level;
-        return level != null;
+        return Selection.activeGameObject?.GetComponent<LevelPrefs>() != null;
     }
 }

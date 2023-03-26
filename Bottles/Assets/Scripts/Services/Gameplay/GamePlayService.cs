@@ -3,26 +3,18 @@ using UnityEngine;
 public class GamePlayService : Service
 {
     [SerializeField] private LevelController _level;
-    [SerializeField] private GridController _grid; 
     [SerializeField] private ScoreController _score;
-    [SerializeField] private WagonController _wagon;
 
     public LevelController LevelCTRL => _level;
-    public GridController GridCTRL => _grid;
     public ScoreController ScoreCTRL => _score;
-    public WagonController WagonCTRL => _wagon;
 
     protected override void InitAllControllers()
     {
         _level.Initialize(this);
-        _grid.Initialize(this);
         _score.Initialize(this);
-        _wagon.Initialize(this);
 
         _level.OnStart();
-        _grid.OnStart();
         _score.OnStart();
-        _wagon.OnStart();
     }
 
     protected override void OnWinEnter()
@@ -30,20 +22,20 @@ public class GamePlayService : Service
         base.OnWinEnter();
 
         ScoreCTRL.SendTotal();
-        GridCTRL.ClearGrid();
+        LevelCTRL.CurrentLevel.Grid.ClearGrid();
     }
 
     protected override void OnLoseEnter()
     {
         base.OnLoseEnter();
 
-        GridCTRL.ClearGrid();
+        LevelCTRL.CurrentLevel.Grid.ClearGrid();
     }
 
     protected override void OnMenuEnter()
     {
         base.OnMenuEnter();
 
-        GridCTRL.ClearGrid();
+        LevelCTRL.CurrentLevel.Grid.ClearGrid();
     }
 }

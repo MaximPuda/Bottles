@@ -1,25 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Tutorial : MonoBehaviour
 {
-    [SerializeField] private TutorialList _tutorialName;
+    [SerializeField] private TextMeshProUGUI _dialog;
+    [SerializeField] private TextMeshProUGUI _message;
     [SerializeField] private GameObject _blackOut;
-
-    public TutorialList TutorialName => _tutorialName;
+    [SerializeField] private TutorialSlide[] _slides;
     
     private Animator _animator;
     private bool _isRunning;
+    private int _count = 0;
 
     public void Initialize()
     {
         _animator = GetComponent<Animator>();
 
-        ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay);
-        if (gamePlay != null)
+        ServiceManager.TryGetService<PlayerService>(out PlayerService player);
+        if (player != null)
         {
-            gamePlay.WagonCTRL.BoxCloseEvent += OnSaccess;
+            player.PlayerCTRL.InteractEvent += OnSuccess;
         }
     }
 
@@ -30,8 +32,27 @@ public class Tutorial : MonoBehaviour
         _isRunning = true;
     }
 
+    public void SetSlide()
+    {
+        if (_slides.Length > 0 && _count < _slides.Length)
+        {
+            _dialog.text = _slides[_count].Dialog;
+            _message.text = _slides[_count].Message;
+            _slides[_count].Mask.SetActive(true);
+            
+            if (_count > 0)
+                _slides[_count - 1].Mask.SetActive(false);
+            
+            _count++;
+        }
+        else Stop();
+    }
+
     public void Next()
     {
+        if (_count >= _slides.Length)
+            Stop();
+
         _animator.SetTrigger("Next");
     }
 
@@ -41,7 +62,7 @@ public class Tutorial : MonoBehaviour
         _isRunning = false;
     }
     
-    private void OnSaccess(int combo)
+    private void OnSuccess()
     {
         Next();
     }

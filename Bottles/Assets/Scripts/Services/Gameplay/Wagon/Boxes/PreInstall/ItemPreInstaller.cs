@@ -9,13 +9,11 @@ public class ItemPreInstaller : MonoBehaviour
 
     private BoxController _collector;
     private ItemController _itemPrefab;
-    private Level _level;
 
-    public void Initialize(Level level)
+    public void Initialize(ItemController itemPrefab)
     {
         _collector = GetComponent<BoxController>();
-        _level = level;
-        _itemPrefab = level.ItemPrefab;
+        _itemPrefab = itemPrefab;
 
         InstallItem();
     }

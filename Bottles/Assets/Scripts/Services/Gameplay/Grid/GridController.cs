@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GridController : Controller
+public class GridController : MonoBehaviour
 {
+    [Header("SETTINGS")]
     [SerializeField] private GridCell _cell;
     [SerializeField] private int _sameItems = 4;
     [SerializeField] private int _poolCapacity = 50;
@@ -12,6 +13,17 @@ public class GridController : Controller
     [SerializeField] private float _showHideDelay = 0.01f;
     [SerializeField] private bool _outlineEnabled = true;
     [SerializeField] private float _outlineOffset = 0.2f;
+    [Space(5)]
+
+    [Header("SPAWN")]
+    [SerializeField] private ItemController _itemPrefab;
+    [SerializeField] private ItemType[] _itemTypes;
+    [SerializeField] private ItemColor[] _itemColors;
+
+    [Space(5)]
+
+    [Header("GRID")]
+    [SerializeField] private GridLine[] _gridTemplate;
 
     public event UnityAction AllCellPurchasedEvent;
     
@@ -22,7 +34,6 @@ public class GridController : Controller
 
     private bool _isCleared;
 
-    private Level _level;
     private ItemPool _itemPool;
     private GridSpawner _spawner;
 
@@ -30,13 +41,9 @@ public class GridController : Controller
 
     private LineRenderer _outline;
 
-    public override void Initialize(Service service)
+    public void Initialize()
     {
-        base.Initialize(service);
-
         _outline = GetComponentInChildren<LineRenderer>();
-
-        _level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
 
         InitPoolAndSpawner();
         Create();
@@ -45,15 +52,14 @@ public class GridController : Controller
 
     private void InitPoolAndSpawner()
     {
-        ItemController prefab = _level.ItemPrefab;
-        if (prefab == null)
+        if (_itemPrefab == null)
         {
             Debug.LogWarning("Item prefab is not assigned to Grid");
             return;
         }
 
-        _itemPool = new ItemPool("MainItemPool", _poolCapacity, _level.ItemPrefab, transform);
-        _spawner = new GridSpawner(_itemPool, this, _level.ItemTypes, _level.ItemColors);
+        _itemPool = new ItemPool("MainItemPool", _poolCapacity, _itemPrefab, transform);
+        _spawner = new GridSpawner(_itemPool, this, _itemTypes, _itemColors);
     }
 
     private void Create()
@@ -67,7 +73,7 @@ public class GridController : Controller
         _cellSizeX = _cell.SizeX;
         _cellSizeY = _cell.SizeY;
 
-        _grid = new List<GridCell>[_level.Grid.Length];
+        _grid = new List<GridCell>[_gridTemplate.Length];
 
         float offsetY = 0;
         for (int row = 0; row < _grid.Length; row++)
@@ -79,9 +85,9 @@ public class GridController : Controller
 
             _grid[row] = new List<GridCell>();
 
-            for (int cell = 0; cell < _level.Grid[row].Cells.Length; cell++)
+            for (int cell = 0; cell < _gridTemplate[row].Cells.Length; cell++)
             {
-                var settings = _level.Grid[row].Cells[cell];
+                var settings = _gridTemplate[row].Cells[cell];
                 AddCell(row, container, settings);
             }
 

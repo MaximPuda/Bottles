@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: RevTriangleTypeSprite
   m_EditorClassIdentifier: 
   Type: 5
-  Sprite: {fileID: 4226879045723286036, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}
+  Sprite: {fileID: -4741149491431637962, guid: 020676f8174a9014ab3e184121bc59d3, type: 3}

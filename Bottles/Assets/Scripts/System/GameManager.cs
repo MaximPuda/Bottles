@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Level _currentLevel;
-    [SerializeField] private Level[] _levels;
+    [SerializeField] private LevelPrefs _currentLevel;
+    [SerializeField] private LevelPrefs[] _levels;
 
     public static GameManager Instance { get; private set; }
     public int LevelsAmount => _levels.Length;
-    public Level CurrentLevel { get { return _currentLevel; } set { _currentLevel = value; } }
+    public LevelPrefs CurrentLevel { get { return _currentLevel; } set { _currentLevel = value; } }
 
     public event UnityAction MenuEnterEvent;
     public event UnityAction PlayEnterEvent;

@@ -16,12 +16,12 @@ public class UIController : Controller
         base.Initialize(service);
 
         _view.IntitializeHUD();
-        _view.SetLevelName(GameManager.Instance.CurrentLevel.LelvelName);
+        _view.SetLevelName(GameManager.Instance.CurrentLevel.LevelName);
 
         if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
         {
             _score = gamePlay.ScoreCTRL;
-            _score.PonintsChangedEvent += UpdatePoints;
+            _score.PointsChangedEvent += UpdatePoints;
         }
 
         if (ServiceManager.TryGetService<PlayerService>(out PlayerService player))
@@ -36,7 +36,7 @@ public class UIController : Controller
 
     private void OnDisable()
     {
-        _score.PonintsChangedEvent -= UpdatePoints;
+        _score.PointsChangedEvent -= UpdatePoints;
         _playerController.MovesLeftEvent -= UpdateMoves;
         _playerData.DataChangedEvent -= UpdateLifes;
     }

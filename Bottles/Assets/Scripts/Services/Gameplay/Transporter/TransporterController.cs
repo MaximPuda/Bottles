@@ -19,15 +19,17 @@ public class TransporterController : Controller
 
         if (_lines != null)
         {
-            Level level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
-            _itemPool = new ItemPool("MainItemPool", level.Moves, _prefab, transform);
-            _itemPool.PoolChangeEvent += OnItmesLeft;
-            _itemPool.PoolEmptyEvent += OnItemsOver;
+            // Закоментил так как система уровней была переделана из ScriptableObject в префабы с Monobiehavior
 
-            foreach (var line in _lines)
-            {
-                line.Spawner.Initialize(_itemPool, line.Capacity, line.ItemsContainer, level.ItemTypes, level.ItemColors);
-            }
+            //Level level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
+            //_itemPool = new ItemPool("MainItemPool", level.Moves, _prefab, transform);
+            //_itemPool.PoolChangeEvent += OnItmesLeft;
+            //_itemPool.PoolEmptyEvent += OnItemsOver;
+
+            //foreach (var line in _lines)
+            //{
+            //    line.Spawner.Initialize(_itemPool, line.Capacity, line.ItemsContainer, level.ItemTypes, level.ItemColors);
+            //}
         }
     }
 

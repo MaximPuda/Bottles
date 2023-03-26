@@ -18,13 +18,6 @@ public class EmptyBottlesBoxView : BoxView
         Animator.SetTrigger("Close");
     }
 
-    protected override void OnClearItems()
-    {
-        foreach (var cell in _cells)
-            if (cell != null)
-                cell.Clear();
-    }
-
     protected override void OnItemAdded(ItemController item)
     {
  

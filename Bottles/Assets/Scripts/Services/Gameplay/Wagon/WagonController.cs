@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
-public class WagonController : Controller
+public class WagonController : MonoBehaviour
 {
     [SerializeField] private Transform _container;
     [SerializeField] private ParticleSystem _winFX;
-    [SerializeField] private ParticleSystemForceField _coinFXForceField;
 
     public bool IsCompleted { get; private set; }
 
@@ -18,52 +17,40 @@ public class WagonController : Controller
     public event UnityAction WagonCompletedEvent;
 
 
-    private BoxController[] _collectors;
+    private BoxController[] _boxes;
 
     private int _closedCount;
     private Animator _animator;
     private Level _level;
 
-    public override void Initialize(Service service)
+    public  void Initialize(ParticleSystemForceField coinFXForceField)
     {
-        base.Initialize(service);
-
         _animator = GetComponent<Animator>();
 
-        _level = ((GamePlayService)CurrentService).LevelCTRL.CurrentLevel;
-        SetBoxes();
-
-        _collectors = GetComponentsInChildren<BoxController>();
-        foreach (var colllector in _collectors)
+        _boxes = GetComponentsInChildren<BoxController>();
+        foreach (var box in _boxes)
         {
-            colllector.Initialize();
-            colllector.SetParticleForceField(_coinFXForceField);
-            colllector.AllItemsCollectedEvent += OnBoxClose;
+            box.Initialize();
+            box.SetParticleForceField(coinFXForceField);
+            box.AllItemsCollectedEvent += OnBoxClose;
         }
 
-        var  installers = GetComponentsInChildren<ItemPreInstaller>();
-        foreach (var installer in installers)
-        {
-            installer.Initialize(_level);
-        }
+        //var  installers = GetComponentsInChildren<ItemPreInstaller>();
+        //foreach (var installer in installers)
+        //{
+        //    installer.Initialize(_level);
+        //}
     }
 
-    public override void OnStart()
+    public void OnStart()
     {
-        base.OnStart();
         _animator.SetTrigger("In");
     }
 
     private void OnDesable()
     {
-        foreach (var box in _collectors)
+        foreach (var box in _boxes)
             box.AllItemsCollectedEvent -= OnBoxClose;
-    }
-
-    private void SetBoxes()
-    {
-        GameObject newBoxes = Instantiate(_level.BoxesPrefab, _container);
-        newBoxes.transform.localPosition = Vector2.zero;
     }
 
     private void OnWagonIn()
@@ -81,7 +68,7 @@ public class WagonController : Controller
         _closedCount++;
         BoxCloseEvent?.Invoke(combo);
 
-        if (_closedCount == _collectors.Length)
+        if (_closedCount == _boxes.Length)
         {
             IsCompleted = true;
             _animator.SetTrigger("Completed");

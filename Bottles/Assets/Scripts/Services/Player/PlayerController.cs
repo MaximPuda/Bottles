@@ -6,11 +6,12 @@ public class PlayerController : Controller
 {
     public event UnityAction<int> MovesLeftEvent;
     public event UnityAction MovesEndedEvent;
+    public event UnityAction InteractEvent;
     
     private const float DOUBLE_TAP_TIME = 0.2f;
     
     private Camera _cam;
-    private Level _level;
+    private LevelPrefs _level;
 
     private ItemController _activeItem;
     private ItemController _lastItem;
@@ -41,12 +42,9 @@ public class PlayerController : Controller
 
         _cam = Camera.main;
 
-        if (ServiceManager.TryGetService<GamePlayService>(out GamePlayService gamePlay))
-        {
-            _level = gamePlay.LevelCTRL.CurrentLevel;
+        _level =  GameManager.Instance.CurrentLevel;
+        if (_level != null)
             Moves = _level.Moves;
-        }
-       
     }
 
     private void Update()
@@ -138,6 +136,7 @@ public class PlayerController : Controller
                     {
                         Moves--;
                         _activeItem = null;
+                        InteractEvent?.Invoke();
                     }
                 }
             } 
