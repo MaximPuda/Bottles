@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[RequireComponent(typeof(Canvas), typeof(Animator))]
 public class Tutorial : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _dialog;
@@ -11,12 +12,15 @@ public class Tutorial : MonoBehaviour
     [SerializeField] private TutorialSlide[] _slides;
     
     private Animator _animator;
+    private Canvas _canvas;
     private bool _isRunning;
     private int _count = 0;
 
-    public void Initialize()
+    public void Initialize(Camera uiCamera)
     {
         _animator = GetComponent<Animator>();
+        _canvas = GetComponent<Canvas>();
+        _canvas.worldCamera = uiCamera;
 
         ServiceManager.TryGetService<PlayerService>(out PlayerService player);
         if (player != null)
@@ -28,7 +32,6 @@ public class Tutorial : MonoBehaviour
     public void StartTutorial()
     {
         _animator.SetTrigger("Start");
-        _blackOut.SetActive(true);
         _isRunning = true;
     }
 
@@ -39,10 +42,9 @@ public class Tutorial : MonoBehaviour
             _dialog.text = _slides[_count].Dialog;
             _message.text = _slides[_count].Message;
             _slides[_count].Mask.SetActive(true);
-            
-            if (_count > 0)
-                _slides[_count - 1].Mask.SetActive(false);
-            
+
+            _blackOut.SetActive(true);
+
             _count++;
         }
         else Stop();
@@ -52,6 +54,11 @@ public class Tutorial : MonoBehaviour
     {
         if (_count >= _slides.Length)
             Stop();
+
+        _blackOut.SetActive(false);
+
+        if (_count > 0)
+            _slides[_count - 1].Mask.SetActive(false);
 
         _animator.SetTrigger("Next");
     }

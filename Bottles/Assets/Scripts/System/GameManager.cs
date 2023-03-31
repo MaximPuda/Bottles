@@ -173,14 +173,14 @@ public class GameManager : MonoBehaviour
         CurrentState = GameStates.Play;
     }
 
-    public void Pause()
+    public void Pause(bool active)
     {
-        if(CurrentState == GameStates.Pause)
+        if(!active)
         {
             Time.timeScale = 1;
             CurrentState = GameStates.Play;
         }
-        else if(CurrentState == GameStates.Play)
+        else 
         {
             Time.timeScale = 0;
             CurrentState = GameStates.Pause;

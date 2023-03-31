@@ -29,7 +29,7 @@ public class GamePlayService : Service
     {
         base.OnLoseEnter();
 
-        LevelCTRL.CurrentLevel.Grid.ClearGrid();
+        //LevelCTRL.CurrentLevel.Grid.ClearGrid();
     }
 
     protected override void OnMenuEnter()

@@ -7,6 +7,7 @@ public class LevelController : Controller
 {
     [SerializeField] private PlayableDirector _levelIntro;
     [SerializeField] private ParticleSystemForceField _coinForceField;
+    [SerializeField] private Camera _uiCamera;
 
     public LevelPrefs CurrentLevel { get; private set; }
 
@@ -19,7 +20,7 @@ public class LevelController : Controller
         if (GameManager.Instance.CurrentLevel != null)
         {
             CurrentLevel = Instantiate(GameManager.Instance.CurrentLevel);
-            CurrentLevel.Intialize(_coinForceField);
+            CurrentLevel.Intialize(_coinForceField, _uiCamera);
             CurrentLevel.Wagon.WagonCompletedEvent += OnWagonCompleted;
         }
         else

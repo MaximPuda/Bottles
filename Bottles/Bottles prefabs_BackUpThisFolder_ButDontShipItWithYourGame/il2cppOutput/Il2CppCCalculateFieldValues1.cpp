@@ -3194,14 +3194,14 @@ struct U3CU3Ec_tA740A8D6DF3EABD2FC61E867744D9F8E4E8CCC94  : public RuntimeObject
 {
 };
 
-// LevelController/<CheckLevelCompleteWithDelay>d__15
-struct U3CCheckLevelCompleteWithDelayU3Ed__15_t04699917D1F07C6E6AB8CE43D54F40D8903DFF80  : public RuntimeObject
+// LevelController/<CheckLevelCompleteWithDelay>d__16
+struct U3CCheckLevelCompleteWithDelayU3Ed__16_tB7C9DCE60BC5A625494B4ACB3D097C764A558EB8  : public RuntimeObject
 {
-	// System.Int32 LevelController/<CheckLevelCompleteWithDelay>d__15::<>1__state
+	// System.Int32 LevelController/<CheckLevelCompleteWithDelay>d__16::<>1__state
 	int32_t ___U3CU3E1__state_0;
-	// System.Object LevelController/<CheckLevelCompleteWithDelay>d__15::<>2__current
+	// System.Object LevelController/<CheckLevelCompleteWithDelay>d__16::<>2__current
 	RuntimeObject* ___U3CU3E2__current_1;
-	// LevelController LevelController/<CheckLevelCompleteWithDelay>d__15::<>4__this
+	// LevelController LevelController/<CheckLevelCompleteWithDelay>d__16::<>4__this
 	LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640* ___U3CU3E4__this_2;
 };
 
@@ -12865,10 +12865,12 @@ struct Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4  : public MonoBehaviou
 	TutorialSlideU5BU5D_tB964A7FB7B12C4B821F9514B2B324B56F6C33335* ____slides_7;
 	// UnityEngine.Animator Tutorial::_animator
 	Animator_t8A52E42AE54F76681838FE9E632683EF3952E883* ____animator_8;
+	// UnityEngine.Canvas Tutorial::_canvas
+	Canvas_t2DB4CEFDFF732884866C83F11ABF75F5AE8FFB26* ____canvas_9;
 	// System.Boolean Tutorial::_isRunning
-	bool ____isRunning_9;
+	bool ____isRunning_10;
 	// System.Int32 Tutorial::_count
-	int32_t ____count_10;
+	int32_t ____count_11;
 };
 
 // UnityEngine.EventSystems.UIBehaviour
@@ -13446,10 +13448,12 @@ struct LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640  : public Contr
 	PlayableDirector_t895D7BC3CFBFFD823278F438EAC4AA91DBFEC475* ____levelIntro_5;
 	// UnityEngine.ParticleSystemForceField LevelController::_coinForceField
 	ParticleSystemForceField_t71D281C4A86607B42D1C3FFC8EDD9671720C0990* ____coinForceField_6;
+	// UnityEngine.Camera LevelController::_uiCamera
+	Camera_tA92CC927D7439999BC82DBEDC0AA45B470F9E184* ____uiCamera_7;
 	// LevelPrefs LevelController::<CurrentLevel>k__BackingField
-	LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215* ___U3CCurrentLevelU3Ek__BackingField_7;
+	LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215* ___U3CCurrentLevelU3Ek__BackingField_8;
 	// PlayerController LevelController::_playerController
-	PlayerController_t7E8D7042FA2D0DFEC54A1FCDF395161D88DAAE95* ____playerController_8;
+	PlayerController_t7E8D7042FA2D0DFEC54A1FCDF395161D88DAAE95* ____playerController_9;
 };
 
 // UnityEngine.UI.Mask
@@ -15994,9 +15998,9 @@ struct U3CU3Ec_tA740A8D6DF3EABD2FC61E867744D9F8E4E8CCC94_StaticFields
 
 // UnityEngine.UI.LayoutUtility/<>c
 
-// LevelController/<CheckLevelCompleteWithDelay>d__15
+// LevelController/<CheckLevelCompleteWithDelay>d__16
 
-// LevelController/<CheckLevelCompleteWithDelay>d__15
+// LevelController/<CheckLevelCompleteWithDelay>d__16
 
 // Internal.Cryptography.OidLookup/<>c
 struct U3CU3Ec_t90F8CB10B454B45A81BE65AA841DD85FE08EA21A_StaticFields
@@ -20745,10 +20749,10 @@ IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3930[7] =
 	static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____name_4)),static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____moves_5)),static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____tutorial_6)),static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____itemTypes_7)),static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____itemColors_8)),static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____itemPrefab_9)),static_cast<int32_t>(offsetof(Level_t1CED3B73CCB94716BF67A03B39D9DE9A991FD5A1, ____boxesPrefab_10)),};
 IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3931[3] = 
 {
-	static_cast<int32_t>(offsetof(U3CCheckLevelCompleteWithDelayU3Ed__15_t04699917D1F07C6E6AB8CE43D54F40D8903DFF80, ___U3CU3E1__state_0)),static_cast<int32_t>(offsetof(U3CCheckLevelCompleteWithDelayU3Ed__15_t04699917D1F07C6E6AB8CE43D54F40D8903DFF80, ___U3CU3E2__current_1)),static_cast<int32_t>(offsetof(U3CCheckLevelCompleteWithDelayU3Ed__15_t04699917D1F07C6E6AB8CE43D54F40D8903DFF80, ___U3CU3E4__this_2)),};
-IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3932[4] = 
+	static_cast<int32_t>(offsetof(U3CCheckLevelCompleteWithDelayU3Ed__16_tB7C9DCE60BC5A625494B4ACB3D097C764A558EB8, ___U3CU3E1__state_0)),static_cast<int32_t>(offsetof(U3CCheckLevelCompleteWithDelayU3Ed__16_tB7C9DCE60BC5A625494B4ACB3D097C764A558EB8, ___U3CU3E2__current_1)),static_cast<int32_t>(offsetof(U3CCheckLevelCompleteWithDelayU3Ed__16_tB7C9DCE60BC5A625494B4ACB3D097C764A558EB8, ___U3CU3E4__this_2)),};
+IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3932[5] = 
 {
-	static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____levelIntro_5)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____coinForceField_6)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ___U3CCurrentLevelU3Ek__BackingField_7)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____playerController_8)),};
+	static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____levelIntro_5)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____coinForceField_6)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____uiCamera_7)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ___U3CCurrentLevelU3Ek__BackingField_8)),static_cast<int32_t>(offsetof(LevelController_t509E7CB90C17A4D233A7564A3857D3FE82ED1640, ____playerController_9)),};
 IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3933[5] = 
 {
 	static_cast<int32_t>(offsetof(LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215, ____name_4)),static_cast<int32_t>(offsetof(LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215, ____moves_5)),static_cast<int32_t>(offsetof(LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215, ____wagon_6)),static_cast<int32_t>(offsetof(LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215, ____grid_7)),static_cast<int32_t>(offsetof(LevelPrefs_t31A94A0A61C2088CA9D5B1C8346394418FFDB215, ____tutor_8)),};
@@ -20863,9 +20867,9 @@ IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3972[1] =
 IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3973[1] = 
 {
 	static_cast<int32_t>(offsetof(ServiceManager_tD3B1700CC6B765889B1F8FE3115C6EF244E3A991_StaticFields, ____services_0)),};
-IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3974[7] = 
+IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3974[8] = 
 {
-	static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____dialog_4)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____message_5)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____blackOut_6)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____slides_7)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____animator_8)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____isRunning_9)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____count_10)),};
+	static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____dialog_4)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____message_5)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____blackOut_6)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____slides_7)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____animator_8)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____canvas_9)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____isRunning_10)),static_cast<int32_t>(offsetof(Tutorial_t4FF9FF1EF6F8E11558052253ECFBB53EC9AA41D4, ____count_11)),};
 IL2CPP_EXTERN_C const int32_t g_FieldOffsetTable3975[3] = 
 {
 	static_cast<int32_t>(offsetof(TutorialSlide_tCC2444CAB41E67EFC83CA611C699C57EF8A33FB8, ___Mask_0)),static_cast<int32_t>(offsetof(TutorialSlide_tCC2444CAB41E67EFC83CA611C699C57EF8A33FB8, ___Dialog_1)),static_cast<int32_t>(offsetof(TutorialSlide_tCC2444CAB41E67EFC83CA611C699C57EF8A33FB8, ___Message_2)),};

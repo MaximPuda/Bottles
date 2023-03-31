@@ -44,6 +44,11 @@ public class UIView : MonoBehaviour
         }
     }
 
+    public void ShowPauseScreen(bool show)
+    {
+        _animator.SetBool("Pause", show);
+    }
+
     public void ShowLoseScreen(bool show)
     {
         _animator.SetBool("Lose", show);

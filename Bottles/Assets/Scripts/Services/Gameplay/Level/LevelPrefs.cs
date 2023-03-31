@@ -16,7 +16,7 @@ public class LevelPrefs : MonoBehaviour
     public GridController Grid => _grid;
     public Tutorial Tutorial => _tutor;
 
-    public void Intialize(ParticleSystemForceField coinForceField)
+    public void Intialize(ParticleSystemForceField coinForceField, Camera uiCamera)
     {
         _wagon = GetComponentInChildren<WagonController>();
         _wagon?.Initialize(coinForceField);
@@ -25,6 +25,6 @@ public class LevelPrefs : MonoBehaviour
         _grid?.Initialize();
 
         _tutor = GetComponentInChildren<Tutorial>();
-        _tutor?.Initialize();
+        _tutor?.Initialize(uiCamera);
     }
 }

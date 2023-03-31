@@ -91,13 +91,39 @@ public class UIController : Controller
 
     public void OnAddMovesClick(Button sender)
     {
-        sender.interactable = false;
+       sender.interactable = false;
         _view.ShowLoseScreen(false);
         GameManager.Instance.Continue();
+        sender.gameObject.SetActive(false);
     }
 
-    public void OnPauseBtnClick()
+    public void OnPauseBtnClick(Button sender)
     {
-        GameManager.Instance.Pause();
+        sender.interactable = true;
+        GameManager.Instance.Pause(true);
+        _view.ShowPauseScreen(true);
+    }
+
+    public void OnPauseContinueBtnClick(Button sender)
+    {
+        sender.interactable = false;
+        GameManager.Instance.Pause(false);
+        _view.ShowPauseScreen(false);
+    }
+
+    public void OnPauseRestartBtnClick(Button sender)
+    {
+        sender.interactable = false;
+        _view.ShowPauseScreen(false);
+        GameManager.Instance.Pause(false);
+        GameManager.Instance.Restart();
+    }
+
+    public void OnPauseBackBtnClick(Button sender)
+    {
+        sender.interactable = false;
+        _view.ShowPauseScreen(false);
+        GameManager.Instance.Pause(false);
+        GameManager.Instance.BackToMenu();
     }
 }

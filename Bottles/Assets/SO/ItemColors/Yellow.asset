@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Yellow
   m_EditorClassIdentifier: 
   _name: 6
-  _color: {r: 0.9803922, g: 0.8196079, b: 0.08627451, a: 1}
+  _color: {r: 1, g: 0.60082304, b: 0, a: 1}
   _chance: 100
